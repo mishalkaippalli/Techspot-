@@ -1,0 +1,28 @@
+{
+  "name": "techspot",
+  "version": "1.0.0",
+  "description": "e-commerce web application",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mishalkaippalli/Techspot-.git"
+  },
+  "author": "Mishal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mishalkaippalli/Techspot-/issues"
+  },
+  "homepage": "https://github.com/mishalkaippalli/Techspot-#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.18.0",
+    "mongoose": "^8.1.3",
+    "nocache": "^4.0.0"
+  }
+}
