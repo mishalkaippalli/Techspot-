@@ -35,22 +35,21 @@ app.set("views", [path.join(__dirname, "views/user"), path.join(__dirname, "view
 
 app.use(express.static(path.join(__dirname, "public")))
 
-// const userRoutes = require("./routes/userRouter")
+const userRoutes = require("./routes/userRouter")
 // const adminRoutes = require("./routes/adminRouter")
 
 
-app.get("/", (req, res) => {
-  res.send("yes its working");
-});
 
-// app.use("/", userRoutes)
+// app.use("/", (req, res) => {
+//   res.send("yes its working");
+// });
+
+app.use("/", userRoutes)
 // app.use("/admin", adminRoutes)
 
-app.get('*', function (req, res) {
-    res.redirect("/pageNotFound");
-});
-
-
+// app.get('*', function (req, res) {
+//     res.redirect("/pageNotFound");
+// });
 
 
 
