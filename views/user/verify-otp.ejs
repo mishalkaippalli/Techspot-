@@ -1,0 +1,37 @@
+<div class="container col-4 login_wrap widget-taber-content p-30 background-white border-radius-5 mt-30">
+    <div class="padding_eight_all bg-white">
+        <div class="heading_s1">
+            <h3 class="mb-30">Email Verification</h3>
+        </div>
+
+        <!-- Add your email verification modal content here -->
+
+        <!-- Add OTP input field -->
+        
+            <div class="form-group">
+                <label for="otp">Enter OTP:</label>
+                <input type="text" id="otp" name="otp" class="form-control" required>
+            </div>
+
+            <!-- Add Verify Email button -->
+            <button onclick="handleOtp()" class="btn btn-primary">Verify Email</button>
+
+           
+            <div class="text-muted text-center pt-25">
+                <p id="timer">Time left: <span id="countdown">60</span> seconds</p>
+                <a id="resendLink" onclick="resendOtp()" style="display:none;">Resend OTP</a>
+            </div>
+            
+        
+                <div class="alert alert-danger" id="errorMessage">
+                    
+                </div>
+         
+            
+   
+
+        <div class="text-muted text-center pt-25">
+            Already verified? <a href="/login">Login now</a>
+        </div>
+    </div>
+</div>

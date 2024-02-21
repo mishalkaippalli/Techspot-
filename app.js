@@ -20,15 +20,15 @@ app.use(nocache())
 
 
 
-// app.use(session({
-//     secret: process.env.SESSION_SECRET_KEY,
-//     resave: false,
-//     saveUninitialized: true,
-//     cookie: {
-//         maxAge: 72 * 60 * 60 * 1000,
-//         httpOnly: true
-//     }
-// }))
+app.use(session({
+    secret: process.env.SESSION_SECRET_KEY,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 72 * 60 * 60 * 1000,
+        httpOnly: true
+    }
+}))
 
 app.set("view engine", "ejs")
 app.set("views", [path.join(__dirname, "views/user"), path.join(__dirname, "views/admin")])
@@ -44,7 +44,7 @@ const userRoutes = require("./routes/userRouter")
 //   res.send("yes its working");
 // });
 
-app.use("/", userRoutes)
+app.use("/user", userRoutes)
 // app.use("/admin", adminRoutes)
 
 // app.get('*', function (req, res) {
