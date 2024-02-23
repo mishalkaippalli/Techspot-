@@ -1,3 +1,4 @@
+<%- include("../partials/header") %>
 
 <style>
     #errorMessage {
@@ -107,6 +108,32 @@
     function handleOtp() {
        const otp = document.getElementById('otp').value
 
-       
+       $ajax({
+          method: "POST",
+          url: "/verify-otp",
+          data: {
+            otp
+          },
+          success: (response) => {
+            if(response.status == false) {
+                errorMessageElement.innerHTML = "Entered OTP is incorrect";
+                errorMessageElement.style.display = "block";
+                // Hide the error message after 3 seconds
+                setTimeout(() => {
+                    errorMessageElement.style.display = "none";
+                }, 3000);
+
+                //clear the error after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('errorMessage').innerHTML = "";
+                }, 3000);
+            } else {
+                location.href = "/"
+                errorMessageElement.style.display = "none";
+            }
+          }
+       })
     }
 </script>
+
+<%- include("../partials/footer") %>

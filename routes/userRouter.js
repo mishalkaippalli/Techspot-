@@ -7,5 +7,6 @@ Router.get("/login", userController.getLoginPage);
 Router.get("/signup", userController.getSignupPage);
 Router.post("/signup", userController.signupUser);
 Router.post("/resendOtp", userController.resendOtp);
+Router.post("/verify-otp", userController.verifyOtp);
 
 module.exports = Router;

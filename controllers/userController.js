@@ -74,7 +74,7 @@ const signupUser = async (req, res) => {
                   if(info) {
                     req.session.userOTP = otp
                     req.session.UserData = req.body
-                    res.render("verify-otp")
+                    res.render("verify-otp", { email })
                     console.log("Email sent", info.messageId)
                   } else {
                     res.json("email error")
@@ -142,9 +142,38 @@ const resendOtp = async (req, res) => {
     }
 }
 
+// Verify otp from email with generated otp and save the user data to db
 
+const verifyOtp = async (req, res) => {
+    try{
+        console.log("Iam inside verify OTP")
+        //get otp from the body
+        const { otp } = req.body
+        if (otp === req.session.userOtp) {
+            const user = req.session.userData
+            const passwordHash = await securePassword(user.password)
+
+            const saveUserData = new User({
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+                password: passwordHash,
+            })
+
+            await saveUserData.save()
+
+            req.session.user = saveUserData._id
+            res.json({status: true})
+        } else {
+            console.log("otp not matching");
+            res.json({status: false})
+        }
+    }catch(error){
+       console.log(error.message);
+    }
+}
 
 
 module.exports = {
-    getLoginPage, getSignupPage, signupUser, getOtpPage, resendOtp
+    getLoginPage, getSignupPage, signupUser, getOtpPage, resendOtp, verifyOtp
 }

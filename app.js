@@ -44,7 +44,7 @@ const userRoutes = require("./routes/userRouter")
 //   res.send("yes its working");
 // });
 
-app.use("/user", userRoutes)
+app.use("/", userRoutes)
 // app.use("/admin", adminRoutes)
 
 // app.get('*', function (req, res) {
