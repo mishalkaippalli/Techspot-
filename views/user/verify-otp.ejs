@@ -1,3 +1,10 @@
+
+<style>
+    #errorMessage {
+        display: none;
+    }
+</style>
+
 <div class="container col-4 login_wrap widget-taber-content p-30 background-white border-radius-5 mt-30">
     <div class="padding_eight_all bg-white">
         <div class="heading_s1">
@@ -35,3 +42,71 @@
         </div>
     </div>
 </div>
+
+<script>
+    function resendOtp(){
+        fetch("/resendOtp",{
+            method: "POST"
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                console.log("resend OTP successful");
+                toggleVisibility(true);
+                startCountdown();
+            } else {
+                console.error("resend OTP failed:", data.message)
+            }
+        })
+        .catch(error => {
+            console.error("Error", error);
+        });
+    }
+// for page fully loading
+    window.onload = function() {
+        startCountdown();
+    }
+
+    function startCountdown() {
+        var seconds = 60;
+        var countdownElement = document.getElementById('countdown');
+        var resendLink = document.getElementById('resendLink');
+
+        var countdownInterval = setInterval(function () {
+            seconds--;
+            countdownElement.innerText = seconds;
+
+            if(seconds <= 0){
+                clearInterval(countdownInterval); //to cstop countdown intervel
+                toggleVisibility(false);
+            }
+        }, 1000);//interval set to one seconds
+    }
+
+    function toggleVisibility(showTimer) {
+        var countdownElement = document.getElementById('countdown');
+        var resendLink = document.getElementById('resendLink');
+
+        if(showTimer){
+            countdownElement.style.display = 'inline'; //show the timer
+            resendLink.style.display = 'none'; // Hide the resend OTP link
+        } else {
+            countdownElement.style.display = 'none'; // hide the timer
+            resendLink.syle.display = 'inline';//show the resend OTP link
+        }
+    }
+
+    setTimeout(()=>{
+        document.getElementById("errorMessage").style.display = "none"
+    },3000)
+</script>
+
+<script>
+    const errorMessageElement = document.getElementById('errorMessage');
+
+    function handleOtp() {
+       const otp = document.getElementById('otp').value
+
+       
+    }
+</script>

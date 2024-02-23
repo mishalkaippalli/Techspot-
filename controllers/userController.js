@@ -58,13 +58,13 @@ const signupUser = async (req, res) => {
                     secure:false,
                     requireTLS: true,
                     auth: {
-                      user: process.env.EMAIL_USERNAME,
+                      user: process.env.EMAIL_USER,
                       pass: process.env.EMAIL_PASSWORD,
                     }
                   })
                 
                   const info = await transporter.sendMail({
-                    from: process.env.EMAIL_USERNAME,
+                    from: process.env.EMAIL_USER,
                     to: email,
                     subject: "Verfiy your Account",
                     text: `Your OTP is ${otp}`,
@@ -102,9 +102,49 @@ const getOtpPage = async (req, res) => {
     }
 }
 
+const resendOtp = async (req, res) => {
+    try {
+        const email = req.session.userData.email;
+        var newOtp = generateOtp();
+        console.log(email, newOtp);
+        
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host:'smtp.gmail.com',
+            port:587,
+            secure:false,
+            requireTLS: true,
+            auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASSWORD,
+            }
+          })
+
+          const info = await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "Resend OTP",
+            text: `Your OTP is ${newOtp}`,
+            html: `<b> <h4> Your new OTP is${newOtp}</h4> <br> <a href="">Click here</a></b>`,
+          })
+
+          if(info) {
+            req.session.userOTP = newOtp;
+            res.json({success: true, message: "OTP resent successfully"});
+            console.log("Email resent", info.messageId)
+          } else {
+            res.json({ success: false, message: 'Failed to resend OTP' });
+          }
+
+    } catch (error) {
+        console.log(error.message);
+        res.json({ success: false, message: 'Error in resending OTP' });
+    }
+}
+
 
 
 
 module.exports = {
-    getLoginPage, getSignupPage, signupUser
+    getLoginPage, getSignupPage, signupUser, getOtpPage, resendOtp
 }
