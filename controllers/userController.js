@@ -1,6 +1,46 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/userSchema");
-const nodemailer = require("nodemailer")
+const nodemailer = require("nodemailer");
+
+// pagenotfound
+const pageNotFound = async (req, res) => {
+    try {
+        res.render("page-404")
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+// Generate hashed password
+const securePassword = async (password) => {
+    try {
+        const passwordHash = await bcrypt.hash(password, 10);
+        return passwordHash;
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+//Loading the Home page
+const getHomePage = async (req, res) => {
+    try {
+        const today = new Date().toISOString();
+        const user = req.session.user
+       //banner here
+
+        const userData = await User.findOne({})//condtion ton be added
+        //branddata & productdata       
+
+        if(user) {
+            res.render("home", {user: userData})
+        } else {
+            res.render("home")
+        }
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 //load login page
 const getLoginPage = async (req, res) => {
@@ -72,8 +112,8 @@ const signupUser = async (req, res) => {
                   })
 
                   if(info) {
-                    req.session.userOTP = otp
-                    req.session.UserData = req.body
+                    req.session.userOtp = otp
+                    req.session.userData = req.body
                     res.render("verify-otp", { email })
                     console.log("Email sent", info.messageId)
                   } else {
@@ -129,7 +169,7 @@ const resendOtp = async (req, res) => {
           })
 
           if(info) {
-            req.session.userOTP = newOtp;
+            req.session.userOtp = newOtp;
             res.json({success: true, message: "OTP resent successfully"});
             console.log("Email resent", info.messageId)
           } else {
@@ -149,8 +189,11 @@ const verifyOtp = async (req, res) => {
         console.log("Iam inside verify OTP")
         //get otp from the body
         const { otp } = req.body
+        console.log("Iam otp inside verifyotp",otp);
+        console.log("Iam req.session.userOtp inside verifyotp",req.session.userOtp);
         if (otp === req.session.userOtp) {
             const user = req.session.userData
+            console.log(user);
             const passwordHash = await securePassword(user.password)
 
             const saveUserData = new User({
@@ -173,7 +216,51 @@ const verifyOtp = async (req, res) => {
     }
 }
 
+const userLogin = async (req, res) => {
+    try {
+        const { email, password} = req.body
+        const findUser = await User.findOne({isAdmin: "0",email: email})
+
+        console.log("IAm inside userLogin");
+
+        if(findUser){
+            const isUserNotBlocked = findUser.isBlocked === false;
+            
+            if(isUserNotBlocked){
+                const passwordmatch = await bcrypt.compare(password, findUser.password)
+                if(passwordmatch) {
+                   req.session.user = findUser._id
+                   console.log("loggedin, user details from session", req.session.user)
+                   console.log("Logged in");
+                   res.redirect("/");
+                } else {
+                    console.log("Password is not matching");
+                    res.render("login", {message: "password is not matching"})
+                }
+            } else {
+                console.log("User is blocked by admin");
+                res.render("login", {message: "User is blocked by admin"})
+            }
+        } else{
+            console.log("User not found");
+            res.render("login", {message: "User is not found"})
+        }
+
+    } catch (error) {
+        console.log(error.message);
+        res.render("login", {message: "Login failed"})     
+    }
+}
+
 
 module.exports = {
-    getLoginPage, getSignupPage, signupUser, getOtpPage, resendOtp, verifyOtp
+    getLoginPage, 
+    getSignupPage, 
+    signupUser, 
+    getOtpPage, 
+    resendOtp, 
+    verifyOtp, 
+    pageNotFound, 
+    userLogin,
+    getHomePage
 }

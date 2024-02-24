@@ -1,0 +1,58 @@
+
+<%- include("../partials/header") %>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1>Welcome to Mobile Shop</h1>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/products">Products</a></li>
+                    <li><a href="/cart">Cart</a></li>
+                    <li><a href="/login">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Banner -->
+    <section class="banner">
+        <div class="container">
+            <h2>Latest Mobiles</h2>
+            <p>Check out our latest collection of mobile phones</p>
+            <a href="/products" class="btn">Shop Now</a>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="featured-products">
+        <div class="container">
+            <h2>Featured Products</h2>
+            <div class="product-grid">
+                <% for (let product of products) { %>
+                    <div class="product">
+                        <img src="<%= product.image %>" alt="<%= product.name %>">
+                        <h3><%= product.name %></h3>
+                        <p><%= product.price %></p>
+                        <a href="/products/<%= product.id %>" class="btn">View Details</a>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Mobile Shop. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
+
+<%- include("../partials/footer") %>

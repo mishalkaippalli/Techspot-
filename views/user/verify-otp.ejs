@@ -27,7 +27,7 @@
            
             <div class="text-muted text-center pt-25">
                 <p id="timer">Time left: <span id="countdown">60</span> seconds</p>
-                <a id="resendLink" onclick="resendOtp()" style="display:none;">Resend OTP</a>
+                <a id="resendLink" onclick="resendOtp()" style="display:none";>Resend OTP</a>
             </div>
             
         
@@ -73,12 +73,14 @@
         var countdownElement = document.getElementById('countdown');
         var resendLink = document.getElementById('resendLink');
 
+        clearInterval(countdownInterval);
+
         var countdownInterval = setInterval(function () {
             seconds--;
             countdownElement.innerText = seconds;
 
             if(seconds <= 0){
-                clearInterval(countdownInterval); //to cstop countdown intervel
+                clearInterval(countdownInterval); //to stop countdown intervel
                 toggleVisibility(false);
             }
         }, 1000);//interval set to one seconds
@@ -93,7 +95,7 @@
             resendLink.style.display = 'none'; // Hide the resend OTP link
         } else {
             countdownElement.style.display = 'none'; // hide the timer
-            resendLink.syle.display = 'inline';//show the resend OTP link
+            resendLink.style.display = 'inline';//show the resend OTP link
         }
     }
 
@@ -108,7 +110,7 @@
     function handleOtp() {
        const otp = document.getElementById('otp').value
 
-       $ajax({
+       $.ajax({
           method: "POST",
           url: "/verify-otp",
           data: {
@@ -128,7 +130,8 @@
                     document.getElementById('errorMessage').innerHTML = "";
                 }, 3000);
             } else {
-                location.href = "/"
+                // Redirect to home page upon successful verification
+                location.href = "/login"
                 errorMessageElement.style.display = "none";
             }
           }
