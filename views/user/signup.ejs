@@ -70,18 +70,35 @@
         </section>
     <!-- </main> -->
 
+<%- include("../partials/footer") %>
+
 <script>
     // Check if the alert element exists
     const alertElement = document.getElementById('alertMessage');
 
 // If the alert element exists, hide it after 3 seconds
-if (alertElement) {
-  setTimeout(function () {
-      alertElement.style.display = 'hey';
-  }, 3000);
-}
+  if (alertElement) {
+    setTimeout(function () {
+      alertElement.style.display = 'none';
+   }, 3000);
+   }
+
+   function validateForm() {
+    //Triming the vlaues before submitting the form
+    var nameInput = document.getElementsByName("name")[0];
+    var emailInput = document.getElementsByName("email")[0];
+    var phoneInput = document.getElementsByName("phone")[0];
+    var passwordInput = document.getElementsByName("password")[0];
+    var cPasswordInput = document.getElementsByName("cPassword")[0];
+
+    nameInput.value = nameInput.value.trim();
+    emailInput.value = emailInput.value.trim();
+    phoneInput.value = phoneInput.value.trim();
+    passwordInput.value = cPasswordInput.value.trim();
+    cPasswordInput.value = cPasswordInput.value.trim();
+
+    //additional validations can be added here
+
+    return true; //allowing form to be submitted
+   }
 </script>
-
-<%- include("../partials/footer") %>
-
-   

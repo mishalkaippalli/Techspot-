@@ -1,58 +1,61 @@
 
 <%- include("../partials/header") %>
 
-<body>
+</section>
 
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <h1>Welcome to Mobile Shop</h1>
-            <nav>
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/products">Products</a></li>
-                    <li><a href="/cart">Cart</a></li>
-                    <li><a href="/login">Login</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+<section class="popular-categories section-padding mt-15 mb-25">
+    <div class="container wow fadeIn animated">
+        <h3 class="section-title mb-20"><span>Popular</span> Categories</h3>
+        <div class="carausel-6-columns-cover position-relative">
+            <div class="slider-arrow slider-arrow-2 carausel-6-columns-arrow" id="carausel-6-columns-arrows">
+            </div>
+            <div class="carausel-6-columns" id="carausel-6-columns">
+                <div class="card-1">
+                    <figure class=" img-hover-scale overflow-hidden">
+                        <a href="products-grid-right.html"><img
+                                src="user-assets/imgs/category/category-gaming.webp" alt=""></a>
+                    </figure>
+                    <!-- <h5><a href="products-grid-right.html">T-Shirt</a></h5> -->
+                </div>
+                <div class="card-1">
+                    <figure class=" img-hover-scale overflow-hidden">
+                        <a href="products-grid-right.html"> <img
+                                src="user-assets/imgs/category/category-contentCreation.webp" alt=""></a>
+                    </figure>
+                    <!-- <h5><a href="products-grid-right.html">Bags</a></h5> -->
+                </div>
+                <div class="card-1">
+                    <figure class=" img-hover-scale overflow-hidden">
+                        <a href="products-grid-right.html"><img
+                                src="user-assets/imgs/category/category-entertainment.webp" alt=""></a>
+                    </figure>
+                    <!-- <h5><a href="products-grid-right.html">Sandan</a></h5> -->
+                </div>
+                <div class="card-1">
+                    <figure class=" img-hover-scale overflow-hidden">
+                        <a href="products-grid-right.html"><img
+                                src="user-assets/imgs/category/category-everydayUse.webp" alt=""></a>
+                    </figure>
+                    <!-- <h5><a href="products-grid-right.html">Scarf Cap</a></h5> -->
+                </div>
+                <div class="card-1">
+                    <figure class=" img-hover-scale overflow-hidden">
+                        <a href="products-grid-right.html"><img
+                                src="user-assets/imgs/category/category-officeUse.webp" alt=""></a>
+                    </figure>
+                    <!-- <h5><a href="products-grid-right.html">Shoes</a></h5> -->
+                </div>
+                <div class="card-1">
+                    <figure class=" img-hover-scale overflow-hidden">
+                        <a href="products-grid-right.html"><img
+                                src="user-assets/imgs/category/category-studies.webp" alt=""></a>
+                    </figure>
+                    <!-- <h5><a href="products-grid-right.html">Pillowcase</a></h5> -->
 
-    <!-- Banner -->
-    <section class="banner">
-        <div class="container">
-            <h2>Latest Mobiles</h2>
-            <p>Check out our latest collection of mobile phones</p>
-            <a href="/products" class="btn">Shop Now</a>
-        </div>
-    </section>
-
-    <!-- Featured Products -->
-    <section class="featured-products">
-        <div class="container">
-            <h2>Featured Products</h2>
-            <div class="product-grid">
-                <% for (let product of products) { %>
-                    <div class="product">
-                        <img src="<%= product.image %>" alt="<%= product.name %>">
-                        <h3><%= product.name %></h3>
-                        <p><%= product.price %></p>
-                        <a href="/products/<%= product.id %>" class="btn">View Details</a>
-                    </div>
-                <% } %>
+                </div>
             </div>
         </div>
-    </section>
+</section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 Mobile Shop. All rights reserved.</p>
-        </div>
-    </footer>
-
-</body>
-
-</html>
 
 <%- include("../partials/footer") %>
