@@ -17,6 +17,7 @@ const getCustomersInfo = async (req, res) => {
 const getCustomerBlocked = async (req, res) => {
     try {
         let id = req.query.id
+        console.log(id)
         await User.updateOne({_id: id}, {$set: {isBlocked: true}})
         res.redirect("/admin/users")
     } catch (error) {
