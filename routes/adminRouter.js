@@ -18,6 +18,11 @@ Router.get("/users", customerController.getCustomersInfo);
 Router.get("/blockCustomer", customerController.getCustomerBlocked);
 Router.get("/unblockCustomer", customerController.getCustomerUnblocked);
 
+//Multer settings
+const multer = require("multer")
+const storage = require("../associates/multer")
+const upload = multer({storage: storage}) //upload holds multer middleware
+Router.use("public/uploads", express.static("public/uploads"))
 
 // category management
 Router.get("/categories", categoryController.getCategoryInfo)
@@ -30,9 +35,14 @@ Router.post("/editCategory/:id", categoryController.editCategory)
 
 // brand management
 Router.get("/brands", brandController.getBrandPage)
-Router.post("/addBrand", brandController.addBrand)
+Router.post("/addBrand", upload.single('image') , brandController.addBrand)
+Router.post("/allBrands", brandController.getAllBrands)
+Router.get("/blockbrand", brandController.blockBrand)
+Router.get("/unblockBrand", brandController.unBlockBrand)
+
+
 // product management
-Router.get("/add-product", productController.getProductAddPage)
+Router.get("/add-product",  productController.getProductAddPage)
 
 
 

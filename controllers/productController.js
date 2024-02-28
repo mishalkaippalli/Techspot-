@@ -8,7 +8,7 @@ const getProductAddPage = async (req, res) => {
     try {
         const category = await Category.find({isListed: true})
         const brand = await Brand.find({isBlocked: false})
-        res.render("product-add", {cat: category, brand: brand})
+        res.render("add-product", {cat: category, brand: brand})
     } catch (error) {
         console.log(error.message);
     }
