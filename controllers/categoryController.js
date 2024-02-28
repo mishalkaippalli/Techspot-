@@ -70,9 +70,31 @@ const getUnlistCategory = async (req, res) => {
 const getEditCategory = async (req, res) => {
     try {
         const id = req.query.id
-        console.log("Iam inside getEdit category id",id)
+        console.log("Iam inside getEdit category id is",id)
         const category = await Category.findOne({_id: id})
+        console.log("category", category)
         res.render("edit-category", {category: category})
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+const editCategory = async (req, res) => {
+    try {
+        const id = req.params.id
+        console.log("Iam inside editCategory, id from params is", id)
+        const {categoryName, description } = req.body
+        const findCategory = await Category.find({_id: id})
+        if(findCategory) {
+            await Category.updateOne({_id: id},
+                {
+                    name: categoryName,
+                    description: description,
+                })
+            res.redirect("/admin/categories")
+        } else {
+            console.log("Category not found");
+        }
     } catch (error) {
         console.log(error.message)
     }
@@ -85,5 +107,6 @@ module.exports = {
     getAllCategories,
     getListCategory,
     getUnlistCategory,
-    getEditCategory
+    getEditCategory,
+    editCategory
 }
