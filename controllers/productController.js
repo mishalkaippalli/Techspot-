@@ -8,6 +8,7 @@ const getProductAddPage = async (req, res) => {
     try {
         const category = await Category.find({isListed: true})
         const brand = await Brand.find({isBlocked: false})
+        console.log(brand)
         res.render("add-product", {cat: category, brand: brand})
     } catch (error) {
         console.log(error.message);
@@ -17,7 +18,7 @@ const getProductAddPage = async (req, res) => {
 const addProducts = async (req, res) => {
     try {
         const products = req.body
-        console.log("Iam inside addProducts, products details", products)
+        
         const productExists = await Product.findOne({productName: products.productName})
         if(!productExists) {
             const images = []
@@ -35,15 +36,17 @@ const addProducts = async (req, res) => {
                 category: products.category,
                 regularPrice: products.regularPrice,
                 salePrice: products.regularPrice,
-                createnOn: new Date(),
+                createdOn: new Date(),
                 quantity: products.quantity,
-                size: products.size,
+                ram: products.ram,
+                storage: products.storage,
                 color: products.color,
-                processor: products.processor,
                 productImage: images
             })
+
             await newProduct.save()
-            res.redirect("/admin/products")
+            console.log("Iam inside addProducts, new products details", newProduct)
+            res.redirect("/admin/addproducts")
         } else {
             res.json("failed");
         }
@@ -51,6 +54,7 @@ const addProducts = async (req, res) => {
         console.log(error.message)
     }
 }
+
 
 module.exports = {
     getProductAddPage,

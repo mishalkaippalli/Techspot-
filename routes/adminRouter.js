@@ -42,7 +42,8 @@ Router.get("/unblockBrand", brandController.unBlockBrand)
 
 
 // product management
-Router.get("/add-product",  productController.getProductAddPage)
+Router.get("/addProducts",  productController.getProductAddPage)
+Router.post("/addProducts", upload.array('images', [3]), productController.addProducts)
 
 
 

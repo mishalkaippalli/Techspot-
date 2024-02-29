@@ -15,7 +15,6 @@ const addBrand = async (req, res) => {
         const {name} = req.body
         console.log(name)
         const brand = req.body.name
-        console.log(req.file);
         const findBrand = await Brand.findOne({brand})
         if(!findBrand){
           const image = req.file.filename

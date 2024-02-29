@@ -28,7 +28,6 @@ const productSchema = Mongoose.Schema({
     },
     salesPrice : {
         type : Number,
-        required : true,
     },
     createdOn : {
         type : String,
@@ -46,15 +45,15 @@ const productSchema = Mongoose.Schema({
         type : Array,
         required : true,
     },
-    size : {
+    ram : {
         type : String, 
         required : true,
     },
-    color : {
+    storage : {
         type : String,
         required : true,
     },
-    processor : {
+    color : {
         type : String,
         required : true,
     },
