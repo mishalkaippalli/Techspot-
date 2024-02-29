@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/userSchema");
 const nodemailer = require("nodemailer");
+const Product = require("../models/productSchema");
 
 // pagenotfound
 const pageNotFound = async (req, res) => {
@@ -251,6 +252,15 @@ const userLogin = async (req, res) => {
         res.render("login", {message: "Login failed"})     
     }
 }
+const getShopPage = async(req, res) => {
+    try {
+        const product = await Product.find({isBlocked: false})
+        console.log("I am inside getShop page, products are", product)
+        res.render("shop", {product: product})
+    } catch (error) {
+        console.log(error.message)
+    }
+}
 
 
 module.exports = {
@@ -262,5 +272,6 @@ module.exports = {
     verifyOtp, 
     pageNotFound, 
     userLogin,
-    getHomePage
+    getHomePage,
+    getShopPage
 }

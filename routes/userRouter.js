@@ -11,4 +11,7 @@ Router.post("/signup", userController.signupUser);
 Router.post("/resendOtp", userController.resendOtp);
 Router.post("/verify-otp", userController.verifyOtp);
 
+//shop
+Router.get("/shop", userController.getShopPage);
+
 module.exports = Router;
