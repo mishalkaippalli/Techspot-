@@ -65,6 +65,11 @@
                         <div class="mb-3">
                             <input class="form-control" placeholder="Password" type="password" name="password">
                         </div> <!-- form-group// -->
+                           <% if (locals.message && message.length> 0) { %>
+                            <div id="alertMessage" class="alert alert-danger">
+                                <%= message %>
+                            </div>
+                            <% } %>
                         <div class="mb-3">
                             <a href="#" class="float-end font-sm text-muted">Forgot password?</a>
                             <label class="form-check">
@@ -113,3 +118,11 @@
 </body>
 
 </html>
+<script>
+ const alertElement = document.getElementById('alertMessage');
+if (alertElement) {
+    setTimeout(function () {
+      alertElement.style.display = 'none';
+   }, 3000);
+   }
+</script>

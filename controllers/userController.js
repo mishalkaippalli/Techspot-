@@ -2,6 +2,8 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/userSchema");
 const nodemailer = require("nodemailer");
 const Product = require("../models/productSchema");
+const Brand = require("../models/brandSchema")
+const Category = require("../models/categorySchema")
 
 // pagenotfound
 const pageNotFound = async (req, res) => {
@@ -29,14 +31,16 @@ const getHomePage = async (req, res) => {
         const user = req.session.user
        //banner here
 
-        const userData = await User.findOne({})//condtion ton be added
-        //branddata & productdata       
+        const userData = await User.findOne({})
+        const brandData = await Brand.find({isBlocked: false})
+        const productData = await Product.find({isBlocked: false}).sort({_id: -1}).limit(4)   
 
         if(user) {
-            res.render("home", {user: userData})
+            res.render("home", {user: userData, data: brandData, product:productData})
         } else {
-            res.render("home")
+            res.render("home", {product: productData, data: brandData,})
         }
+        
 
     } catch (error) {
         console.log(error.message);
@@ -262,6 +266,29 @@ const getShopPage = async(req, res) => {
     }
 }
 
+const getProductDetailsPage = async (req, res) => {
+    try {
+        const user = req.session.user
+        console.log("Iam inside getProductdetails page user is", user)
+        // const id =req.query.id
+        // console.log(id);
+        const findProduct = await Product.findOne({id: 1709221524568});
+        console.log("Iam inside getproduct details page",findProduct)
+        const findCategory = await Category.findOne({name: findProduct.category})
+        console.log("findproduct is", findProduct)
+        console.log("findcategory is", findCategory)
+
+        if(user){
+            res.render("productdetails", {data: findProduct, user:user})
+        } else {
+            res.render("productdetails", {data: findProduct})
+        }
+        
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 
 module.exports = {
     getLoginPage, 
@@ -273,5 +300,6 @@ module.exports = {
     pageNotFound, 
     userLogin,
     getHomePage,
-    getShopPage
+    getShopPage,
+    getProductDetailsPage
 }

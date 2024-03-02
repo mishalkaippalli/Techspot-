@@ -24,10 +24,11 @@ const verifyLogin = async (req, res) => {
                 res.redirect("dashboard")
             } else {
                 console.log("Password is incorrect");
-                res.redirect("/adminDashboard")
+                res.render("admin-login",{message: "password incorrect"})
             }
         } else {
             console.log("You are not an admin");
+            res.render("admin-login",{message: "You are not an admin"})
         }
     } catch (error) {
         console.log(error.message);

@@ -1,7 +1,7 @@
 
 <%- include("../partials/header") %>
 
-</section>
+
 
 <section class="popular-categories section-padding mt-15 mb-25">
     <div class="container wow fadeIn animated">
@@ -51,11 +51,42 @@
                                 src="user-assets/imgs/category/category-studies.webp" alt=""></a>
                     </figure>
                     <!-- <h5><a href="products-grid-right.html">Pillowcase</a></h5> -->
-
+                
                 </div>
             </div>
         </div>
 </section>
-
+<section class="mt-50 mb-50">
+    <div class="container">
+        <div class="row product-grid-3">
+            <% for (let i=0; i <product.length; i++)  { %>
+               <div class="col-lg-4 col-md-4 col-12 col-sm-6">
+                  <div class="product-cart-wrap mb-30">
+                    <div class="product-img action wrap">
+                        <div class="product-img product-img-zoom">
+                            <img class = "default-img" src="/uploads/product-images/<%=product[i].productImage[0]%>" alt="">
+                        </div> 
+                    </div>
+                  </div>
+                  <div class="product-content-wrap">
+                    <div class="product-category">
+                        <h2><%=product[i].brand%></h2>
+                    </div>
+                    <h2><%=product[i].productName%></h2>
+                    <div class="product-price">
+                        <span>$<%= product[i].regularPrice %></span>
+                    </div>
+                  </div>
+                  <div class="product-action-1 show">
+                     <a aria-label="Add to cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>                  
+                
+                  </div>
+               </div>
+            <% } %>
+        </div>
+    </div>
+</section>
 
 <%- include("../partials/footer") %>
+
+//cutted from above
