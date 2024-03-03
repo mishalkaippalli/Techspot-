@@ -15,10 +15,12 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <form method = "post" action="/admin/addCategory">
+                            
+                            <form method = "post" action="/admin/addCategory"  id="categoryForm" >
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Name</label>
-                                    <input type="text" name="name" placeholder="Type here" class="form-control"  id="product_name" />
+                                    <input type="text" id="name" name="name" placeholder="Type here" class="form-control"  id="product_name" />
+                                    <div id="nameError" class="text-danger" style="display: none;"></div>
                                 </div>
                                 <!-- <div class="mb-4">
                                     <label for="product_slug" class="form-label">Slug</label>
@@ -33,11 +35,13 @@
                                 </div> -->
                                 <div class="mb-4">
                                     <label class="form-label">Description</label>
-                                    <textarea name="description" placeholder="Type here" class="form-control" ></textarea>
+                                    <textarea id="description" name="description" placeholder="Type here" class="form-control" ></textarea>
+                                    <div id="descriptionError" class="text-danger" style="display: none;"></div>
                                 </div>
                                 <div class="d-grid">
                                     <button class="btn btn-primary">Create category</button>
                                 </div>
+                                
                             </form>
                         </div>
                         <div class="col-md-9">
@@ -122,3 +126,33 @@
 </html>
 
 <%- include("../partials/adminFooter") %>
+
+<script>
+    document.getElementById('categoryForm').addEventListener('submit', function (event) {
+        var name = document.getElementById('name').value.trim();
+        var description = document.getElementById('description').value.trim();
+        var nameError = document.getElementById('nameError');
+        var descriptionError = document.getElementById('descriptionError');
+        var isValid = true;
+
+        if (name === '') {
+            nameError.textContent = 'Please enter a name for the category.';
+            nameError.style.display = 'block';
+            isValid = false;
+        }
+
+        if (description === '') {
+            descriptionError.textContent = 'Please enter a description for the category.';
+            descriptionError.style.display = 'block';
+            isValid = false;
+        }
+
+        if (!isValid) {
+            setTimeout(function () {
+                nameError.style.display = 'none';
+                descriptionError.style.display = 'none';
+            }, 4000);
+            event.preventDefault();
+        }
+    });
+</script>

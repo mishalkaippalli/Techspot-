@@ -61,7 +61,9 @@ button {
   text-decoration: none;
   cursor: pointer;
 }
-b {font-weight: 500;}
+b {
+  font-weight: 500;
+}
 strong,
 .fw-600 {
   font-weight: 600;
@@ -100,18 +102,34 @@ h5.widget-title {
   font-size: 18px;
   font-weight: 600;
 }
-.text-body {color: $color-text !important;}
-.font-xxs{font-size:$font-xxs;}
-.font-xs{font-size:$font-xs;}
-.font-sm{font-size:$font-sm;}
-.font-md{font-size:$font-md;}
-.font-lg{font-size:$font-lg;}
-.font-xl{font-size:$font-xl;}
-.font-xxl{font-size:$font-xxl;}
+.text-body {
+  color: $color-text !important;
+}
+.font-xxs {
+  font-size: $font-xxs;
+}
+.font-xs {
+  font-size: $font-xs;
+}
+.font-sm {
+  font-size: $font-sm;
+}
+.font-md {
+  font-size: $font-md;
+}
+.font-lg {
+  font-size: $font-lg;
+}
+.font-xl {
+  font-size: $font-xl;
+}
+.font-xxl {
+  font-size: $font-xxl;
+}
 
 .text-style-1 {
   position: relative;
-  &::after {    
+  &::after {
     content: "";
     background-color: #ffdabf;
     height: 20%;
@@ -129,4 +147,6 @@ h5.widget-title {
     @include transform-duration-5s;
   }
 }
-.fw-700 {font-weight: 700;}
+.fw-700 {
+  font-weight: 700;
+}

@@ -85,6 +85,13 @@
     var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    // to clear the error(from backend validation) after 5 seconds
+   if (alertElement) {
+    setTimeout(function () {
+      alertElement.style.display = 'none';
+   }, 5000);
+   }
+
     function displayError(message) {
     validatealertelement.textContent = message;
     validatealertelement.style.display = 'block';
@@ -135,19 +142,7 @@
     return true;
    }
 
-    // to clear the error after 5 seconds
-    if (validatealertelement) {
-    setTimeout(function () {
-      validatealertelement.style.display = 'none';
-   }, 5000);
-   }
-
-   // to clear the error after 5 seconds
-   if (alertElement) {
-    setTimeout(function () {
-      alertElement.style.display = 'none';
-   }, 5000);
-   }
+   
 
 </script>
 
