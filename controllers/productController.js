@@ -56,7 +56,41 @@ const addProducts = async (req, res) => {
   }
 };
 
+const getAllProducts = async(req, res) => {
+  try {
+    const search = req.query.search || ""
+    const page = req.query.search || 1
+    const limit = 10
+    const productData = await Product.find({
+        $or : [
+          {productName: {$regex: new RegExp(".*"+ search + ".*", "i") } }, //".*": This is a regular expression pattern that matches any sequence of characters.
+          {brand: {$regex: new RegExp(".*" + search + ".*", "i") } }
+        ],   
+    }).sort({cratedOn: -1})
+      .limit(limit*1)
+      .skip((page - 1)* limit) // to skip based on the current page number and the limit
+      .exec()  // used with await to wait for the query to finish executing before proceeding further in the code
+
+      const count = await Product.find({
+        $or: [
+          {productName: {$regex: new RegExp(".*"+ search + ".*", "i") } }, //".*": This is a regular expression pattern that matches any sequence of characters.
+          {brand: {$regex: new RegExp(".*" + search + ".*", "i") } }
+        ]
+      }).countDocuments()
+
+      res.render("products", {
+        data: productData,
+        currentPage: page,
+        totalPages: Math.ceil(count / limit)
+      })
+
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
 module.exports = {
   getProductAddPage,
   addProducts,
+  getAllProducts,
 };

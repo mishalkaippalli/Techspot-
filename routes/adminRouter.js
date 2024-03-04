@@ -47,6 +47,6 @@ Router.post(
   upload.array("images", [3]),
   productController.addProducts,
 );
-Router.get("/products", productController.getProductAddPage);
+Router.get("/products", productController.getAllProducts);
 
 module.exports = Router;
