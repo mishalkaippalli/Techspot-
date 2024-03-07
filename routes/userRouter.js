@@ -2,22 +2,27 @@ const express = require("express");
 const Router = express.Router();
 
 const userController = require("../controllers/userController");
+const userProfileController = require("../controllers/userProfileController")
 const { isLogged } = require("../authenticaiton/auth");
 
+//User Actions
 Router.get("/", userController.getHomePage);
 Router.get("/login", userController.getLoginPage);
-Router.get("/loginn")
 Router.post("/login", userController.userLogin);
 Router.get("/signup", userController.getSignupPage);
 Router.post("/signup", userController.signupUser);
 Router.post("/resendOtp", userController.resendOtp);
 Router.post("/verify-otp", userController.verifyOtp);
-Router.get("/productdetails", userController.getProductDetailsPage);
 Router.get("/logout", userController.getLogoutUser)
 
-//shop
+//Product based routes
 Router.get("/shop", isLogged, userController.getShopPage);
+Router.get("/productDetails", userController.getProductDetailPage);
 
+// user Profile
+Router.get("/profile", isLogged, userProfileController.getUserProfile );
+Router.post("/editUserDetails", isLogged, userProfileController.editUserDetails)
+Router.get("/addAddress", isLogged, userProfileController.getAddressAddPage )
 
 
 module.exports = Router;

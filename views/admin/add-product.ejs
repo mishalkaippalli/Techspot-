@@ -26,11 +26,11 @@
                     <h2 class="content-title">Add New Product</h2>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-12">
                 <div class="card mb-4">
                     <div class="card-body">
 
-                        <form method="post" action="/admin/addProducts" enctype="multipart/form-data"
+                        <form id="productForm" method="post" action="/admin/addProducts" enctype="multipart/form-data"
                             onsubmit="return validateForm()">
                             <div class="mb-4">
                                 <label for="product_name" class="form-label">Product Name</label>
@@ -78,7 +78,7 @@
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <label class="form-label">Operating System</label>
-                                        <input placeholder="$" name="operatingsystem" type="text" class="form-control border">
+                                        <input placeholder="$" name="operatingSystem" type="text" class="form-control border">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -162,27 +162,9 @@
                                         <button type="button" id="saveButton3" class="btn-sm btn-primary">Save</button>
                                     </div>
                                 </div>
-                                
-                                <div class="row">
-                                    <div class="card-body align-items-center" style="margin-bottom: 20px;">
-                                        <img src="assets/imgs/theme/upload.svg" alt="" id="imgView4">
-                                        <input class="form-control" type="file" name="images" id="input4"
-                                            accept="image/png, image/jpeg, image/jpg"
-                                            onchange="viewImage4(event),viewImage(event, 4)">
-                                    </div>
-                                    <div class="image-cropper d-flex align-items-center"
-                                        style="display:none; width: 300px; height: 200px; margin-bottom: 20px;">
-                                        <img src="" id="croppedImg4" alt="">
-                                        <button type="button" id="saveButton4" class="btn-sm btn-primary">Save</button>
-                                    </div>
-                                </div>
-                                
-
-
-
                             </div>
                             <div>
-                                <button class="btn btn-md rounded font-sm hover-up" type="button"
+                                <button class="btn btn-md rounded font-sm hover-up" type="submit"
                                     onclick="validateAndSubmit()">Publish</button>
                             </div>
                         </form>
@@ -205,6 +187,8 @@
         }
     </style>
 
+        <%- include("../partials/adminFooter") %>
+
     <script src="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.js"></script>
 
 
@@ -224,10 +208,6 @@
             document.getElementById('imgView3').src = URL.createObjectURL(event.target.files[0])
         }
 
-        function viewImage4(event) {
-            document.getElementById('imgView4').src = URL.createObjectURL(event.target.files[0])
-        }
-
 
         function viewImage(event, index) {
             let input = event.target;
@@ -240,12 +220,14 @@
 
                 // Initialize Cropper.js on the image
                 let cropper = new Cropper(image, {
-                    aspectRatio: 1, // Square aspect ratio
+                    // aspectRatio: 1, // Square aspect ratio
                     viewMode: 1,
                     guides: true,
                     background: false,
                     autoCropArea: 1,
-                    zoomable: true
+                    zoomable: true,
+                    // width: 300, // Set the desired width
+                    // height: 200, // Set the desired height
                 });
 
 
@@ -257,6 +239,10 @@
                 let saveButton = document.querySelector('#saveButton' + index);
                 saveButton.addEventListener('click', async function () {
                     let croppedCanvas = cropper.getCroppedCanvas();
+                    //  width: 500, // Specify the desired width here
+                    //  height: 600,
+                    // });
+                   
                     let croppedImage = document.getElementById("croppedImg" + index);
                     croppedImage.src = croppedCanvas.toDataURL('image/jpeg', 1.0);
 
@@ -348,9 +334,8 @@
             if (validateForm()) {
 
                 // If validation passes, submit the form
-                document.forms[0].submit(); // Assuming this is the first (and only) form on your page
+                document.getElementById("productForm").submit();
             }
-
         }
 
         function validateForm() {
@@ -404,4 +389,3 @@
         }
     </script>
 
-    <%- include("../partials/adminFooter") %>

@@ -266,23 +266,34 @@ const userLogin = async (req, res) => {
 const getShopPage = async (req, res) => {
   try {
     const user = req.session.id;
-    const product = await Product.find({ isBlocked: false });
+    const products = await Product.find({ isBlocked: false });
     const count = await Product.find({ isBlocked: false }).count();
-    const brand = await Brand.find({});
+    const brands = await Brand.find({});
     const categories = await Category.find({ isListed: true });
+    let itemsPerPage = 6
+    let currentPage = parseInt(req.query.page) || 1
+    let startIndex = (currentPage -1) * itemsPerPage
+    let endIndex = startIndex + itemsPerPage
+    let totalPages = Math.ceil(products.length / 6)
+    const currentProduct = products.slice(startIndex, endIndex)
     console.log("I am inside getShop page");
 
     //pagination to be added
 
     res.render("shop", 
-        { user: user,
-          product: product,
-          count: count, 
+        { 
+          user: user,
+          product: currentProduct,
+          brand: brands,
+          count: count,
+          totalPages,
+          currentPage, 
         });
   } catch (error) {
     console.log(error.message);
   }
 };
+
 
 const getLogoutUser = async (req, res) =>{
   try {
@@ -297,22 +308,28 @@ const getLogoutUser = async (req, res) =>{
   }
 }
 
-const getProductDetailsPage = async (req, res) => {
+const getProductDetailPage = async (req, res) => {
   try {
     const user = req.session.user;
-    console.log("Iam inside getProductdetails page user is", user);
-    // const id =req.query.id
-    // console.log(id);
-    const findProduct = await Product.findOne({ id: 1709221524568 });
+    console.log("Iam inside gettrialfordetailpage page user is", user);
+    const id = req.query.id
+    console.log(id);
+    const findProduct = await Product.findOne({ id: id });
     console.log("Iam inside getproduct details page", findProduct);
     const findCategory = await Category.findOne({ name: findProduct.category });
+
+    // let totalOffer
+    // if(findCategory.categoryOffer || findProduct.productOffer){
+    //   totalOffer = findCategory.categoryOffer + findProduct.productOffer
+    // }
+
     console.log("findproduct is", findProduct);
     console.log("findcategory is", findCategory);
 
     if (user) {
-      res.render("productdetails", { data: findProduct, user: user });
+      res.render("trialfordetailpagealt", { product: findProduct, user: user });
     } else {
-      res.render("productdetails", { data: findProduct });
+      res.render("trialfordetailpagealt", { product: findProduct });
     }
   } catch (error) {
     console.log(error.message);
@@ -330,6 +347,6 @@ module.exports = {
   userLogin,
   getHomePage,
   getShopPage,
-  getProductDetailsPage,
+  getProductDetailPage,
   getLogoutUser
 };

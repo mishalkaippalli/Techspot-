@@ -1,33 +1,89 @@
 <%- include("../partials/header") %>
 
+<style>
+    /* CSS for enforcing consistent image height */
+    .product-img img {
+        height: 300px; /* Adjust the height as per your requirement */
+        width: auto; /* This will maintain aspect ratio */
+    }
+</style>
+
+
 <section class="mt-50 mb-50">
     <div class="container">
-        <div class="row product-grid-3">
-            <% for (let i=0; i <product.length; i++)  { %>
-               <div class="col-lg-4 col-md-4 col-12 col-sm-6">
-                  <div class="product-cart-wrap mb-30">
-                    <div class="product-img action wrap">
-                        <div class="product-img product-img-zoom">
-                            <img class = "default-img" src="/uploads/product-images/<%=product[i].productImage[0]%>" alt="">
-                        </div> 
+        <div class="row flex-row-reverse">
+            <div class="col-lg-9">
+                <!-- <div class="shop-product-filter">
+                    <div class="total-product">
+                        if (locals.count) { 
+                             <p>We found <strong class="text-brand">< locals.count </strong>items for you!</p>
+                          } 
                     </div>
-                  </div>
-                  <div class="product-content-wrap">
-                    <div class="product-category">
-                        <h2><%=product[i].brand%></h2>
+                    <div class="sort-by-product-area">
+                        <div class="sort-by-product-wrap">
+                            <div class="sort-by">
+                                <span><i class="fi-rs-apps-sort"></i>Sort by:</span>
+                            </div>
+                            <div class="sort-by-dropdown-wrap">
+                                <select id="sortByDropdown" onchange="handleSortChange(this.value, getCurrentPageFromURL(this))">
+                                  <option value="featured" selected>Featured</option>
+                                  <option value="lowToHigh">Price: Low to High</option>
+                                  <option value="hightolow">Price: High to Low</option>
+                                  <option vlaue="releaseDate">Release Date</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <h2><%=product[i].productName%></h2>
-                    <div class="product-price">
-                        <span>$<%= product[i].regularPrice %></span>
-                    </div>
-                  </div>
-                  <div class="product-action-1 show">
-                     <a aria-label="Add to cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>                  
-                
-                  </div>
-               </div>
-            <% } %>
-        </div>
+                </div> -->
+                <div class="row product-grid-3">
+                    <% for (let i=0; i <product.length; i++)  { %>
+                       <div class="col-lg-4 col-md-4 col-12 col-sm-6">
+                          <div class="product-cart-wrap mb-30">
+                            <div class="product-img action wrap">
+                                <div class="product-img product-img-zoom">
+                                    <a href="/productDetails?id=<%=product[i].id%>">
+                                    <img class = "default-img" src="/uploads/product-images/<%=product[i].productImage[0]%>" alt="">
+                                    </a>
+                                </div> 
+                                <div class="product-action-1">
+                                    <a aria-label="Add to wishlist" class="action-btn hover-up" href="javascipt:void(0);"
+                                    onclick="addToWishlist('<%= product[i]._id %>')"><i class="fi-rs-heart"></i></a>  <!--prevents the anchor tag from causing the browser to navigate to a new URL when clicked-->
+                                </div>
+                                <!-- <div class="product-badges product-badges-position product-badges-mrg">
+                                    <span class="hot">Hot</span>
+                                </div> -->
+                            </div>
+                          </div>
+
+                          <div class="product-content-wrap">
+                            <div class="product-category">
+                                <a href="shop-grid-right.html"> <%= product[i].brand %></a>
+                            </div>
+                            <h2><a href="shop-product-right.html"><%= product[i].productName %></a></h2>
+                            <div class="product-price">
+                                <span>$<%= product[i].regularPrice %></span>
+                            </div>
+                            <!--div class="rating-result" title="90%">
+                            <span>
+                                <span>90%</span>
+                            </span>
+                            </div> -->
+                            <div class="product-price">
+                                        <!-- <span>$ product[i].salePrice.toLocaleString('en-IN') </span> -->
+                                        <span class="old-price">$<%= product[i].regularPrice.toLocaleString('en-IN') %></span>
+                                    </div>
+                          </div>
+                          <div class="product-action-1 show">
+                            <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
+                          </div>
+                       </div>
+                    <% } %>
+                </div>
+              
+
+
+            </div>
+        </div>   
     </div>
 </section>
 

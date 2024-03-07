@@ -24,14 +24,14 @@
                                 <div class="slider-nav-thumbnails pl-15 pr-15">
 
                                     <% for (let j=0; j < data.productImage.length; j++) { %>
-                                        <div><img src="/uploads/product-images/<%= data.productImage[j] %>"
-                                                alt="product image"></div>
+                                        <div>
+                                            <img src="/uploads/product-images/<%= data.productImage[j] %>"
+                                                alt="product image">
+                                        </div>
                                         <% } %>
 
                                 </div>
                             </div>
-
-
                         </div>
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <div class="detail-info">
@@ -61,7 +61,7 @@
                                 </div>
 
                                 <div class="pro-details-brand">
-                                    <span> Size : <%= data.size %></span>
+                                    <span> Color : <%= data.color %></span>
                                 </div>
                                 <div class="bt-1 border-color-1 mt-30 mb-30"></div>
 
@@ -78,7 +78,7 @@
                                 <ul class="product-meta font-xs color-grey mt-50">
                                     <li class="mb-5">ID: <%= data.id %>
                                     </li>
-                                    <li class="mb-5">Tags: Laptop, <%= data.category %>
+                                    <li class="mb-5">Tags: Phone, <%= data.category %>
                                     </li>
                                     <li>Availability:<span class="in-stock text-success ml-5">
                                             <%= data.quantity %> Items In Stock
@@ -88,25 +88,26 @@
                             <!-- Detail Info -->
                         </div>
                     </div>
+                </div>
                     <div class="row">
                         <div class="col-lg-10 m-auto entry-main-content">
                             <h2 class="section-title style-1 mb-30">Description</h2>
                             <div class="description mb-50">
-                                <p>Unleash the power of technology with our state-of-the-art laptop series, designed
-                                    to elevate your computing experience to new heights. Crafted with precision and
-                                    innovation, these laptops seamlessly blend style and functionality to meet the
-                                    demands of modern computing.</p>
-                                <p>Equipped with the latest processors and advanced hardware, our laptops deliver
-                                    lightning-fast performance for all your computing needs. Whether you're working
-                                    on complex tasks, streaming content, or multitasking, these laptops ensure
+                                <p>Unleash the power of technology with our state-of-the-art smartphone series, designed
+                                    to elevate your user experience to new heights. Crafted with precision and
+                                    innovation, these smartphone seamlessly blend style and functionality to meet the
+                                    demands of modern user.</p>
+                                <p>Equipped with the latest processors and advanced hardware, our smartphone deliver
+                                    lightning-fast performance for all your user needs. Whether you're working
+                                    on complex tasks, streaming content, or multitasking, these smartphone ensure
                                     smooth and efficient operations.
                                 </p>
                                 <hr class="wp-block-separator is-style-dots">
                                 <ul class="product-more-infor mt-30">
-                                    <li><span>Processor</span> Powered by the latest Intel/AMD processors</li>
+                                    <li><span>OperatingSystem</span> Powered by the latest Android/IOS processors</li>
                                     <li><span>RAM</span> High-capacity RAM for seamless multitasking</li>
-                                    <li><span>Storage</span> Fast SSD storage for quick data access</li>
-                                    <li><span>Graphics</span> Cutting-edge graphics for immersive visuals</li>
+                                    <li><span>Storage</span> Fast  storage for quick data access</li>
+                                    <li><span>Display</span> Cutting-edge display for immersive visuals</li>
                                     <li><span>Battery Life</span> Extended battery life for uninterrupted usage</li>
                                 </ul>
                                 <hr class="wp-block-separator is-style-dots">
@@ -134,8 +135,7 @@
                                                     </div>
                                                     <div class="product-action-1">
                                                         <a aria-label="Quick view" class="action-btn small hover-up"
-                                                            data-bs-toggle="modal" data-bs-target="#quickViewModal
-"><i class="fi-rs-search"></i></a>
+                                                            data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-search"></i></a>
                                                         <a aria-label="Add To Wishlist"
                                                             class="action-btn small hover-up"
                                                             href="shop-wishlist.html" tabindex="0"><i
@@ -149,7 +149,7 @@
                                                         <span class="hot">Hot</span>
                                                     </div>
                                                 </div>
-                                                <div class="product-content-wrap">
+                                                <!-- <div class="product-content-wrap">
                                                     <h2><a href="shop-product-right.html" tabindex="0">Ulstra Bass
                                                             Headphone</a></h2>
                                                     <div class="rating-result" title="90%">
@@ -160,7 +160,7 @@
                                                         <span>$238.85 </span>
                                                         <span class="old-price">$245.8</span>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
 
@@ -188,3 +188,4 @@
 </section>
 
 <%- include("../partials/footer") %>
+

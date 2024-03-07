@@ -1,0 +1,243 @@
+<%- include('../partials/header.ejs') %>
+   
+<script src="https://unpkg.com/js-image-zoom/js-image-zoom.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-image-zoom/js-image-zoom.min.js"></script>
+
+<!-- this is for zoom -->
+<style>
+
+/* Keep your existing CSS styles */
+.img_zoom_container {
+	  position: relative;
+	  overflow: hidden;
+	  cursor: zoom-in;
+	}
+  
+	.img_zoom {
+	  transition: transform 0.9s ease-in-out;
+	  transform-origin: center center;
+	}
+  
+	/* Remove the background-image style from figure.zoom */
+	figure.zoom {
+	  background-position: 50% 50%;
+	  position: relative;
+	  margin: 10px auto;
+	  border: 5px solid white;
+	  box-shadow: -1px 5px 15px black;
+	  height: 500px;
+	  width: 500px;
+	  overflow: hidden;
+	  cursor: zoom-in;
+	}
+  
+	/* Add a rule to hide the img inside the figure */
+	figure.zoom img {
+	  display: none;
+	}
+	 .img_zoom_container {
+	  position: relative;
+	  overflow: hidden;
+	  cursor: zoom-in;
+	}
+  
+	.img_zoom {
+	  transition: transform 0.9s ease-in-out;
+	  transform-origin: center center;
+	}
+
+
+
+
+
+</style>
+
+<!-- zoom style end  -->
+
+    <main class="main">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="/api" rel="nofollow">Home</a>
+                    <span></span>
+                    <a href="/api/shop" rel="nofollow">shop</a>
+                    <span></span> Details
+                    <span></span> 
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <section class="mt-50 mb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div class="product-detail accordion-detail">
+                            <div class="row mb-50">
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="detail-gallery">
+                                        <span class="zoom-icon" id="zoom-icon"><i   
+                                                class="fi-rs-search"></i></span>
+                                        <!-- MAIN SLIDES -->
+                                        <div class="product-image-slider">
+                                            <% for (let i=0; i < product.productImage.length; i++) { %>
+                                                <figure class="border-radius-10">
+                                                  
+                                                        <img style="width: 475px; height: 800px;" src="/uploads/product-images/<%= product.productImage[i] %>" alt="product image"> 
+                                                    
+                                                   
+
+                                                </figure>
+                                                <% } %>
+                                        </div>
+                                        <!-- THUMBNAILS -->
+                                        <div class="slider-nav-thumbnails pl-15 pr-15">
+                                            <% for (let i=0; i < product.productImage.length; i++) { %>
+
+                                                <div>
+                                                    <img style="height: 150 px; width: 100px;" src="/uploads/product-images/<%= product.productImage[i] %>" alt="product image">
+
+                                                    
+                                                </div>
+                                                <% } %>
+                                        </div>
+                                    </div>
+                                    <!-- End Gallery -->
+                                    <div class="social-icons single-share">
+                                        <ul class="text-grey-5 d-inline-block">
+                                            <li><strong class="mr-10">Share this:</strong></li>
+                                            <li class="social-facebook"><a href="#"><img
+                                                        src="#" alt=""></a></li>
+                                            <li class="social-twitter"> <a href="#"><img
+                                                        src="#" alt=""></a></li>
+                                            <li class="social-instagram"><a href="#"><img
+                                                        src="#" alt=""></a>
+                                            </li>
+                                            <li class="social-linkedin"><a href="#"><img
+                                                        src="#" alt=""></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="detail-info">
+                                        <h2 class="title-detail">
+                                            <%= product.title %>
+                                        </h2>
+                        
+                                   
+                                        <div class="attr-detail attr-color mb-15">
+                                            <strong class="mr-10">Color</strong>
+                                            <ul class="list-filter color-filter">
+                                                <li class="active"> <a href="#"><%= product.color%></a>
+                                            </ul>
+                                        </div>
+                                      
+                                        <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+                                        <div class="detail-extralink">
+                                            
+                                            <div class="product-extra-link2">
+                                                
+                                               
+                                               
+                                                <br>
+                                                <a aria-label="Add To Wishlist" onclick="wishList('<%= product._id %>')" class="action-btn hover-up"><i class="fi-rs-heart"></i></a>
+                                               
+                                            </div>
+                                            <br>
+                                            <br>
+                                             <div class=" ml-5"><a  onclick="addToCart('<%= product.id %>')" ><button type="submit"  class="button button-add-to-cart ">Add tocart</button></a></div>
+                                             <div class="col-lg-3"><a href="/api/buyNOw?id=<%= product.id %>"><button style="width: 100px; height: 40px;" type="submit" class="btn btn-sm button-add-to-cart">Buy Now</button></a></div>
+                                        </div>
+                                        <ul class="product-meta font-xs color-grey mt-50">
+                                           
+                                            <li class="mb-5">Tags: <a href="#" rel="tag"><%= product.category %></a>,
+                                             
+                                            <li>Availability:<span class="in-stock text-success ml-5">
+                                                <%= product.quantity %> in  Stock</span></li>
+                                        </ul>
+                                    </div>
+                                    <!-- Detail Info -->
+                                </div>
+                            </div>
+                            <div class="tab-style3">
+                                
+                                <div class="tab-content shop_info_tab entry-main-content">
+                                    <div class="tab-pane fade show active" id="Description">
+                                        <div class="">
+                                            <p><%= product.discription %>
+                                            </p>
+                                            <ul class="product-more-infor mt-30">
+                                                <li><span>Type Of Packing</span> Box </li>
+                                                <li><span>Color</span> <%= product.color %></li>
+                                                <li><span>Available Quantity</span> <%= product.quantity %></li>
+                                                
+                                            </ul>
+                                            <hr class="wp-block-separator is-style-dots">
+                                            
+                                            <h4 class="mt-30">Packaging & Delivery</h4>
+                                            <hr class="wp-block-separator is-style-wide">
+                                            <p>Cyclo's packaging and delivery solutions are a testament to our commitment to excellence. Our quality-driven approach ensures that your products are protected and delivered with care. From elegant packaging that enhances the unboxing experience to export-ready solutions that meet global standards, we take pride in providing the best. Trust Cyclo for quality, protection, and peace of mind with every delivery.
+                                            </p>
+                                           
+                                        </div>
+                                    </div>
+                                   
+                                                
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-60">
+                                <div class="col-12">
+                                    <h3 class="section-title style-1 mb-30">Related products</h3>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row related-products">
+                                        
+            
+
+
+                                        
+                                        
+                                       
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                           <br><br><br>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+    </main>
+        
+ <%- include('../partials/footer.ejs' )%>
+
+    <script>
+
+        let zoomer = function () {
+            document.querySelector('.product-image-slider figure')
+                .addEventListener('mousemove', function (e) {
+                    // Your existing zooming logic here
+                }, false);
+        }();
+
+    </script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize image zoom for all product images
+        var productImages = document.querySelectorAll('.image-zoom-container img');
+        productImages.forEach(function (img) {
+            new ImageZoom(img.parentNode, {
+                scale: 2.0,
+                zoomPosition: 'right'
+            });
+        });
+    });
+</script>
+
+
+

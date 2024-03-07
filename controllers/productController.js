@@ -16,8 +16,9 @@ const getProductAddPage = async (req, res) => {
 
 const addProducts = async (req, res) => {
   try {
+    console.log("IAm inside addProducts")
     const products = req.body;
-
+    console.log("Iam inside addproducts, product body fromejs file is ", products)
     const productExists = await Product.findOne({
       productName: products.productName,
     });
@@ -39,7 +40,7 @@ const addProducts = async (req, res) => {
         salePrice: products.regularPrice,
         createdOn: new Date(),
         quantity: products.quantity,
-        ram: products.ram,
+        operatingSystem: products.operatingSystem,
         storage: products.storage,
         color: products.color,
         productImage: images,
