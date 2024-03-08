@@ -23,6 +23,10 @@ Router.get("/productDetails", userController.getProductDetailPage);
 Router.get("/profile", isLogged, userProfileController.getUserProfile );
 Router.post("/editUserDetails", isLogged, userProfileController.editUserDetails)
 Router.get("/addAddress", isLogged, userProfileController.getAddressAddPage )
+Router.post("/addAddress", isLogged, userProfileController.postAddress )
+Router.get("/editAddress", isLogged, userProfileController.getEditAddress)
+Router.post("/editAddress", isLogged, userProfileController.postEditAddress)
+Router.get("/deleteAddress", isLogged, userProfileController.getDeleteAddress)
 
 
 module.exports = Router;
