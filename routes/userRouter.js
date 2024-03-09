@@ -3,6 +3,7 @@ const Router = express.Router();
 
 const userController = require("../controllers/userController");
 const userProfileController = require("../controllers/userProfileController")
+const cartController = require("../controllers/cartController")
 const { isLogged } = require("../authenticaiton/auth");
 
 //User Actions
@@ -27,6 +28,10 @@ Router.post("/addAddress", isLogged, userProfileController.postAddress )
 Router.get("/editAddress", isLogged, userProfileController.getEditAddress)
 Router.post("/editAddress", isLogged, userProfileController.postEditAddress)
 Router.get("/deleteAddress", isLogged, userProfileController.getDeleteAddress)
+
+//cart management
+Router.get("/cart", isLogged, cartController.getCartPage)
+Router.post("/addToCart", isLogged, cartController.addToCart)
 
 
 module.exports = Router;

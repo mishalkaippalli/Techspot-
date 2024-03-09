@@ -327,9 +327,9 @@ const getProductDetailPage = async (req, res) => {
     console.log("findcategory is", findCategory);
 
     if (user) {
-      res.render("trialfordetailpagealt", { product: findProduct, user: user });
+      res.render("productDetails", { data: findProduct, user: user });
     } else {
-      res.render("trialfordetailpagealt", { product: findProduct });
+      res.render("productDetails", { data: findProduct });
     }
   } catch (error) {
     console.log(error.message);
