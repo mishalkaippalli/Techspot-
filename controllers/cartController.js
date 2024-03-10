@@ -4,14 +4,14 @@ const mongodb = require('mongodb')
 
 const getCartPage = async(req, res) => {
     try {
-        const id = req.session.User
+        const id = req.session.user
         console.log("Am inside getcartpage, id is :", id)
         const user = await User.findOne({_id: id})
         const productIds = user.cart.map(item => item.productId)
         console.log(productIds)
         const products = await Product.find({_id: {$in: productIds}})
 
-        const oid = new ObjectId(id)  //to make addobjectid to the id
+        const oid = new mongodb.ObjectId(id)  //to make addobjectid to the id
         console.log(oid)
 
         const data = await User.aggregate([
@@ -29,6 +29,7 @@ const getCartPage = async(req, res) => {
            }},
         ])
       console.log("Data =>>", data)
+      console.log(data[0].productDetails)
 
       let quantity = 0
 
@@ -60,13 +61,13 @@ const addToCart = async (req, res) => {
         const findUser = await User.findById(userId)
         console.log(findUser)
         const product = await Product.findById({_id: id}).lean()  //In Mongoose, the .lean() method is used to return a plain JavaScript object (POJO - Plain Old JavaScript Object) instead of a Mongoose document
-        
+        console.log(product)
         if (!product) {
             return res.json({status: "product not found"});
         }
         if(product.quantity > 0){
-            const cartIndex = findUser.cart.findIndex(item => item.productId == id)           //findIndex() is a JavaScript array method that returns the index of the first element in the array that satisfies the provided testing function. If no element satisfies the testing function, it returns -1.
-            console.log(cartIndex, "cartIndex");                                              //If an item with the specified productId exists in the cart array, findIndex() returns its index. Otherwise, it returns -1, indicating that the item with the given productId is not present in the cart.
+            const cartIndex = await findUser.cart.findIndex(item => item.productId == id)           //findIndex() is a JavaScript array method that returns the index of the first element in the array that satisfies the provided testing function. If no element satisfies the testing function, it returns -1.
+            console.log("cartIndex",cartIndex);                                              //If an item with the specified productId exists in the cart array, findIndex() returns its index. Otherwise, it returns -1, indicating that the item with the given productId is not present in the cart.
             if(cartIndex == -1){
                 let quantity = parseInt(req.body.quantity)
                 await User.findByIdAndUpdate(userId, {
@@ -78,12 +79,12 @@ const addToCart = async (req, res) => {
                     }
                 })
                   .then((data) => res.json({status: true}))
-            }
-        } else {
-            const productInCart = findUser.cart[cartIndex]
-
-            if(productInCart.quantity < product.quanity){
+            } else {
+            const productInCart = await findUser.cart[cartIndex]
+             console.log("productincart", productInCart);
+            if(productInCart.quantity < product.quantity){
                 const newQuantity = parseInt(productInCart.quantity) + parseInt(req.body.quantity)
+                console.log(newQuantity)
                 await User.updateOne(
                     {_id: userId, "cart.productId": id},
                     {$set: {"cart.$.quantity": newQuantity}}
@@ -92,7 +93,9 @@ const addToCart = async (req, res) => {
             } else {
                 res.json({status: "out of stock"})
             }
-        }
+          }
+        } else { res.json({status: "out of stock"})
+    }
     } catch (error) {
         console.log(error.message)
     }
