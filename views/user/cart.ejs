@@ -103,9 +103,9 @@
                       <% console.log("x variable in the cart",x) %>
                       <input type="hidden" name="" id="totalabc" value="<%= x %>" >
                     </tbody>
-
-                   </table>
-                </div>
+                  </div>
+                </table>
+                
             </div>
             <div class="col-3">
                 <div class="border p-md-4 p-30 border-readius cart-totals">
@@ -147,18 +147,21 @@
         console.log(productId, cartProductQuantity, count, productPrice,i, ProductQuantity)
 
         const cartProductQuantityElement = document.querySelector(`#cartProductQuantity${i}`)
-        alert('quantity')
+        console.log(cartProductQuantityElement)
+        alert(cartProductQuantityElement.value)
 
-        const subtotalElement = document.querySelector(`#subTotal${i}`)
-        alert(subtotalElement.innerHTML, "heyo")
+        const subtotalElement = document.querySelector(`#subTotal${i}`).textContent;
+        alert(subtotalElement)
 
-        const totalElements = document.getElementsById('total').innerHTML;
+        const totalElements = document.getElementById('total').textContent;
+        alert(totalElements)
 
         let currentQuantity = parseInt(cartProductQuantityElement.value)
-        const currentSubTotal = parseInt(subtotalElement.innerHTML)
-        alert(currentSubTotal+"sub")
+        const currentSubTotal = parseInt(subtotalElement)
+        alert(currentSubTotal.value, "sub")
          
          const newQuantity = currentQuantity + count
+         alert(newQuantity)
 
          if(count=== -1 && newQuantity < 1){ return }
 
@@ -179,11 +182,11 @@
          if(count == 1) {
             document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML) + parseInt(productPrice)
          } else {
-            // alert('else')
+            alert('else')
             document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML) - parseInt(productPrice)
          }
 
-         $ajax({
+         $.ajax({
             url: '/changeQuantity',
             method: 'POST',
             data: {

@@ -57,6 +57,19 @@ const addProducts = async (req, res) => {
   }
 };
 
+const getEditProduct = async(req, res) => {
+  try {
+    const id = req.query.id
+    const findProduct = await Product.findOne({_id: id})
+
+    const category = await Category.find({})
+    const findBrand = await Brand.find({})
+    res.render("edit-product", {product: findProduct, cat: category, brand: findBrand})
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
 const getAllProducts = async(req, res) => {
   try {
     const search = req.query.search || ""
@@ -90,8 +103,65 @@ const getAllProducts = async(req, res) => {
   }
 }
 
+const editProduct = async(req, res) => {
+  try {
+    const id = req.params.id
+    const data = req.body
+    const images = []
+    if(req.files && req.files.length > 0){
+      for(let i = 0; i < req.files.length; i++){
+        images.push(req.files[i].filename)
+      }
+    }
+    console.log("I am inside post editproduct in producontroler, the files i recieved is ", req.files)
+
+    if(req.files.length > 0){
+      console.log("Yes image is there")
+      const updatedProduct = await Product.findByIdAndUpdate(id, {
+         id: Date.now(),
+         productName: data.productName,
+         description: data.description,
+         brand: data.brand,
+         category: data.category,
+         regularPrice: data.regularPrice,
+         quantity: data.quantity,
+         operatingSystem: data.operatingSystem,
+         storage: data.storage,
+         color: data.color,
+         createdOn: new Date(),
+         productImage: images
+      }, { new: true })
+      console.log("product updated");
+      res.redirect("/admin/products")
+    } else {
+      console.log("No images found");
+
+      const updatedProduct = await Product.findByIdAndUpdate(id, {
+        id: Date.now(),
+        productName: data.productName,
+        description: data.description,
+        brand: data.brand,
+        category: data.category,
+        regularPrice: data.regularPrice,
+        quantity: data.quantity,
+        operatingSystem: data.operatingSystem,
+        storage: data.storage,
+        color: data.color,
+        createdOn: new Date(),
+     }, { new: true })
+     console.log("product updated");
+     res.redirect("/admin/products")
+    }
+
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
 module.exports = {
   getProductAddPage,
   addProducts,
   getAllProducts,
+  getEditProduct,
+  editProduct
 };

@@ -40,9 +40,11 @@ const getCartPage = async(req, res) => {
       let grandTotal = 0;
       for(let i = 0; i < data.length; i++){
         if(products[i]) {
+            console.log(data[i].productDetails[0].salePrice)
+            console.log(data[i].quantity)
             grandTotal += data[i].productDetails[0].salePrice * data[i].quantity;
         }
-        console.log("grandTotal", grandTotal)
+        console.log("Am inside grandtotal in getcartpage in cartcontroller.js , grandTotal is", grandTotal)
         req.session.grandTotal = grandTotal
       }
 

@@ -44,6 +44,8 @@ Router.get("/unblockBrand", brandController.unBlockBrand);
 Router.get("/addProducts", productController.getProductAddPage);
 Router.post("/addProducts", upload.array("images", [3]), productController.addProducts);
 Router.get("/products", productController.getAllProducts);
+Router.get("/editProduct", productController.getEditProduct);
+Router.post("/editProduct/:id", upload.array("images", 5), productController.editProduct);
 
 
 
