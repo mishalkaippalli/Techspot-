@@ -22,7 +22,7 @@
 
                     <div class="card-body">
                         <form method="post" action="/admin/editProduct/<%=product._id%>" enctype="multipart/form-data" 
-                            multiple>
+                            onsubmit="return validateAndSubmit()" multiple>
                             <div class="mb-4">
                                 <label for="product_name" class="form-label">Product Name</label>
                                 <input type="text" name="productName" value="<%= product.productName %>"
@@ -217,6 +217,112 @@
             addedImagesContainer.appendChild(thumbnail)
         }
     }
+    function deleteImage(productId, filename) {
+        deleteSingleImage({productId, filename})
+    }
+
+    function deleteSingleImage({productId, filename}){
+       alert(JSON.stringify(productId))
+       alert(JSON.stringify(filename))
+        alert("inside deleteSingle image in delete image")
+
+        fetch("/admin/deleteImage", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({productId,filename})
+        })
+        .then((response) => location.reload())
+        .then((data) => {
+            if(data.success){
+                removeImage(filename);
+            } else {
+                console.error("Error deleting image:", data.error)
+            }
+        }).catch((error) => {
+            console.log(error.message)
+        })
+    }
+
+    function removeImage(filename) {
+        const imageElement = document.querySelector(`[data-filename]="${filename}"]`);
+
+        if(imageElement) {
+            imageElement.closest('.col-md-12').remove();
+        }
+    }
+
+//     function deleteSingleImage(productId, filename){
+//     alert("inside deleteSingle image in delete image");
+
+//     fetch("/admin/deleteImage", {
+//         method: "POST",
+//         headers: {
+//             "Content-Type": "application/json"
+//         },
+//         body: JSON.stringify({productId, filename})
+//     })
+//     .then(response => {
+//         if (!response.ok) {
+//             throw new Error('Network response was not ok');
+//         }
+//         return response.json();
+//     })
+//     .then(data => {
+//         if(data.success){
+//             removeImage(filename);
+//             location.reload();
+//         } else {
+//             console.error("Error deleting image:", data.error);
+//         }
+//     })
+//     .catch(error => {
+//         console.error('There was a problem with the fetch operation:', error);
+//     });
+// }
+
+
+
+    function validateAndSubmit(){
+        if(validateForm()){
+            document.forms[0].submit();// Assuming this is the first (and only) form on your page
+        } else return false;
+    }
+
+    function validateForm() {
+        resetErrorMessages();
+        var isValid = true;
+
+        var productName = document.getElementsByName("productName")[0].value;
+        var regularPrice = document.getElementByName("regularPrice")[0].value;
+        var salePrice = document.getElementsByName("salePrice")[0].value;
+        var quantity = document.getElementsByName("quantity")[0].value;
+
+        if(productName === ""){
+            dispalyErrorMessage("productName-error", "Product Name is required")
+            isValid = false;
+        }
+        
+        if (!/^[1-9]\d*$/.test(quantity)) {
+                displayErrorMessage("quantity-error", "Quantity must be a positive integer");
+                isValid = false;
+            }
+            return isValid
+        }
+
+        function dispalyErrorMessage(elementId, message) {
+            var errorElement = document.getElementById(elementId);
+            errorElement.innerText = message;
+            errorElement.style.display = "block"
+        }
+        function resetErrorMessages() {
+            var errorElements = document.querySelectorAll(".error-message");
+            errorElements.forEach(function(element){
+                element.innerText = "";
+                element.style.display = "none";
+            });
+        }
 </script>
 
 <%- include("../partials/adminFooter") %>

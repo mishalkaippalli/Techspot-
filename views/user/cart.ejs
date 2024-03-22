@@ -140,7 +140,9 @@
    </section>
 </main>
 
-<script>
+
+
+<!-- <script>
     function changeQuantity(productId, cartProductQuantity, count, productPrice,i, ProductQuantity){
         const abc = document.getElementById("totalabc").value
         console.log("I am inside changeQuantity function in script, totalabc is : ", abc)
@@ -151,23 +153,22 @@
         alert(cartProductQuantityElement.value)
 
         const subtotalElement = document.querySelector(`#subTotal${i}`).textContent;
-        alert(subtotalElement)
+        alert(subtotalElement + "subtotalelel")
 
         const totalElements = document.getElementById('total').textContent;
         alert(totalElements)
 
         let currentQuantity = parseInt(cartProductQuantityElement.value)
+        alert(currentQuantity)
         const currentSubTotal = parseInt(subtotalElement)
-        alert(currentSubTotal.value, "sub")
+        alert(currentSubTotal + "currentsubTotal")
          
          const newQuantity = currentQuantity + count
-         alert(newQuantity)
+         alert("newquantity" + newQuantity)
 
-         if(count=== -1 && newQuantity < 1){ return }
+         if(count=== -1 && newQuantity < 1){ return; }
 
-         if(currentSubTotal < currentSubTotal) {return}
-
-         if(count == 1 && newQuantity > ProductQuantity){
+         if(count === 1 && newQuantity > ProductQuantity){
 
             Swal.fire({
                 title: 'STOCK!',
@@ -179,11 +180,11 @@
          }
 
          const newSubtotal = newQuantity * productPrice
-         if(count == 1) {
-            document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML) + parseInt(productPrice)
+         if(count === 1) {
+            document.getElementById(`subTotal${i}`).textContent = currentSubTotal + productPrice;
          } else {
             alert('else')
-            document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML) - parseInt(productPrice)
+            document.getElementById(`subTotal${i}`).textContent = currentSubTotal - productPrice;
          }
 
          $.ajax({
@@ -197,20 +198,27 @@
             success: (response) => {
                 alert('succes')
 
-                let currentQuantity = parseInt(cartProductQuantityElement.value)
+                document.getElementById(`cartProductQuantity${i}`).value = newQuantity;
+                document.getElementById(`subTotal${i}`).textContent = newSubtotal;
+             
+                const newTotal = count === 1 ? parseInt(totalElement) + parseInt(response.totalAmount) 
+                : parseInt(totalElement) - parseInt(response.totalAmount)  
+                document.getElementById('total').textContent = newTotal;
 
-                let currentSubTotal = parseInt(subtotalElement.value)
+                // let currentQuantity = parseInt(cartProductQuantityElement.value)
 
-                document.getElementById(`cartProductQuantity${i}`).value = currentQuantity + count
+                // let currentSubTotal = parseInt(subtotalElement.value)
 
-                document.getElementById(`subTotal${i}`).value = currentSubTotal * count
+                // document.getElementById(`cartProductQuantity${i}`).value = currentQuantity + count
 
-                if(response.count == 1 ) {
-                    console.log("Total element == >", totalElements)
-                    document.getElementById(`total`).innerHTML = parseInt(totalElements) + parseInt(response.totalAmount)
-                } else {
-                    document.getElementById(`total`).innerHTML = parseInt(totalElements) - parseInt(response.totalAmount)
-                }
+                // document.getElementById(`subTotal${i}`).value = currentSubTotal * count
+
+                // if(response.count == 1 ) {
+                //     console.log("Total element == >", totalElements)
+                //     document.getElementById(`total`).innerHTML = parseInt(totalElements) + parseInt(response.totalAmount)
+                // } else {
+                //     document.getElementById(`total`).innerHTML = parseInt(totalElements) - parseInt(response.totalAmount)
+                // }
             },
             error: (error) => {
 
@@ -218,6 +226,107 @@
             }
          })
     }
+</script> -->
+
+<script>
+    function changeQuantity(productId, cartQuantity, count, productPrice, i, productQuantity) {
+        
+        // alert(productPrice)
+        // alert(cartQuantity)
+        // alert(i)
+
+        const abc = document.getElementById("totalabc").value
+        console.log(abc, "hi");
+        console.log(productId, cartQuantity, count, productPrice, i, productQuantity);
+        const cartProductQuantityElement = document.querySelector(`#cartProductQuantity${i}`)
+        // alert('quantity')
+        // alert(cartProductQuantityElement.value,'quantity')
+        const subtotalElement = document.querySelector(`#subTotal${i}`);
+        // alert(subtotalElement.innerHTML,"subelm")
+        const totalElements = document.getElementById('total').innerHTML;
+        // alert(parseInt(subtotalElement.innerHTML)+ parseInt(productPrice))
+
+        let currentQuantity = parseInt(cartProductQuantityElement.value)
+        
+        const currentSubTotal = parseInt(subtotalElement.innerHTML)
+        // alert(currentSubTotal+"sub")
+
+        // alert(currentTotal+"total")
+
+        const newQuantity = currentQuantity + count
+        // alert(newQuantity)
+
+        if (count === -1 && newQuantity < 1) {
+            return; 
+        }
+
+        // if(currentSubTotal < currentSubTotal){
+        //     return
+        // }
+
+        if (count == 1 && newQuantity > productQuantity) {
+
+
+            Swal.fire({
+                title: 'STOCK!',
+                text: 'Product is out of stock.',
+                icon: 'error',
+                timer: 5000
+            })
+            return
+        }
+
+        const newSubtotal = newQuantity * productPrice
+        if (count == 1) {
+            // alert('1')
+            document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML) + parseInt(productPrice)
+        } else {
+            // alert('else')
+            document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML) - parseInt(productPrice)
+        }
+
+        // alert('in starting '+newTotal)
+        $.ajax({
+            url: '/changeQuantity',
+            method: 'POST',
+            data: {
+                productId: productId,
+                quantity: newQuantity,
+                count: count
+            },
+
+            success: (response) => {
+                //   alert('sucess')
+                // location.reload()
+
+
+                let currentQuantity = parseInt(cartProductQuantityElement.value)
+                 alert(currentQuantity,"currQua")
+                let currentSubTotal = parseInt(subtotalElement.value)
+                // alert(subtotalElement.value,"subttl")
+                // alert(currentTotal,"ctotal")
+                document.getElementById(`cartProductQuantity${i}`).value = currentQuantity + count
+                console.log(currentQuantity, count , "currentquantituy and count")
+                console.log(document.getElementById(`cartProductQuantity${i}`).value)
+
+                document.getElementById(`subTotal${i}`).value = currentSubTotal * count
+                // alert(parseInt(abc) + parseInt(response.totalAmount),"helloooooooooooooooooooo")
+                if (response.count == 1) {
+                    console.log("Total Element == >" , totalElements)
+                    document.getElementById(`total`).innerHTML = parseInt(totalElements) + parseInt(response.totalAmount)
+                } else {
+                    document.getElementById(`total`).innerHTML = parseInt(totalElements) - parseInt(response.totalAmount)
+
+                }
+
+
+            },
+            error: (error) => {
+                // alert(error)    
+            }
+        })
+    }
+
 </script>
 
 <%- include("../partials/footer") %>

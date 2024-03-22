@@ -42,10 +42,10 @@ const getHomePage = async (req, res) => {
       res.render("home", {
         user: userData,
         data: brandData,
-        product: productData,
+        products: productData,
       });
     } else {
-      res.render("home", { product: productData, data: brandData });
+      res.render("home", { products: productData, data: brandData });
     }
   } catch (error) {
     console.log(error.message);
@@ -336,6 +336,124 @@ const getProductDetailPage = async (req, res) => {
   }
 };
 
+const filterProduct = async(req, res) => {
+   try {
+    const user = req.session.user;
+    const category = req.query.category;
+    const brand = req.query.brand;
+    const brands = await Brand.find({});
+    const findCategory = category ? await Category.findOne({_id: category}) : null;
+    const findBrand = brand ? await Brand.findOne({_id: brand}): null;
+
+    const query = {
+      isBlocked: false,
+    };
+    if(findCategory) {
+      query.category = findCategory.name;
+    }
+
+    if(findBrand){
+      query.brand = findBrand.brandName
+    }
+
+    const findProducts = await Product.find(query);
+    const categories = await Category.find({isListed: true})
+
+    let itemsPerPage = 6;
+    let currentPage = parseInt(req.query.page) || 1;
+    let startIndex = (currentPage - 1) * itemsPerPage;
+    let endIndex = startIndex + itemsPerPage;
+    let totalPages = Math.ceil(findProducts.length / 6);
+    const currentProduct = findProducts.slice(startIndex, endIndex);
+
+    res.render("shop", {
+      user: user,
+      product: currentProduct,
+      category: categories,
+      brand: brands,
+      totalPages,
+      currentPage,
+      selectedCategory: category || null,
+      selctedBrand: brand || null,
+    });
+
+   } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Internal server error")
+   }
+};
+
+const filterByPrice = async(req, res) => {
+  try {
+    const user = req.session.user
+    const brands = await Brand.find({});
+    const categories = await Category.find({isListed: true});
+    console.log(req.query);
+
+    const findProducts = await Product.find({
+      $and: [
+        {salePrice: {$gt: req.query.gt}},
+        {salePrice: {$lt: req.query.lt}},
+        {isBlocked: false}
+      ]
+    })
+
+    let itemsPerPage = 6;
+    let currentPage = parseInt(req.query.page) || 1;
+    let startIndex = (currentPage - 1) * itemsPerPage;
+    let endIndex = startIndex + itemsPerPage;
+    let totalPages = Math.ceil(findProducts.length / 6);
+    const currentProduct = findProducts.slice(startIndex, endIndex);
+
+    res.render("shop", {
+      user: user,
+      product: currentProduct,
+      category: categories,
+      brand: brands,
+      totalPages,
+      currentPage
+    })
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+const getSortProducts = async (req, res) => {
+  try {
+    console.log("Iam inside getsortproducts in userController")
+    console.log(req.body)
+    let option = req.body.option;
+    let itemsPerPage = 6;
+    let currentPage = parseInt(req.body.page) || 1
+    let startIndex = (currentPage - 1) * itemsPerPage;
+    let endIndex = startIndex + itemsPerPage;
+    let data;
+
+    if(option == "hightoLow"){
+      data = await Product.find({isBlocked: false}).sort({salePrice: -1});
+    } else if (option == "lowToHigh"){
+      data = await Product.find({isBlocked: false}).sort({salePrice: 1});
+    } else if (option == "realeseDate") {
+      data = await Product.find({isBlocked: false}).sort({createdOn: 1});
+    }
+    
+    
+    res.json({
+      status: true,
+      data: {
+        currentProduct: data,
+        count: data.length,
+        totalPages: Math.ceil(data.length / itemsPerPage),
+        currentPage
+      }
+    });
+
+  } catch (error) {
+    console.log(error.message);
+    res.json({status: false, error: error.message})
+  }
+}
+
 module.exports = {
   getLoginPage,
   getSignupPage,
@@ -348,5 +466,8 @@ module.exports = {
   getHomePage,
   getShopPage,
   getProductDetailPage,
-  getLogoutUser
+  getLogoutUser,
+  filterProduct,
+  filterByPrice,
+  getSortProducts
 };

@@ -19,6 +19,9 @@ Router.get("/logout", userController.getLogoutUser)
 //Product based routes
 Router.get("/shop", isLogged, userController.getShopPage);
 Router.get("/productDetails", userController.getProductDetailPage);
+Router.get("/filter", userController.filterProduct)
+Router.get("/filterPrice", userController.filterByPrice)
+Router.post("/sortProducts", userController.getSortProducts)
 
 // user Profile
 Router.get("/profile", isLogged, userProfileController.getUserProfile );
@@ -32,6 +35,8 @@ Router.get("/deleteAddress", isLogged, userProfileController.getDeleteAddress)
 //cart management
 Router.get("/cart", isLogged, cartController.getCartPage)
 Router.post("/addToCart", isLogged, cartController.addToCart)
+Router.post("/changeQuantity", isLogged, cartController.changeQuantity)
+Router.get("/deleteItem", isLogged, cartController.deleteProduct)
 
 
 module.exports = Router;

@@ -8,7 +8,7 @@ const getProductAddPage = async (req, res) => {
   try {
     const category = await Category.find({ isListed: true });
     const brand = await Brand.find({ isBlocked: false });
-    res.render("trialaddproduct", { cat: category, brand: brand });
+    res.render("add-product", { cat: category, brand: brand });
   } catch (error) {
     console.log(error.message);
   }
@@ -37,7 +37,7 @@ const addProducts = async (req, res) => {
         brand: products.brand,
         category: products.category,
         regularPrice: products.regularPrice,
-        salePrice: products.regularPrice,
+        salePrice: products.salePrice,
         createdOn: new Date(),
         quantity: products.quantity,
         operatingSystem: products.operatingSystem,
@@ -103,6 +103,30 @@ const getAllProducts = async(req, res) => {
   }
 }
 
+const deleteSingleImage = async (req, res) => {
+  try {
+    console.log("I am in deletesingleImage in productController.js")
+    console.log(req.body.productId)
+    const id = (req.body.productId)
+    const image = req.body.filename
+    console.log(id, image)
+    const product = await Product.findByIdAndUpdate(id, {
+      $pull: {productImage: image}
+    })
+
+    const imagePath = path.join('public', 'uploads', 'product-images', image);
+    if(fs.existsSync(imagePath)){
+      await fs.unlinkSync(imagePath);
+      console.log(`Image ${image} deleted successfully`);
+      res.json({success: true})
+    } else {
+      console.log(`Image ${image} not found`)
+    }
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
 const editProduct = async(req, res) => {
   try {
     const id = req.params.id
@@ -163,5 +187,6 @@ module.exports = {
   addProducts,
   getAllProducts,
   getEditProduct,
-  editProduct
+  editProduct,
+  deleteSingleImage,
 };

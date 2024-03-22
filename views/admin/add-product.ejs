@@ -13,10 +13,15 @@
             font-size: 14px;
             /* Adjust font size as needed */
         }
+        .card-body {
+         margin-right: 10px; /* Added margin-right to create space between thumbnail images */
+        }
+
+        .image-cropper {
+         margin-right: 10px; /* Added margin-right to create space between cropping images */
+        } 
+
     </style>
-
-
-
 
 
     <section class="content-main">
@@ -61,7 +66,14 @@
                                         <input placeholder="$" name="regularPrice" type="text"
                                             class="form-control border">
                                         <div id="regularPrice-error" class="error-message"></div>
-
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <label class="form-label">Sale price</label>
+                                        <input placeholder="$" name="salePrice" type="text"
+                                            class="form-control border">
+                                        <div id="salePrice-error" class="error-message"></div>
                                     </div>
                                 </div>
 
@@ -122,13 +134,13 @@
 
 
                                 <div class="row">
-                                  <div class="card-body align-items-center" style="margin-bottom: 20px;">
+                                  <div class="card-body align-items-center mb-5" style="margin-bottom: 20px;">
                                         <img src="assets/imgs/theme/upload.svg" alt="" id="imgView1">
                                         <input class="form-control" type="file" name="images" id="input1"
                                             accept="image/png, image/jpeg, image/jpg"
                                             onchange="viewImage1(event), viewImage(event, 1)">
                                     </div>
-                                    <div class="image-cropper d-flex align-items-center"
+                                    <div class="image-cropper d-flex align-items-center mb-5"
                                         style="display:none; width: 300px; height: 200px; margin-bottom: 20px;">
                                         <img src="" id="croppedImg1" alt="">
                                         <button type="button" id="saveButton1" class="btn-sm btn-primary">Save</button>
@@ -220,7 +232,7 @@
 
                 // Initialize Cropper.js on the image
                 let cropper = new Cropper(image, {
-                    aspectRatio: 1, // Square aspect ratio
+                    // aspectRatio: 1, // Square aspect ratio
                     viewMode: 1,
                     guides: true,
                     background: false,
@@ -346,6 +358,7 @@
 
             var productName = document.getElementById("product_name").value;
             var regularPrice = document.getElementsByName("regularPrice")[0].value;
+            var salePrice = document.ge
             var quantity = document.getElementsByName("quantity")[0].value;
             // alert("hi")
             // Check if inputs are not empty
@@ -359,9 +372,6 @@
                 displayErrorMessage("regularPrice-error", "Regular price must be a positive number");
                 isValid = false;
             }
-
-
-
 
             // Check if quantity is a positive integer
             if (!/^[1-9]\d*$/.test(quantity)) {

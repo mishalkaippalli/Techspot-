@@ -1,8 +1,69 @@
 
 <%- include("../partials/header") %>
 
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
-<section class="popular-categories section-padding mt-15 mb-25">
+</head>
+
+<style>
+    .home-slider {
+        overflow: hidden; /* Hide any content that overflows the container */
+    }
+
+    .swiper-container {
+        max-width: 100%; /* Limit the maximum width to 100% of the parent container */
+        overflow: hidden; /* Hide any content that overflows the container */
+    }
+
+    .swiper-wrapper {
+        display: flex; /* Ensure the wrapper items are displayed in a row */
+    }
+
+    .swiper-slide {
+        width: 100%; /* Make each slide take up the full width of the container */
+        box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    }
+    /* Add this CSS code to set fixed dimensions for product boxes */
+    .product-cart-wrap {
+        width: 100%; /* Adjust the width as needed */
+        height: 450px; /* Adjust the height as needed */
+        border: 1px solid #ccc; /* Optional: Add border for better visualization */
+        padding: 10px; /* Optional: Add padding for spacing */
+    }
+
+    .product-img-action-wrap {
+        /* Ensure the image and action area fit within the fixed box size */
+        height: calc(100% - 60px); /* Subtract the height of other elements (e.g., product content) from the total height */
+        position: relative;
+    }
+
+    .product-img {
+        /* Adjust image size to fit within the product box */
+        max-width: 100%; /* Ensure image fits within the container */
+        max-height: 100%; /* Ensure image fits within the container */
+        display: block; /* Make sure the image doesn't break the layout */
+        margin: 0 auto; /* Center the image horizontally */
+    }
+
+    
+    .product-content-wrap h2 {
+        /* Ensure product name fits within the fixed box size */
+        margin: 0; /* Remove default margin */
+        overflow: hidden; /* Hide any content that overflows the container */
+        text-overflow: ellipsis; /* Add ellipsis (...) for long product names */
+        white-space: nowrap; /* Prevent text from wrapping */
+    }
+    .product-price {
+        position: relative;
+        /* Ensure tooltip text doesn't overflow */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+
+<!-- <section class="popular-categories section-padding mt-15 mb-25">
     <div class="container wow fadeIn animated">
         <h3 class="section-title mb-20"><span>Popular</span> Categories</h3>
         <div class="carausel-6-columns-cover position-relative">
@@ -14,77 +75,130 @@
                         <a href="products-grid-right.html"><img
                                 src="user-assets/imgs/category/category-gaming.webp" alt=""></a>
                     </figure>
-                    <!-- <h5><a href="products-grid-right.html">T-Shirt</a></h5> -->
+                    <h5><a href="products-grid-right.html">T-Shirt</a></h5>
                 </div>
                 <div class="card-1">
                     <figure class=" img-hover-scale overflow-hidden">
                         <a href="products-grid-right.html"> <img
                                 src="user-assets/imgs/category/category-contentCreation.webp" alt=""></a>
                     </figure>
-                    <!-- <h5><a href="products-grid-right.html">Bags</a></h5> -->
+                    <h5><a href="products-grid-right.html">Bags</a></h5>
                 </div>
                 <div class="card-1">
                     <figure class=" img-hover-scale overflow-hidden">
                         <a href="products-grid-right.html"><img
                                 src="user-assets/imgs/category/category-entertainment.webp" alt=""></a>
                     </figure>
-                    <!-- <h5><a href="products-grid-right.html">Sandan</a></h5> -->
+                    <h5><a href="products-grid-right.html">Sandan</a></h5>
                 </div>
                 <div class="card-1">
                     <figure class=" img-hover-scale overflow-hidden">
                         <a href="products-grid-right.html"><img
                                 src="user-assets/imgs/category/category-everydayUse.webp" alt=""></a>
                     </figure>
-                    <!-- <h5><a href="products-grid-right.html">Scarf Cap</a></h5> -->
+                    <h5><a href="products-grid-right.html">Scarf Cap</a></h5>
                 </div>
                 <div class="card-1">
                     <figure class=" img-hover-scale overflow-hidden">
                         <a href="products-grid-right.html"><img
                                 src="user-assets/imgs/category/category-officeUse.webp" alt=""></a>
                     </figure>
-                    <!-- <h5><a href="products-grid-right.html">Shoes</a></h5> -->
+                    <h5><a href="products-grid-right.html">Shoes</a></h5>
                 </div>
                 <div class="card-1">
                     <figure class=" img-hover-scale overflow-hidden">
                         <a href="products-grid-right.html"><img
                                 src="user-assets/imgs/category/category-studies.webp" alt=""></a>
                     </figure>
-                    <!-- <h5><a href="products-grid-right.html">Pillowcase</a></h5> -->
+                    <h5><a href="products-grid-right.html">Pillowcase</a></h5>
                 
                 </div>
             </div>
         </div>
-</section>
-<section class="mt-50 mb-50">
+</section> -->
+
+<!-- //new products trial -->
+<section class="product-tabs section-padding position-relative wow fadeIn animated">
+    <div class="bg-square"></div>
     <div class="container">
-        <div class="row product-grid-3">
-            <% for (let i=0; i <product.length; i++)  { %>
-               <div class="col-lg-4 col-md-4 col-12 col-sm-6">
-                  <div class="product-cart-wrap mb-30">
-                    <div class="product-img action wrap">
-                        <div class="product-img product-img-zoom">
-                            <img class = "default-img" src="/uploads/product-images/<%=product[i].productImage[0]%>" alt="">
-                        </div> 
-                    </div>
-                  </div>
-                  <div class="product-content-wrap">
-                    <div class="product-category">
-                        <h2><%=product[i].brand%></h2>
-                    </div>
-                    <h2><%=product[i].productName%></h2>
-                    <div class="product-price">
-                        <span>$<%= product[i].regularPrice %></span>
-                    </div>
-                  </div>
-                  <div class="product-action-1 show">
-                     <a aria-label="Add to cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>                  
-                
-                  </div>
-               </div>
-            <% } %>
+        <!-- <div class="tab-header">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+           
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="nav-tab-three" data-bs-toggle="tab" data-bs-target="#tab-three"
+                        type="button" role="tab" aria-controls="tab-three" aria-selected="false">New
+                        added</button>
+                </li>
+            </ul>
+            <a href="#" class="view-more d-none d-md-flex">View More<i
+                    class="fi-rs-angle-double-small-right"></i></a>
+        </div> -->
+        <!--End nav-tabs-->
+        <div class="tab-content wow fadeIn animated" id="myTabContent">
+            <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
+                <div class="row product-grid-4">
+
+
+                    <% for (let i=0; i < products.length; i++) { %>
+
+                        <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                            <div class="product-cart-wrap mb-30">
+                                <div class="product-img-action-wrap">
+                                    <div class="product-img product-img-zoom">
+                                        <a href="/productDetails?id=<%=products[i].id%>">
+                                            <img class="default-img"
+                                                src="/uploads/product-images/<%=products[i].productImage[0]%>" alt="">
+                                            
+                                        </a>
+                                    </div>
+                                    <div class="product-action-1">
+                                       
+                                        <a aria-label="Add To Wishlist" class="action-btn hover-up"
+                                            href="products-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                       
+                                    </div>
+                                    <!-- <div class="product-badges product-badges-position product-badges-mrg">
+                                        <span class="hot">New</span>
+                                    </div> -->
+                                </div>
+                                <div class="product-content-wrap">
+                                    <div class="product-brand">
+                                        <a href="products-grid-right.html"><%-products[i].brand%></a>
+                                    </div>
+                                    <h2><a href="products-product-right.html"><%-products[i].productName%></a></h2>
+                                    <!-- <div class="rating-result" title="90%">
+                                        <span>
+                                            <span>90%</span>
+                                        </span>
+                                    </div> -->
+                                    <div class="product-price">
+                                        <!-- <span>-products[i].salePrice.toLocaleString('en-IN')%> </span> -->
+                                        <span class="old-price">€<%-products[i].regularPrice.toLocaleString('en-IN')%></span>
+                                    </div>
+                                    <!-- <div class="product-action-1 show">
+                                        <a aria-label="Add To Cart" class="action-btn hover-up"
+                                            href="products-cart.html"><i
+                                                class="fi-rs-productsping-bag-add"></i></a>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+
+
+                </div>
+            </div>
         </div>
     </div>
+    <!--End product-grid-4-->
+    </div>
+    <!--En tab three (New added)-->
+    </div>
+    <!--End tab-content-->
+    </div>
 </section>
+
+
 
 <%- include("../partials/footer") %>
 

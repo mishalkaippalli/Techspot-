@@ -46,6 +46,7 @@ Router.post("/addProducts", upload.array("images", [3]), productController.addPr
 Router.get("/products", productController.getAllProducts);
 Router.get("/editProduct", productController.getEditProduct);
 Router.post("/editProduct/:id", upload.array("images", 5), productController.editProduct);
+Router.post("/deleteImage", productController.deleteSingleImage)
 
 
 

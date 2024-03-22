@@ -1,5 +1,26 @@
 <%- include("../partials/header") %>
 
+<style>   
+.thumbnail-item {
+    display: inline-block;
+    width: 100px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+    margin-right: 10px; /* Adjust spacing between thumbnails */
+    cursor: pointer; /* Show pointer cursor on hover */
+    vertical-align: top;
+}
+.thumbnail-item:hover {
+    border: 2px solid #007bff; /* Add border on hover */
+}
+.slider-nav-thumbnails {
+    white-space: nowrap; /* Prevent wrapping */
+    overflow-x: auto; /* Enable horizontal scrolling */
+}
+.thumbnail-item:last-child {
+    margin-right: 0;
+}
+</style>
+
 <section class="mt-50 mb-50">
     <div class="container">
         <div class="row">
@@ -22,15 +43,16 @@
                                 </div>
                                 <!-- THUMBNAILS -->
                                 <div class="slider-nav-thumbnails pl-15 pr-15">
-
+                                  
                                     <% for (let j=0; j < data.productImage.length; j++) { %>
-                                        <div>
+                                        <div class="thumbnail-item">
                                             <img src="/uploads/product-images/<%= data.productImage[j] %>"
                                                 alt="product image">
                                         </div>
                                         <% } %>
-
                                 </div>
+
+                                
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12 col-xs-12">

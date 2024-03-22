@@ -1,6 +1,43 @@
 <%- include("../partials/header") %>
 
 <style>
+     .pagination {
+        display: flex;
+        justify-content: center;
+     }
+
+     .btn {
+         /* Add your button styling here */
+         margin: 0 5px;
+         padding: 5px 10px;
+         background-color: #f0f0f0;
+         border: 1px solid #ccc;
+         text-decoration: none;
+         color: #333;
+     }
+     .btn:hover {
+        /* Add styles for button hover state */
+        background-color: #ddd;
+     }
+
+     .active {
+       /* Add styles for the active page */
+        color: #fff;
+      }
+
+      .price-filter-inner {
+        display: flex;
+        justify-content: space-between; /* Adjust as needed */
+      }
+      
+      .price-button {
+        flex: 1;
+        height: 40px; /* Adjust the height as needed */
+        width: 100%; /* Fill the container width */
+        margin-right: 5px; /* Adjust the margin between buttons as needed */
+        border: 1px solid #ddd;
+    }
+
     /* CSS for enforcing consistent image height */
     .product-img img {
         height: 300px; /* Adjust the height as per your requirement */
@@ -13,29 +50,31 @@
     <div class="container">
         <div class="row flex-row-reverse">
             <div class="col-lg-9">
-                <!-- <div class="shop-product-filter">
+                <div class="shop-product-filter">
                     <div class="total-product">
-                        if (locals.count) { 
-                             <p>We found <strong class="text-brand">< locals.count </strong>items for you!</p>
-                          } 
+                        <% if (locals.count) { %>
+                             <p>We found <strong class="text-brand"><%= locals.count %></strong>items for you!</p>
+                         <% } %> 
                     </div>
-                    <div class="sort-by-product-area">
+                     <div class="sort-by-product-area">
                         <div class="sort-by-product-wrap">
                             <div class="sort-by">
                                 <span><i class="fi-rs-apps-sort"></i>Sort by:</span>
                             </div>
                             <div class="sort-by-dropdown-wrap">
-                                <select id="sortByDropdown" onchange="handleSortChange(this.value, getCurrentPageFromURL(this))">
+                                <select id="sortByDropdown" onchange="handleSortChange(this.value)">
                                   <option value="featured" selected>Featured</option>
                                   <option value="lowToHigh">Price: Low to High</option>
                                   <option value="hightolow">Price: High to Low</option>
-                                  <option vlaue="releaseDate">Release Date</option>
+                                  <option value="releaseDate">Release Date</option>
                                 </select>
                             </div>
                         </div>
                     </div>
-                </div> -->
+                </div>
+
                 <div class="row product-grid-3">
+
                     <% for (let i=0; i <product.length; i++)  { %>
                        <div class="col-lg-4 col-md-4 col-12 col-sm-6">
                           <div class="product-cart-wrap mb-30">
@@ -60,8 +99,13 @@
                                 <a href="shop-grid-right.html"> <%= product[i].brand %></a>
                             </div>
                             <h2><a href="shop-product-right.html"><%= product[i].productName %></a></h2>
+                             <!-- <div class="rating-result" title="90%">
+                                        <span>
+                                            <span>90%</span>
+                                        </span>
+                                    </div> -->
                             <div class="product-price">
-                                <span>$<%= product[i].regularPrice %></span>
+                                <span>€<%= product[i].regularPrice.toLocaleString('en-IN') %></span>
                             </div>
                             <!--div class="rating-result" title="90%">
                             <span>
@@ -86,5 +130,115 @@
         </div>   
     </div>
 </section>
+
+<script>
+  
+   function addToWishlist(productId){
+         $.ajax({
+            url: "/addToWishlist",
+            method: "post",
+            data: {
+                productId : productId
+            },
+            success: (response)=> {
+                if(response.status == true){
+                    Swal.fire({
+                        title: 'Added to wishlist!',
+                        text: 'Continue Shopping',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    })
+                }else if(response.status == false){
+                    Swal.fire({
+                        title: 'you need to login first',
+                        text: 'continue shopping',
+                        icon: 'warning',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() =>{window.location.href = '/login' })
+                }
+            }
+        })
+        return false;
+    }  
+
+    function getCurrentPageFromURL(element) {
+        const url = window.location.href;
+        const match = url.match(/page=(\d+)/);  //\d: Matches any digit.
+
+        if(match && match[1]) {
+            return parseInt(match[1], 10);
+        }
+        return 1;
+    }
+
+    function handleSortChange(selectedOption) {
+      console.log(selectedOption);
+      let option = selectedOption;
+      $.ajax({
+        url: "/sortProducts",
+        method: "POST",
+        data: {
+            option: option,
+            //page: page
+        },
+        success: (response) => {
+            if(response.status === true){
+                const sortedProducts = response.data;
+                console.log(sortedProducts);
+                //clear existing product grid content
+                $(".product-grid-3").empty();
+                // $(.pagination).empty();
+
+                // render each product in the container
+                sortedProducts.currentProduct.forEach((product) => {
+                    const productDiv = $("<div class='col-lg-4 col-md-4 col-12 col-sm-6'>" +
+                        "<div class='product-cart-wrap mb-30'>" +
+                        "<div class='product-img-action-wrap'>" +
+                        "<div class='product-img product-img-zoom'>" +
+                        "<a href='/productDetails?id=" + product.id + "'>" +
+                        "<img class='default-img' src='/uploads/product-images/" + product.productImage[0] + "' alt=''>" +
+                        "</a>" +
+                        "</div>" +
+                        "<div class='product-action-1'>" +
+                        "<a aria-label='Add To Wishlist' class='action-btn hover-up' href='javascript:void(0);' onclick='addToWishlist(\"" + product._id + "\")'>" +
+                        "<i class='fi-rs-heart'></i>" +
+                        "</a>" +
+                        "</div>" +
+                        "<div class='product-badges product-badges-position product-badges-mrg'>" +
+                        "<span class='hot'>Hot</span>" +
+                        "</div>" +
+                        "</div>" +
+                        "<div class='product-content-wrap'>" +
+                        "<div class='product-category'>" +
+                        "<a href='shop-grid-right.html'>" + product.brand + "</a>" +
+                        "</div>" +
+                        "<h2><a href='shop-product-right.html'>" + product.productName + "</a></h2>" +
+                        "<div class='product-price'>" +
+                        "<span>€" + product.salePrice.toLocaleString('en-IN') + "</span>" +
+                        "<span class='old-price'>₹" + product.regularPrice.toLocaleString('en-IN') + "</span>" +
+                        "</div>" +
+                        "<div class='product-action-1 show'>" +
+                        "<a aria-label='Add To Cart' class='action-btn hover-up' href='shop-cart.html'>" +
+                        "<i class='fi-rs-shopping-bag-add'></i>" +
+                        "</a>" +
+                        "</div>" +
+                        "</div>" +
+                        "</div>" +
+                        "</div>");
+
+                    // Append the productDiv to the product grid
+                    $(".product-grid-3").append(productDiv);
+                    // $("#pagination").html(response.data.totalPages);
+                })
+            } else {
+                console.error("error in sorting products:",response)
+            }
+        }
+      });
+    }
+    
+</script>
 
 <%- include("../partials/footer") %>

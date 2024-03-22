@@ -29,7 +29,7 @@ const getCartPage = async(req, res) => {
            }},
         ])
       console.log("Data =>>", data)
-      console.log(data[0].productDetails)
+      console.log(data.productDetails)
 
       let quantity = 0
 
@@ -37,16 +37,33 @@ const getCartPage = async(req, res) => {
         quantity += i.quantity
       }
 
-      let grandTotal = 0;
-      for(let i = 0; i < data.length; i++){
-        if(products[i]) {
-            console.log(data[i].productDetails[0].salePrice)
-            console.log(data[i].quantity)
-            grandTotal += data[i].productDetails[0].salePrice * data[i].quantity;
+    //   let grandTotal = 0;
+    //   for(let i = 0; i < data.length; i++){
+    //     if(products[i]) {
+    //         console.log(data[i].productDetails[0].salePrice)
+    //         console.log(data[i].quantity)
+    //         grandTotal += data[i].productDetails[0].salePrice * data[i].quantity;
+    //         console.log(grandTotal);
+    //     }
+    //     console.log("Am inside grandtotal in getcartpage in cartcontroller.js , grandTotal is", grandTotal)
+    //     req.session.grandTotal = grandTotal
+    //   }
+
+    let grandTotal = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].productDetails.length > 0) {
+        const salePrice = data[i].productDetails[0].salePrice;
+        const quantity = data[i].quantity;
+
+        if (!isNaN(salePrice) && !isNaN(quantity)) {
+            grandTotal += salePrice * quantity;
         }
-        console.log("Am inside grandtotal in getcartpage in cartcontroller.js , grandTotal is", grandTotal)
-        req.session.grandTotal = grandTotal
-      }
+    }
+  }
+
+console.log("Grand Total:", grandTotal);
+req.session.grandTotal = grandTotal;
 
       res.render("cart", {user, quantity, data, grandTotal})
             
@@ -103,7 +120,79 @@ const addToCart = async (req, res) => {
     }
 }
 
+const changeQuantity = async(req, res) => {
+    try {
+        const id = req.body.productId
+        const user = req.session.user
+        const count = req.body.count
+
+        const findUser = await User.findOne({_id: user})
+
+        const findProduct = await Product.findOne({_id: id})
+
+        if(findUser){
+            const productExistinCart = findUser.cart.find(item => item.productId === id)
+
+            let newQuantity
+            if(productExistinCart){
+                console.log(count);
+                if(count == 1){
+                    newQuantity = productExistinCart.quantity + 1
+                } else if (count == -1) {
+                    newQuantity = productExistinCart.quantity - 1
+                } else {
+                    return res.status(400).json({status: false, error: "Invalid count"})
+                }
+            } else {
+                console.log("product does not exist in cart")
+            }
+
+            console.log(newQuantity, 'this id new quantity');
+            if(newQuantity > 0 && newQuantity <= findProduct.quantity){
+                let quantityUpdated = await User.updateOne(
+                    {_id: user, "cart.productId": id},
+                    {
+                        $set: {
+                            "cart.$.quantity": newQuantity
+                        }
+                    }
+                )
+                const totalAmount = findProduct.salePrice
+                
+                if(quantityUpdated){
+                    res.json({status: true, quantityInput: newQuantity, count:count, totalAmount: totalAmount})
+                } else {
+                    res.json({status:false, error: 'cart quantity is less'})
+                }
+            } else {
+                res.json({status: false, error: 'out of stock'})
+            }
+        }
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500).json({status: false, error: "server error"});
+    }
+}
+
+const deleteProduct = async (req, res) => {
+    try {
+        const id = req.query.id
+        console.log(id, "id");
+        const userId = req.session.user
+        const user = await User.findById(userId)
+        const cartIndex = user.cart.findIndex(item => item.productId == id)
+        user.cart.splice(cartIndex, 1)
+        await user.save()
+        console.log("item deleted from cart");
+        res.redirect("/cart")
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 module.exports = {
                 getCartPage,
-                addToCart
+                addToCart,
+                changeQuantity,
+                deleteProduct
                  }
