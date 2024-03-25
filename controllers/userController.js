@@ -429,7 +429,7 @@ const getSortProducts = async (req, res) => {
     let endIndex = startIndex + itemsPerPage;
     let data;
 
-    if(option == "hightoLow"){
+    if(option == "highToLow"){
       data = await Product.find({isBlocked: false}).sort({salePrice: -1});
     } else if (option == "lowToHigh"){
       data = await Product.find({isBlocked: false}).sort({salePrice: 1});

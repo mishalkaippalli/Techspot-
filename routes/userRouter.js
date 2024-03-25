@@ -5,6 +5,7 @@ const userController = require("../controllers/userController");
 const userProfileController = require("../controllers/userProfileController")
 const cartController = require("../controllers/cartController")
 const { isLogged } = require("../authenticaiton/auth");
+const orderController = require("../controllers/orderController")
 
 //User Actions
 Router.get("/", userController.getHomePage);
@@ -37,6 +38,9 @@ Router.get("/cart", isLogged, cartController.getCartPage)
 Router.post("/addToCart", isLogged, cartController.addToCart)
 Router.post("/changeQuantity", isLogged, cartController.changeQuantity)
 Router.get("/deleteItem", isLogged, cartController.deleteProduct)
+
+//orders
+Router.get("/checkout", isLogged, orderController.getCheckoutPage)
 
 
 module.exports = Router;
