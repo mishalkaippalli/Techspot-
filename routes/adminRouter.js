@@ -7,16 +7,17 @@ const categoryController = require("../controllers/categoryController");
 const productController = require("../controllers/productController");
 const brandController = require("../controllers/brandController");
 const Category = require("../models/categorySchema");
+const {isAdmin} = require("../authenticaiton/auth.js")
 
 //admin actions
 Router.get("/login", adminController.getLoginPage);
 Router.post("/login", adminController.verifyLogin);
-Router.get("/dashboard", adminController.adminDashboard);
+Router.get("/dashboard",isAdmin, adminController.adminDashboard);
 
 //customer managemement
-Router.get("/users", customerController.getCustomersInfo);
-Router.get("/blockCustomer", customerController.getCustomerBlocked);
-Router.get("/unblockCustomer", customerController.getCustomerUnblocked);
+Router.get("/users",isAdmin, customerController.getCustomersInfo);
+Router.get("/blockCustomer",isAdmin, customerController.getCustomerBlocked);
+Router.get("/unblockCustomer",isAdmin, customerController.getCustomerUnblocked);
 
 //Multer settings
 const multer = require("multer");
@@ -25,28 +26,31 @@ const upload = multer({ storage: storage }); //upload holds multer middleware
 Router.use("public/uploads", express.static("public/uploads"));
 
 // category management
-Router.get("/categories", categoryController.getCategoryInfo);
-Router.post("/addCategory", categoryController.addCategory);
-Router.get("/allCategories", categoryController.getAllCategories);
-Router.get("/listcategory", categoryController.getListCategory);
-Router.get("/unlistCategory", categoryController.getUnlistCategory);
-Router.get("/editCategory", categoryController.getEditCategory);
-Router.post("/editCategory/:id", categoryController.editCategory);
+Router.get("/categories",isAdmin,  categoryController.getCategoryInfo);
+Router.post("/addCategory",isAdmin, categoryController.addCategory);
+Router.get("/allCategories",isAdmin, categoryController.getAllCategories);
+Router.get("/listcategory",isAdmin, categoryController.getListCategory);
+Router.get("/unlistCategory",isAdmin, categoryController.getUnlistCategory);
+Router.get("/editCategory",isAdmin, categoryController.getEditCategory);
+Router.post("/editCategory/:id",isAdmin, categoryController.editCategory);
 
 // brand management
-Router.get("/brands", brandController.getBrandPage);
-Router.post("/addBrand", upload.single("image"), brandController.addBrand);
-Router.post("/allBrands", brandController.getAllBrands);
-Router.get("/blockbrand", brandController.blockBrand);
-Router.get("/unblockBrand", brandController.unBlockBrand);
+Router.get("/brands",isAdmin, brandController.getBrandPage);
+Router.post("/addBrand",isAdmin, upload.single("image"), brandController.addBrand);
+Router.post("/allBrands",isAdmin, brandController.getAllBrands);
+Router.get("/blockbrand",isAdmin, brandController.blockBrand);
+Router.get("/unblockBrand",isAdmin, brandController.unBlockBrand);
 
 // product management
-Router.get("/addProducts", productController.getProductAddPage);
-Router.post("/addProducts", upload.array("images", [3]), productController.addProducts);
-Router.get("/products", productController.getAllProducts);
-Router.get("/editProduct", productController.getEditProduct);
-Router.post("/editProduct/:id", upload.array("images", 5), productController.editProduct);
-Router.post("/deleteImage", productController.deleteSingleImage)
+Router.get("/addProducts",isAdmin, productController.getProductAddPage);
+Router.post("/addProducts",isAdmin, upload.array("images", [3]), productController.addProducts);
+Router.get("/products",isAdmin, productController.getAllProducts);
+Router.get("/editProduct",isAdmin, productController.getEditProduct);
+Router.post("/editProduct/:id",isAdmin, upload.array("images", 5), productController.editProduct);
+Router.post("/deleteImage",isAdmin, productController.deleteSingleImage)
+
+//Order Management
+
 
 
 

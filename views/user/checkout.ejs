@@ -122,12 +122,24 @@
                         <div class="mb-25 ml-150">
                             <h5>Payment</h5>
                         </div>
+                          <div class="custome-radio ml-150">
+                                <input class="form-check-input payment" required="" value="wallet" type="radio"
+                                    name="payment_option" id="wallet" checked="">
+                                <label class="form-check-label" for="wallet" data-bs-toggle="collapse"
+                                    data-target="#wallet" aria-controls="paypal">Wallet</label>
+                            </div>
                         <div class="custome-radio ml-150">
                             <input class="form-check-input payment" type="radio" value="cod" name="payment_option"
                                     id="CashOnDelivey" checked="">
                                 <label class="form-check-label" for="CashOnDelivey" data-bs-toggle="collapse"
                                     data-target="#CashOnDelivey" aria-controls="CashOnDelivey">Cash on
                                     Delivery</label>
+                        </div>
+                        <div class="custome-radio ml-150">
+                            <input class="form-check-input payment" required="" value="wallet" type="radio"
+                                name="payment_option" id="wallet" checked="">
+                            <label class="form-check-label" for="wallet" data-bs-toggle="collapse"
+                                data-target="#wallet" aria-controls="paypal">Wallet</label>
                         </div>
                         <div class="custome-radio ml-150">
                             <input class="form-check-input payment" required="" value="online" type="radio"
@@ -268,7 +280,7 @@
                                         onclick="placeOrder('<%= user._id %>', [<% for (let i = 0; i < data.length; i++) { %>
                                             '<%= data[i].productDetails[0]._id %>'<% if (i < data.length - 1) { %>,<% } %><% } %>], false)">
                                             PlaceOrder</button>
-                                    <% } %>
+                                <% } %>
 
                         </div>
                     </div>
@@ -282,9 +294,10 @@
 <!-- <script src="https://checkout.razorpay.com/v1/checkout.js"></script> -->
 <script>
     async function placeOrder(userId, prodId, isSingle){
-        alerlt(prodId)
+        alert(prodId)
         let address = $("input[name='selectedAddress']:checked").val();
-        let payment = $("input [name='payment_option']:checked").val();
+        let payment = $("input[name='payment_option']:checked").val();
+        alert(payment)
 
         const sum = document.getElementById("totalValue").textContent;
         const numericValue = parseInt(sum.replace(/[^\d.]/g, ''));
