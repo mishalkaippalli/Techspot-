@@ -163,7 +163,9 @@ const orderPlaced = async (req, res) => {
 
             const userId = req.session.user
             const findUser = await User.findOne({_id: userId})
+            console.log("finduser",findUser)
             const productIds = findUser.cart.map(item => item.productId)
+            console.log("productids", productIds)
             const grandTotal = req.session.grandTotal
             console.log(grandTotal, "grandTotal");
             //const address = await Address.findOne({userId: userId})
@@ -177,18 +179,35 @@ const orderPlaced = async (req, res) => {
                 const findProducts = await Product.find({_id: {$in: productIds}})
 
                 const cartItemQuantities = findUser.cart.map((item) => ({
-                    productId: Item.product,
+                    productId: item.productId,
                     quantity: item.quantity
                 }))
+
+                console.log("cartItemQuantities", cartItemQuantities)
+
+                // const orderedProducts = findProducts.map((item) => ({
+                //     _id: item._id,
+                //     price: item.salePrice,
+                //     name: item.productName,
+                //     image: item.productImage[0],
+                //     quantity: (() => { cartItemQuantities.find(cartItem => 
+                //         cartItem.productId.toString() === item._id.toString())
+                        
+                //         return cartItem ? cartItem.quantity: 0;
+                // })()
 
                 const orderedProducts = findProducts.map((item) => ({
                     _id: item._id,
                     price: item.salePrice,
                     name: item.productName,
                     image: item.productImage[0],
-                    quantity: cartItemQuantities.find(cartItem => 
-                        cartItem.productId.toString() === item._id.toString()).quantity
-                }))
+                    quantity: (() => {
+                        const cartItem = cartItemQuantities.find(cartItem =>
+                            cartItem.productId.toString() === item._id.toString()
+                        );
+                        return cartItem ? cartItem.quantity : 0; // Return quantity if cartItem is found, otherwise return 0
+                    })()
+                }));
 
                 const newOrder = new Order({
                     product: orderedProducts,
@@ -255,6 +274,21 @@ const orderPlaced = async (req, res) => {
     }
 }
 
+const getOrderDetailsPage = async(req, res) => {
+    try {
+        const userId = req.session.user
+        const orderId = req.query.id
+        const findOrder = await Order.findOne({_id: orderId})
+        const findUser = await User.findOne({_id: orderId})
+        console.log(findOrder, findUser);
+        res.render("orderDetails", {orders: findOrder, user: findUser, orderId})
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 module.exports = {
-                   getCheckoutPage
+                   getCheckoutPage,
+                   orderPlaced,
+                   getOrderDetailsPage
                   }
