@@ -3,6 +3,7 @@ const Product = require("../models/productSchema")
 const Address = require("../models/addressSchema")
 const Order = require("../models/orderSchema")
 const mongodb = require("mongodb")
+const { ObjectId } = require('mongodb');
 
 const getCheckoutPage = async(req, res) => {
     try {
@@ -287,8 +288,63 @@ const getOrderDetailsPage = async(req, res) => {
     }
 }
 
+const cancelOrder = async(req, res) => {
+    try {
+        const userId = req.session.user
+        console.log("Iam inside cancelOrder in orderController, userid is: ", userId)
+        const findUser = await User.findOne({_id: userId})
+
+        if(!findUser) {
+            return res.status(404).json({message: 'User not found'});
+        }
+
+        const orderId = req.query.orderId
+        console.log("order Id from query is", orderId)
+
+        await Order.updateOne({_id: orderId},{status: "Canceled"})
+            .then((data) => console.log(data))
+        
+        const findOrder = await Order.findOne({_id: orderId})
+        console.log("find order", findOrder)
+
+        if(findOrder.payment === "wallet" || findOrder.payment === "online"){
+            findUser.wallet += findOrder.totalPrice;
+
+            const newHistory = {
+                amount: findOrder.totalPrice,
+                status: "credit",
+                date: Date.now()
+            }
+
+            findUser.history.push(newHistory)
+            await findUser.save();
+        }
+        
+        for(const productData of findOrder.product) {
+
+           const productId = productData._id;
+           console.log("inside for productId: ",productId)
+           const quantity = productData.quantity;
+           console.log("inside for productId: ",quantity)
+
+           const product = await Product.findById(productId);
+           console.log("product", product)
+
+           if(product) {
+            product.quantity += quantity;
+            await product.save()
+           }
+        }
+        res.redirect('/profile');
+
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 module.exports = {
                    getCheckoutPage,
                    orderPlaced,
-                   getOrderDetailsPage
+                   getOrderDetailsPage,
+                   cancelOrder
                   }

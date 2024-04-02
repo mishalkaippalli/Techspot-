@@ -43,6 +43,7 @@ Router.get("/deleteItem", isLogged, cartController.deleteProduct)
 Router.get("/checkout", isLogged, orderController.getCheckoutPage)
 Router.post("/orderPlaced", isLogged, orderController.orderPlaced)
 Router.get("/orderDetails", isLogged, orderController.getOrderDetailsPage)
+Router.get("/cancelOrder", isLogged, orderController.cancelOrder)
 
 
 module.exports = Router;
