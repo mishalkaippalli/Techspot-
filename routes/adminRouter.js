@@ -6,6 +6,7 @@ const customerController = require("../controllers/customerController");
 const categoryController = require("../controllers/categoryController");
 const productController = require("../controllers/productController");
 const brandController = require("../controllers/brandController");
+const orderController = require("../controllers/orderController.js")
 const Category = require("../models/categorySchema");
 const {isAdmin} = require("../authenticaiton/auth.js")
 
@@ -13,6 +14,7 @@ const {isAdmin} = require("../authenticaiton/auth.js")
 Router.get("/login", adminController.getLoginPage);
 Router.post("/login", adminController.verifyLogin);
 Router.get("/dashboard",isAdmin, adminController.adminDashboard);
+Router.get("/",isAdmin, adminController.adminDashboard);
 
 //customer managemement
 Router.get("/users",isAdmin, customerController.getCustomersInfo);
@@ -50,8 +52,8 @@ Router.post("/editProduct/:id",isAdmin, upload.array("images", 5), productContro
 Router.post("/deleteImage",isAdmin, productController.deleteSingleImage)
 
 //Order Management
-
-
+Router.get("/orderList", isAdmin, orderController.getOrderListPageAdmin)
+Router.get("/orderDetailsAdmin", isAdmin, orderController.getOrderDetailsPageAdmin)
 
 
 module.exports = Router;

@@ -288,6 +288,19 @@ const getOrderDetailsPage = async(req, res) => {
     }
 }
 
+const getOrderDetailsPageAdmin = async(req, res) => {
+    try {
+        const orderId = req.query.id
+        console.log(orderId);
+        const findOrder = await Order.findOne({_id: orderId}).sort({createdOn: 1})
+        console.log(findOrder)
+
+        res.render("order-details-admin", {orders: findOrder, orderId})
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 const cancelOrder = async(req, res) => {
     try {
         const userId = req.session.user
@@ -342,9 +355,29 @@ const cancelOrder = async(req, res) => {
     }
 }
 
+const getOrderListPageAdmin = async(req, res) => {
+    try {
+        const orders = await Order.find({}).sort({createdOn: -1});
+        console.log(req.query)
+
+        let itemsPerPage = 5
+        let currentPage = parseInt(req.query.page) || 1
+        let startIndex = (currentPage - 1) *  itemsPerPage
+        let endIndex = startIndex + itemsPerPage
+        let totalPages = Math.ceil(orders.length / 3)
+        const currentOrder = orders.slice(startIndex, endIndex)
+
+        res.render("orders-list", {orders: currentOrder, totalPages, currentPage})
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 module.exports = {
                    getCheckoutPage,
                    orderPlaced,
                    getOrderDetailsPage,
-                   cancelOrder
+                   cancelOrder,
+                   getOrderListPageAdmin,
+                   getOrderDetailsPageAdmin
                   }
