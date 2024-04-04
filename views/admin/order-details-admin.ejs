@@ -24,7 +24,7 @@
                     </div>
                     <div class="col-lg-4 col-md-4 ms-auto text-md-end">
                         <% if (orders.status !== "Canceled") {%>
-                            <% if(orders.status !== "Delivered") {%>
+                            <% if(orders.status === "Delivered") {%>
                                 <div class="row">
                                     <div class="col-2">
                                         <a href="/invoice?id=<%= orders._id %>">
@@ -35,9 +35,9 @@
                                     <h4 class="text-success ">Delivered</h4>
                                     </div>
                                 </div>
-                                <% } else if (order.status === "Returned") {%>
+                                <% } else if (orders.status === "Returned") {%>
                                     <h4 class="text-warning">Returned</h4>
-                            <% } else {%>
+                                <% } else {%>
                                     <select id="actionDropdown" class="form-select form select-sm d-inline-block mb-lg-0 mb-15 mw-100"
                                     onchange="handleDropdownChange(this)">
                                      <option value="status">Status</option>
@@ -247,15 +247,15 @@
   <script>
     function handleDropdownChange(selectElement) {
        
-        console.log(orderId.value,"hiiiiiiiiiiiiiiiiiiiii");
+        console.log("orderId inside handleDropdoenChange script", orderId.value);
         var selectedValue = selectElement.value;
         console.log(selectedValue);
         if(selectedValue == "cancel"){
-            window.location.href = `https://localhost:7000/admin/changeStatus?orderId=${orderId.value}&status=${selectedValue}`;
+            window.location.href = `http://localhost:7000/admin/changeStatus?orderId=${orderId.value}&status=${selectedValue}`;
         }else if(selectedValue == "Shipped"){
-            window.location.href = `https://localhost:7000/admin/changeStatus?orderId=${orderId.value}&status=${selectedValue}`;
+            window.location.href = `http://localhost:7000/admin/changeStatus?orderId=${orderId.value}&status=${selectedValue}`;
         }else if(selectedValue == "Delivered"){
-            window.location.href = `https://localhost:7000/admin/changeStatus?orderId=${orderId.value}&status=${selectedValue}`;
+            window.location.href = `http://localhost:7000/admin/changeStatus?orderId=${orderId.value}&status=${selectedValue}`;
         }else{
             alert("error")
         }

@@ -54,6 +54,6 @@ Router.post("/deleteImage",isAdmin, productController.deleteSingleImage)
 //Order Management
 Router.get("/orderList", isAdmin, orderController.getOrderListPageAdmin)
 Router.get("/orderDetailsAdmin", isAdmin, orderController.getOrderDetailsPageAdmin)
-
+Router.get("/changeStatus", isAdmin, orderController.changeOrderStatus)
 
 module.exports = Router;

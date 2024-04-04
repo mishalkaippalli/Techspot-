@@ -373,11 +373,31 @@ const getOrderListPageAdmin = async(req, res) => {
     }
 }
 
+const changeOrderStatus = async(req, res) => {
+    try {
+        console.log("I am inside changeOrderStatus in order controller",req.query);
+
+        const orderId = req.query.orderId
+        console.log("orderid", orderId)
+
+        await Order.updateOne({_id: orderId},
+            {status: req.query.status})
+            .then((data) => console.log(data))
+
+        const findOrder = await Order.findOne({_id: orderId})
+        res.redirect('/admin/orderList');
+
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 module.exports = {
                    getCheckoutPage,
                    orderPlaced,
                    getOrderDetailsPage,
                    cancelOrder,
                    getOrderListPageAdmin,
-                   getOrderDetailsPageAdmin
+                   getOrderDetailsPageAdmin,
+                   changeOrderStatus
                   }
