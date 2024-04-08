@@ -1,0 +1,144 @@
+
+
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Techspot</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/user-assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="/user-assets/css/main.css?v=3.4">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <header class="header-area header-style-5">  
+        <div class="header-bottom sticky-bar sticky-white-bg">
+            <div class="container">
+                <div class="header-wrap header-space-between position-relative">
+                    <div class="logo logo-width-1">
+                        <a href="index.html"><img src="/user-assets/imgs/theme/Techspotlogo.png" alt="logo"></a>
+                    </div>
+                  
+                    <div class="main-menu main-menu-grow main-menu-padding-1 main-menu-lh-1 main-menu-mrg-1 hm3-menu-padding d-none d-lg-block hover-boder">
+                        <nav>
+                            <ul>   
+                                <li><a class="active" href="/">Home <!--<i class="fi-rs-angle-down"></i> --></a>
+                                </li>
+                                <li><a href="/shop">Shop </i></a>
+                                </li>
+                                <li><a href="/about">About</i></a>
+                                </li>
+                                <li><a href="/contact">Contact</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    
+                        <div class="search-style-1 ">
+                            <form action="/search">
+                                <input type="text" id="filterItem" name="search" class="form-control" placeholder="Search for items...">
+                            </form>
+                        </div>
+                   
+                    <div class="header-action-right">
+                        <div class="header-action-2">
+                            <div class="header-action-icon-2">
+                                <a href="/wishlist">
+                                    <img class="svgInject" alt="Evara" src="/user-assets/imgs/theme/icons/icon-heart.svg">
+                                    <!-- <span class="pro-count blue">4</span> -->
+                                </a>
+                            </div>
+                            <div class="header-action-icon-2">
+                                <a class="mini-cart-icon" href="/cart">
+                                    <img alt="Evara" src="/user-assets/imgs/theme/icons/icon-cart.svg">
+                                    <!-- <span class="pro-count blue">2</span> -->
+                                </a>
+                            </div>
+                            <div class="header-action-icon-2">
+                                <% if (locals.user) { %>
+                                    <!-- Displayed when the user is logged in -->
+                                    <li class="dropdown nav-item">
+                                      <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false">
+                                        <!-- Uncomment the following line if you want to use an icon -->
+                                        <!-- <i class="fas fa-/user-circle"></i> -->
+                                        <img class="svgInject" alt="Evara" src="/user-assets/imgs/theme/icons/user-profile.svg" style="height: 25px; width: 25px; margin-top: 2px;">
+                                      </a>
+                                      <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                                        <a class="dropdown-item" href="/profile"><i class="material-icons md-perm_identity"></i> Profile</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i> Logout</a>
+                                      </div>
+                                    </li>
+                                  <% } else { %>
+                                    <!-- Displayed when the user is not logged in -->
+                                    <div class="single-mobile-header-info ml-25 pr-5">
+                                      <a href="/login">Sign Up</a>
+                                    </div>
+                                  <% } %>
+                                  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+                
+
+
+<style>
+     .pagination {
+        display: flex;
+        justify-content: center;
+     }
+
+     .btn {
+         /* Add your button styling here */
+         margin: 0 5px;
+         padding: 5px 10px;
+         background-color: #f0f0f0;
+         border: 1px solid #ccc;
+         text-decoration: none;
+         color: #333;
+     }
+     .btn:hover {
+        /* Add styles for button hover state */
+        background-color: #ddd;
+     }
+
+     .active {
+       /* Add styles for the active page */
+        color: #fff;
+      }
+
+      .price-filter-inner {
+        display: flex;
+        justify-content: space-between; /* Adjust as needed */
+      }
+      
+      .price-button {
+        flex: 1;
+        height: 40px; /* Adjust the height as needed */
+        width: 100%; /* Fill the container width */
+        margin-right: 5px; /* Adjust the margin between buttons as needed */
+        border: 1px solid #ddd;
+    }
+
+    /* CSS for enforcing consistent image height */
+    .product-img img {
+        height: 300px; /* Adjust the height as per your requirement */
+        width: auto; /* This will maintain aspect ratio */
+    }
+</style>

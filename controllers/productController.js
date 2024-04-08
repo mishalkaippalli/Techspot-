@@ -14,6 +14,20 @@ const getProductAddPage = async (req, res) => {
   }
 };
 
+// const deleteoneImage = async (req , res) => {
+//   try {
+//     const productId = req.query.id
+//     const imagetobedeleted = req.query.image
+//     const product = await Product.find({_id: productId})
+//     if(product){
+//       Product.updateOne({_id: productId}, {$unset: {image: imagetobedeleted}})
+//     } 
+//     }catch (error) {
+//     console.log(error.message)
+//     }
+//   }
+
+
 const addProducts = async (req, res) => {
   try {
     console.log("IAm inside addProducts")
@@ -48,7 +62,7 @@ const addProducts = async (req, res) => {
 
       await newProduct.save();
       console.log("Iam inside addProducts, new products details", newProduct);
-      res.redirect("/admin/addproducts");
+      res.redirect("/admin/products");
     } else {
       res.json("failed");
     }

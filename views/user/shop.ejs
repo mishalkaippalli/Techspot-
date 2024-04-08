@@ -1,49 +1,4 @@
-<%- include("../partials/header") %>
-
-<style>
-     .pagination {
-        display: flex;
-        justify-content: center;
-     }
-
-     .btn {
-         /* Add your button styling here */
-         margin: 0 5px;
-         padding: 5px 10px;
-         background-color: #f0f0f0;
-         border: 1px solid #ccc;
-         text-decoration: none;
-         color: #333;
-     }
-     .btn:hover {
-        /* Add styles for button hover state */
-        background-color: #ddd;
-     }
-
-     .active {
-       /* Add styles for the active page */
-        color: #fff;
-      }
-
-      .price-filter-inner {
-        display: flex;
-        justify-content: space-between; /* Adjust as needed */
-      }
-      
-      .price-button {
-        flex: 1;
-        height: 40px; /* Adjust the height as needed */
-        width: 100%; /* Fill the container width */
-        margin-right: 5px; /* Adjust the margin between buttons as needed */
-        border: 1px solid #ddd;
-    }
-
-    /* CSS for enforcing consistent image height */
-    .product-img img {
-        height: 300px; /* Adjust the height as per your requirement */
-        width: auto; /* This will maintain aspect ratio */
-    }
-</style>
+<%- include("../partials/shopHeader") %>
 
 
 <section class="mt-50 mb-50">
@@ -116,7 +71,22 @@
                     <% } %>
                 </div>
               
+              <% if(totalPages) { %>
+                <div class="pagination">
+                    <% if(currentPage > 1) {%>
+                        <button class="btn btn-sm"><a href="/shop?page=<%= currentPage - 1 %>">Previous</a></button>
+                    <% } %>
 
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                         <button class="btn btn-sm <%= i === currentPage? 'active' : '' %>">
+                         </button>
+                    <% } %>
+
+                    <% if(currentPage < totalPages) {%>
+                        <button class="btn btn-sm"><a href="/shop?page=<%= currentPage + 1 %>">Next</a></button>
+                    <% } %>
+                </div>
+              <% } %>
 
             </div>
         </div>   

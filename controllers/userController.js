@@ -454,6 +454,43 @@ const getSortProducts = async (req, res) => {
   }
 }
 
+const searchProducts = async(req, res) => {
+  try {
+      const user = req.session.user
+      let search = req.query.search
+      const brands = await Brand.find({})
+      const categories = await Category.find({isListed: true})
+
+      const searchResult = await Product.find({
+        $or:[
+          {
+            productName: {$regex: ".*" + search + ".*", $options: "i"},
+          }
+        ],
+        isBlocked: false
+      }).lean()  //.lean(): This is a Mongoose method used to return plain JavaScript objects instead of Mongoose documents.
+      
+      let itemsPerPage = 6
+      let currentPage = parseInt(req.query.page) || 1
+      let startIndex = (currentPage - 1) * itemsPerPage
+      let endIndex = startIndex + itemsPerPage
+      let totalPages = Math.ceil(searchResult.length / 6)
+      let currentProduct = searchResult.slice(startIndex, endIndex)
+       
+      res.render("shop",
+        {
+          user: user,
+          product: currentProduct,
+          category: categories,
+          brand: brands,
+          totalPages,
+          currentPage
+        })
+    } catch (error) {
+    console.log(error.message)
+  }
+}
+
 module.exports = {
   getLoginPage,
   getSignupPage,
@@ -469,5 +506,6 @@ module.exports = {
   getLogoutUser,
   filterProduct,
   filterByPrice,
-  getSortProducts
+  getSortProducts,
+  searchProducts
 };

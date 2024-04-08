@@ -37,21 +37,22 @@
                                 </div>
                                 <% } else if (orders.status === "Returned") {%>
                                     <h4 class="text-warning">Returned</h4>
-                                <% } else {%>
+                                <% } else { %>
                                     <select id="actionDropdown" class="form-select form select-sm d-inline-block mb-lg-0 mb-15 mw-100"
                                     onchange="handleDropdownChange(this)">
-                                     <option value="status">Status</option>
+                                     <option value="status">Change Status</option>
                                      <option value="Shipped">Shipped</option>
                                      <option value="Delivered">Delivered</option>
+                                     <option value="Canceled">Cancel</option>
                                     </select> 
-                            <% } %>
+                                <% } %>
+                                
                         <% } else {%>
                             <h4 class="text-danger">Canceled</h4>
                         <% } %>
                     </div>
                 </div>
             </header>
-        </div> 
         
         <div class="card-body">
             <div class="row mb-50 mt-20 order-info-wrap backgrounf-info">
@@ -250,7 +251,7 @@
         console.log("orderId inside handleDropdoenChange script", orderId.value);
         var selectedValue = selectElement.value;
         console.log(selectedValue);
-        if(selectedValue == "cancel"){
+        if(selectedValue == "Canceled"){
             window.location.href = `http://localhost:7000/admin/changeStatus?orderId=${orderId.value}&status=${selectedValue}`;
         }else if(selectedValue == "Shipped"){
             window.location.href = `http://localhost:7000/admin/changeStatus?orderId=${orderId.value}&status=${selectedValue}`;

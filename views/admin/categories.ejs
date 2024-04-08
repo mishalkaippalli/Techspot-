@@ -38,6 +38,11 @@
                                     <textarea id="description" name="description" placeholder="Type here" class="form-control" ></textarea>
                                     <div id="descriptionError" class="text-danger" style="display: none;"></div>
                                 </div>
+                                <% if (locals.message && message.length> 0) { %>
+                                    <div id="alertMessage" class="alert alert-danger">
+                                        <%= message %>
+                                    </div>
+                                    <% } %>
                                 <div class="d-grid">
                                     <button class="btn btn-primary">Create category</button>
                                 </div>
@@ -128,6 +133,15 @@
 <%- include("../partials/adminFooter") %>
 
 <script>
+
+    const alertElement = document.getElementById('alertMessage');
+     // to clear the error(from backend validation) after 5 seconds
+     if (alertElement) {
+     setTimeout(function () {
+      alertElement.style.display = 'none';
+      }, 3000);
+     } 
+
     document.getElementById('categoryForm').addEventListener('submit', function (event) {
         var name = document.getElementById('name').value.trim();
         var description = document.getElementById('description').value.trim();
@@ -155,4 +169,7 @@
             event.preventDefault();
         }
     });
+
+   
+   
 </script>

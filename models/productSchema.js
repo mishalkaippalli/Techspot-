@@ -18,7 +18,7 @@ const productSchema = Mongoose.Schema({
     required: true,
   },
   category: {
-    type: String,
+    type:mongoose.Schema.Types.ObjectId, //objectid to be edited
     required: true,
   },
   regularPrice: {

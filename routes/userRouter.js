@@ -20,6 +20,7 @@ Router.get("/logout", userController.getLogoutUser)
 //Product based routes
 Router.get("/shop", isLogged, userController.getShopPage);
 Router.get("/productDetails", userController.getProductDetailPage);
+Router.get("/search", userController.searchProducts)
 Router.get("/filter", userController.filterProduct)
 Router.get("/filterPrice", userController.filterByPrice)
 Router.post("/sortProducts", userController.getSortProducts)

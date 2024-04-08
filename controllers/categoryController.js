@@ -15,6 +15,7 @@ const getCategoryInfo = async (req, res) => {
 const addCategory = async (req, res) => {
   try {
     const { name, description } = req.body;
+    const categoryData = await Category.find({});
     const categoryExists = await Category.findOne({ name });
     if (description) {
       if (!categoryExists) {
@@ -26,7 +27,7 @@ const addCategory = async (req, res) => {
         console.log("New category: ", newCategory);
         res.redirect("/admin/allCategories");
       } else {
-        res.redirect("/admin/categories");
+        res.render("categories", {message: "Category already exists", cat: categoryData})
         console.log("Category already exists");
       }
     } else {
