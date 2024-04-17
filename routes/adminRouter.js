@@ -8,6 +8,7 @@ const productController = require("../controllers/productController");
 const brandController = require("../controllers/brandController");
 const orderController = require("../controllers/orderController.js")
 const Category = require("../models/categorySchema");
+
 const {isAdmin} = require("../authenticaiton/auth.js")
 
 //admin actions
@@ -55,5 +56,10 @@ Router.post("/deleteImage",isAdmin, productController.deleteSingleImage)
 Router.get("/orderList", isAdmin, orderController.getOrderListPageAdmin)
 Router.get("/orderDetailsAdmin", isAdmin, orderController.getOrderDetailsPageAdmin)
 Router.get("/changeStatus", isAdmin, orderController.changeOrderStatus)
+
+//Coupon Management
+Router.get("/coupon", isAdmin, adminController.getCouponPageAdmin)
+Router.post("/createCoupon", isAdmin, adminController.createCoupon)
+
 
 module.exports = Router;
