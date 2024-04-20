@@ -33,9 +33,14 @@ const addProducts = async (req, res) => {
     console.log("IAm inside addProducts")
     const products = req.body;
     console.log("Iam inside addproducts, product body fromejs file is ", products)
+    const {category} = req.body.category
+    const findCategory = await Category.findOne({category: category});
+    const categoryId = findCategory._id
+    console.log(categoryId)
     const productExists = await Product.findOne({
       productName: products.productName,
     });
+
     if (!productExists) {
       const images = [];
       if (req.files && req.files.length > 0) {
@@ -49,7 +54,7 @@ const addProducts = async (req, res) => {
         productName: products.productName,
         description: products.description,
         brand: products.brand,
-        category: products.category,
+        category: categoryId,
         regularPrice: products.regularPrice,
         salePrice: products.salePrice,
         createdOn: new Date(),
@@ -152,7 +157,10 @@ const editProduct = async(req, res) => {
       }
     }
     console.log("I am inside post editproduct in producontroler, the files i recieved is ", req.files)
-
+    const {category} = req.body.category
+    const findCategory = await Category.findOne({category: category});
+    const categoryId = findCategory._id
+    console.log("categoryid inside edit product",categoryId)
     if(req.files.length > 0){
       console.log("Yes image is there")
       const updatedProduct = await Product.findByIdAndUpdate(id, {
@@ -160,7 +168,7 @@ const editProduct = async(req, res) => {
          productName: data.productName,
          description: data.description,
          brand: data.brand,
-         category: data.category,
+         category: categoryId,
          regularPrice: data.regularPrice,
          quantity: data.quantity,
          operatingSystem: data.operatingSystem,
@@ -179,7 +187,7 @@ const editProduct = async(req, res) => {
         productName: data.productName,
         description: data.description,
         brand: data.brand,
-        category: data.category,
+        category: categoryId,
         regularPrice: data.regularPrice,
         quantity: data.quantity,
         operatingSystem: data.operatingSystem,

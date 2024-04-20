@@ -198,15 +198,19 @@
         const minimumPriceInput = document.getElementsByName('minimumPrice')[0];
          
         const offerPrice = offerPriceInput.value.trim() !== '' ? parseInt(offerPriceInput.value) : NaN;
-        const minimumPrice = minumumPriceInput.value.trim() !== '' ? parseInt(minimumPriceInput.value) : NaN;
+        console.log("offer price inside validate form", offerPrice)
+        alert("inside validate form")
+        const minimumPrice = minimumPriceInput.value.trim() !== '' ? parseInt(minimumPriceInput.value) : NaN;
+        console.log("minimumprice in validate forn",minimumPrice)
 
-        if( isNaN(offerPrice) || isNaN(minimumPrice) || offerPrice >= minimumPrice) {
-            document.getElementById('error-offer-price').innerHTML = 'offer price must be greater than Minimum price';
+        if( offerPrice >= minimumPrice) {
+            document.getElementById('error-offer-price').innerHTML = 'offer price must be less than Minimum price';
             return false;
         }
 
         if(isNaN(offerPrice) || isNaN(minimumPrice)) {
-            document.getElementsById('error-offer-price').innerHTML = 'please enter numeric values for offer price and minimum price'
+            document.getElementById('error-offer-price').innerHTML = 'please enter numeric values for offer price and minimum price'
+            return false;
         }
 
         const formData = {

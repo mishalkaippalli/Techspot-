@@ -4,6 +4,8 @@ const nodemailer = require("nodemailer");
 const Product = require("../models/productSchema");
 const Brand = require("../models/brandSchema");
 const Category = require("../models/categorySchema");
+const { resolveConfig } = require("prettier");
+const Coupon = require("../models/couponSchema");
 
 // pagenotfound
 const pageNotFound = async (req, res) => {
@@ -491,6 +493,37 @@ const searchProducts = async(req, res) => {
   }
 }
 
+const applyCoupon = async(req, res) => {
+  try {
+    const userId = req.session.user
+    console.log("Iam inside apply coupon in userController, req.body is",req.body)
+    const selectedCoupon = await Coupon.findOne({name: req.body.coupon})
+    console.log(selectedCoupon)
+    if(!selectedCoupon) {
+      console.log("no coupon");
+      res.json({noCoupon: true})
+    } else if(selectedCoupon.userId.includes(userId)) {
+      console.log('already used');
+      res.json({used: true})
+    } else {
+      console.log("coupon exists");
+      await Coupon.updateOne(
+        {name: req.body.coupon},
+        {
+          $addToSet: {
+            userId: userId
+          }
+        }
+      );
+      const gt = parseInt(req.body.total) - parseInt(selectedCoupon.offerPrice);
+      console.log("grandtotal gt in applycoupon inside usercontroller", gt)
+      res.json({gt: gt, offerPrice: parseInt(selectedCoupon.offerPrice)})
+    }
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
 module.exports = {
   getLoginPage,
   getSignupPage,
@@ -507,5 +540,6 @@ module.exports = {
   filterProduct,
   filterByPrice,
   getSortProducts,
-  searchProducts
+  searchProducts,
+  applyCoupon
 };

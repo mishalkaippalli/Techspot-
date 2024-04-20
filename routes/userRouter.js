@@ -4,7 +4,7 @@ const Router = express.Router();
 const userController = require("../controllers/userController");
 const userProfileController = require("../controllers/userProfileController")
 const cartController = require("../controllers/cartController")
-const { isLogged } = require("../authenticaiton/auth");
+const { isLogged, isAdmin } = require("../authenticaiton/auth");
 const orderController = require("../controllers/orderController")
 
 //User Actions
@@ -45,6 +45,10 @@ Router.get("/checkout", isLogged, orderController.getCheckoutPage)
 Router.post("/orderPlaced", isLogged, orderController.orderPlaced)
 Router.get("/orderDetails", isLogged, orderController.getOrderDetailsPage)
 Router.get("/cancelOrder", isLogged, orderController.cancelOrder)
+Router.post("/applyCoupon", isLogged, userController.applyCoupon)
+
+//Sales Report
+Router.get("/salesReport", isAdmin, adminController.getSalesReportPage)
 
 
 module.exports = Router;

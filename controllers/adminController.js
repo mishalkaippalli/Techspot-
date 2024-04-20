@@ -1,6 +1,7 @@
 const User = require("../models/userSchema");
 const bcrypt = require("bcryptjs");
 const Coupon = require("../models/couponSchema");
+const Order = require("../models/orderSchema");
 
 const getLoginPage = async (req, res) => {
   try {
@@ -77,6 +78,71 @@ const createCoupon = async(req, res) => {
     console.log(error)
   }
 }
+
+const getSalesReportPage = async(req, res) => {
+  try {
+    let filterBy = req.query.day
+    if(filterBy){
+      res.redirect(`/admin/${req.query.day}`)
+    } else {
+      res.redirect(`/admin/$salesMonthly`)
+    }
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+const salesToday = async(req, res) =>{
+try {
+  let today = new Date()
+  const startOfTheDay = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    0,
+    0,
+    0,
+    0
+  )
+
+  const endOfTheDay = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    23,
+    59,
+    59,
+    999
+  )
+
+  const orders = await Order.aggregate([
+    {
+      $match: {
+        createdOn: {
+          $gte: startOfTheDay,
+          $lt: endOfTheDay
+        },
+        status: "Delivered"
+      }
+    }
+  ]).sort({createdOn: -1})
+
+let itemsPerPage = 5
+let currentPage = parseInt(req.query.page) || 1
+let startIndex = (currentPage -1) * itemsPerPage
+let endIndex = startIndex + itemsPerPage
+let totalPages = Math.ceil(orders.length/3)
+const currentOrder = orders.slice(startIndex, endIndex)
+
+console.log("current order", currentOrder)
+res.render('salesReport', {data: currentOrder, totalPages, currentPage, salesToday: True})
+} catch (error) {
+  console.log(error.message)
+}
+}
+
+
+
 
 module.exports = { 
                     getLoginPage, 

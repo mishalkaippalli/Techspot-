@@ -18,8 +18,9 @@ const productSchema = Mongoose.Schema({
     required: true,
   },
   category: {
-    type: Mongoose.Schema.Types.ObjectId, //objectid to be edited
-    required: true,
+    type: Mongoose.Schema.Types.ObjectId,
+    ref:'category',
+    required:true
   },
   regularPrice: {
     type: Number,

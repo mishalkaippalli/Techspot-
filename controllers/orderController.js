@@ -2,12 +2,13 @@ const User = require("../models/userSchema")
 const Product = require("../models/productSchema")
 const Address = require("../models/addressSchema")
 const Order = require("../models/orderSchema")
+const Coupon = require("../models/couponSchema")
 const mongodb = require("mongodb")
 const { ObjectId } = require('mongodb');
 
 const getCheckoutPage = async(req, res) => {
     try {
-        console.log("I am inside getcheckoutpage in usercontroller, request query is", req.query);
+        console.log("I am inside getcheckoutpage in ordercontroller, request query is", req.query);
         //isSingle is for buying one product for buy now
         if(req.query.isSingle == "true") {   
             const id = req.query.id
@@ -20,17 +21,17 @@ const getCheckoutPage = async(req, res) => {
 
             const today = new Date().toISOString(); 
 
-            // const findCoupons = await Coupon.find({
-            //     isList: true,
-            //     createdOn: {$lt: new Date(today)},
-            //     expireOn: {$gt: new Date(today)},
-            //     minimumPrice: {$lt: findProduct[0].salePrice}
-            // });
-            // console.log(findCoupons, "this is coupon");
+            const findCoupons = await Coupon.find({
+                isList: true,
+                createdOn: {$lt: new Date(today)},
+                expireOn: {$gt: new Date(today)},
+                minimumPrice: {$lt: findProduct[0].salePrice}
+            });
+            console.log(findCoupons, "this is coupon");
 
             res.render("checkout", {product: findProduct, user: userId, findUser: findUser,
-                                     userAddress: addressData, isSingle: true,}) //coupons to be added
-        } else {
+                                     userAddress: addressData, isSingle: true, coupons: findCoupons}) 
+        } else {                             
             const user = req.query.userId
             const findUser = await User.findOne({_id: user})
             console.log(findUser);
@@ -52,23 +53,23 @@ const getCheckoutPage = async(req, res) => {
                         foreignField: '_id',
                         as: 'productDetails'
                     }
-                }
+                },
             ])
 
             const grandTotal = req.session.grandTotal
             console.log("grandtotal", grandTotal)
             const today = new Date().toISOString();
 
-            // const findCoupons = await Coupon.find({
-            //     isList: true,
-            //     createdOn: {$lt: new Date(today)},
-            //     expireOn: {$gt: new Date(today)},
-            //     minimumPrice: {$lt: findProduct[0].salePrice}
-            // });
-            // console.log("coupons", findCoupons);
+            const findCoupons = await Coupon.find({
+                isList: true,
+                createdOn: {$lt: new Date(today)},
+                expireOn: {$gt: new Date(today)},
+                minimumPrice: {$lt: grandTotal}
+            });
+            console.log("coupons", findCoupons);
 
             res.render("checkout", {data: data, user: findUser, isCart: true,
-                 userAddress: addressData, isSingle: false, grandTotal })      //coupons to be added
+                 userAddress: addressData, isSingle: false, grandTotal, coupons: findCoupons })   
         }
     } catch (error) {
         console.log(error.message)

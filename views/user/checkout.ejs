@@ -139,11 +139,33 @@
                             <input class="form-check-input payment" required="" value="online" type="radio"
                                 name="payment_option" id="Razorpay" checked="">
                             <label class="form-check-label" for="Razorpay" data-bs-toggle="collapse"
-                                data-target="#Razorpay" aria-controls="paypal">Paypal</label>
+                                data-target="#Paypal" aria-controls="paypal">Paypal</label>
                         </div>
-                        <!-- <div class="mb-25 ml-150 pt-40">
+                        <div class="mb-25 ml-150 pt-40">
                             <h5>Available Coupons</h5>
-                        </div> -->
+                        </div>
+
+                        <ul>
+                            <% if (locals.coupons) {%>
+                                <% for(let i = 0; i < coupons.length; i++) { %>
+                                    <li>
+                                        <div class="coupon-card col-4" style="margin-left: 150px; margin-top: 20px">
+                                        <div class="coupon-details">
+                                            <span class="coupon-name">
+                                                <%= coupons[i].name %>
+                                            </span><br>
+                                            <!-- other coupons an be added here -->
+                                        </div>
+                                        <button onclick="useCoupon('<%= coupons[i].name %>')" id="useButton_<%= coupons[i].name %>" class="use-button">Use</button>
+                                        <button onclick="cancelCoupon('<%= coupons[i].name %>')" id="cancelButton_<%= coupons[i].name %>" class="cancel-button btn-danger" style="display: none;">Cancel</button>
+                                        </div>
+                                    </li>
+                                <% } %>
+                            <% } else { %>
+                                <h3>No coupons Available</h3>
+                             <% } %>
+                        </ul>
+
                     </div>
                  </div>
 
@@ -257,12 +279,12 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <!-- <div class="input-group mb-3 col-2" style="border: 1px solid #ced4da; border-radius: 5px; width: 300px; margin-left: 200px; margin-top: 60px;">
+                        <div class="input-group mb-3 col-2" style="border: 1px solid #ced4da; border-radius: 5px; width: 300px; margin-left: 200px; margin-top: 60px;">
                             <input type="text" class="form-control" id="inputCoupon" placeholder="Paste Coupon Name" >
                             <div class="input-group-append">
                                 <button class="btn btn-primary" id="applyButton" type="button" onclick="applyCoupon('<%=totalAmount%>')">Apply</button>
                             </div>
-                        </div> -->
+                        </div>
 
                         <div class="ml-65">
                             <%if(isSingle===true){%>
@@ -393,7 +415,107 @@
         })
     }
 
-    // coupon functions
+    function showCouponDetails(couponName) {
+        Swal.fire({
+            title: 'Coupon Details',
+            text: `${couponName}`,
+            icon: `info`,
+            confirmButtonText: 'OK'
+        }).then((result) => {
+            if(result.isConfirmed) {
+                copyToClipboard(couponName)
+            }
+        });
+    }
+
+    function copyToClipboard(text) {
+        var tempInput = document.createElement('input');
+        document.body.appendChild(tempInput);
+        tempInput.value = text;
+
+        tempInput.select();
+        document.execCommand('copy');
+
+        document.body.removeChild(tempInput);
+
+        Swal.fire({
+            title: 'copied!',
+            text: 'coupon name has been copied to the clipboard',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    }
+
+    function applyCoupon(total) {
+        const coupon = document.getElementById('inputCoupon').value
+        alert(coupon)
+        alert(total)
+        $.ajax({
+            url: '/applyCoupon',
+            method: 'post',
+            data: {
+                coupon, 
+                total
+            },
+            success: (response) => {
+                if(response.used == true){
+                    Swal.fire("Already used");
+                } else if(response.noCoupon == true){
+                    Swal.fire("No coupon found")
+                } else{
+                    document.getElementById('inputCoupon').readOnly = true;
+                    document.getElementById('applyButton').disabled = true;
+                    const gt = parseInt(document.getElementById('totalValue').innerHTML);
+                    const discount = parseInt(document.getElementById('discount').innerHTML);
+
+                    document.getElementById('totalValue').innerHTML = gt-parseInt(response.offerPrice);
+                    document.getElementById('discount').innerHTML = discount+parseInt(response.offerPrice)
+                }
+            }
+        })
+    }
+
+    var usedCoupon = null;
+
+    function useCoupon(couponName) {
+        // disable all other coupons
+        disableOtherCoupons(couponName);
+        // show details for the used coupon
+        showCouponDetails(couponName);
+
+        //show cancel button and hide use button for the used coupon
+        document.getElementById('useButton_' + couponName).style.display = 'none';
+        document.getElementById('cancelButton_' + couponName).style.display = 'block';
+
+        usedCoupon = couponName;
+    }
+
+    function cancelCoupon(couponName) {
+        enableAllCoupons();
+
+        // Hide cancel button and show use button for the canceled coupon
+        document.getElementById('useButton_' + couponName).style.display = 'block';
+        document.getElementById('cancelButton_' + couponName).style.display = 'none';
+
+        usedCoupon = null;
+    }
+
+    function disableOtherCoupons(excludeCoupon) {
+        var couponButtons = document.querySelectorAll('.use-button');
+        couponButtons.forEach(function(button) {
+            var couponName = button.id.replace('useButton_', '');
+            if(couponName !== excludeCoupon) {
+                button.disabled = true;
+            }
+        });
+    }
+
+    function enableAllCoupons() {
+        var couponButtons = document.querySelectorAll('.use-button');
+        couponButtons.forEach(function(button) {
+            button.disabled = false;
+        });
+    }
 </script>
 
 <%- include("../partials/footer") %>
