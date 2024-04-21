@@ -59,10 +59,18 @@
                                             <span>90%</span>
                                         </span>
                                     </div> -->                
-                                    <div class="product-price">
-                                        <span>€<%-product[i].salePrice.toLocaleString('en-IN')%> </span> 
-                                        <span class="old-price">€<%-product[i].regularPrice.toLocaleString('en-IN')%></span>
-                                   </div>
+                                    <!-- <div >
+                                        <span class="product-price">€-product[i].salePrice.toLocaleString('en-IN')%> </span> 
+                                        <span class="old-price">€-product[i].regularPrice.toLocaleString('en-IN')%></span>
+                                   </div> -->
+                                   <div class="product-price primary-color float-left">
+                                    <% if (product[i].salePrice) { %>
+                                        <span>€<%- product[i].salePrice.toLocaleString('en-IN') %></span>
+                                        <span class="old-price">€<%- product[i].regularPrice.toLocaleString('en-IN') %></span>  
+                                    <% } else { %>
+                                        <span class="product-price">€<%- product[i].regularPrice.toLocaleString('en-IN') %></span>
+                                     <% } %>       
+                                </div>
                           </div>
                           <div class="product-action-1 show">
                             <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>

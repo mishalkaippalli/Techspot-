@@ -39,7 +39,8 @@ const getHomePage = async (req, res) => {
     const productData = await Product.find({ isBlocked: false })
       .sort({ _id: -1 })
       .limit(4);
-
+       
+      console.log("inside gethomePage productdata is", productData)
     if (user) {
       res.render("home", {
         user: userData,
@@ -269,6 +270,7 @@ const getShopPage = async (req, res) => {
   try {
     const user = req.session.id;
     const products = await Product.find({ isBlocked: false });
+  
     const count = await Product.find({ isBlocked: false }).count();
     const brands = await Brand.find({});
     const categories = await Category.find({ isListed: true });

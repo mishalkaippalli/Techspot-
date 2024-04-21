@@ -45,10 +45,10 @@ Router.get("/checkout", isLogged, orderController.getCheckoutPage)
 Router.post("/orderPlaced", isLogged, orderController.orderPlaced)
 Router.get("/orderDetails", isLogged, orderController.getOrderDetailsPage)
 Router.get("/cancelOrder", isLogged, orderController.cancelOrder)
+Router.get("/return", isLogged, orderController.returnOrder)
 Router.post("/applyCoupon", isLogged, userController.applyCoupon)
 
-//Sales Report
-Router.get("/salesReport", isAdmin, adminController.getSalesReportPage)
+
 
 
 module.exports = Router;

@@ -61,5 +61,14 @@ Router.get("/changeStatus", isAdmin, orderController.changeOrderStatus)
 Router.get("/coupon", isAdmin, adminController.getCouponPageAdmin)
 Router.post("/createCoupon", isAdmin, adminController.createCoupon)
 
+//Sales Report
+Router.get("/salesReport", isAdmin, adminController.getSalesReportPage)
+Router.get("/salesToday", isAdmin, adminController.salesToday)
+Router.get("/salesWeekly", isAdmin, adminController.salesWeekly)
+Router.get("/salesMonthly", isAdmin, adminController.salesMonthly)
+Router.get("/salesYearly", isAdmin, adminController.salesYearly)
+Router.get("/dateWiseFilter", isAdmin, adminController.dateWiseFilter)
+Router.post('/generatePdf', isAdmin, adminController.generatePdf)
+Router.post('/downloadExcel', isAdmin, adminController.downloadExcel)
 
 module.exports = Router;

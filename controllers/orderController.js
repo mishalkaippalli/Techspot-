@@ -392,6 +392,52 @@ const changeOrderStatus = async(req, res) => {
         console.log(error.message)
     }
 }
+const returnOrder = async (req, res) => {
+    try {
+        
+        const userId = req.session.user
+        const findUser = await User.findOne({_id: userId})
+        
+        if(!findUser) {
+            return res.status(404).json({message: 'User not found'})
+        }
+
+        const id = req.query.id
+        await Order.updateOne({_id: id},
+        {status: "Returned"})
+        .then((data) => console.log(data))
+
+        const findOrder = await Order.findOne({_id: id})
+
+        if(findOrder.payment === "wallet" || findOrder.payment === "online"){
+            findUser.wallet += findOrder.totalPrice;
+
+            const newHistory = {
+                amount: findOrder.totalPrice,
+                status: "credit",
+                date: Date.now()
+            }
+            findUser.history.push(newHistory)
+            await findUser.save()
+        }
+        
+        for (const productData of findOrder.product) {
+            const productId = productData.ProductId;
+            const quantity = productData.quantity;
+
+            const product = await Product.findById(productId);
+
+            if(product){
+                product.quantity += quantity;
+                await product.save();
+            }
+        }
+        res.redirect('/profile');
+
+    } catch (error) {
+        console.log(error.message)
+    }
+}
 
 module.exports = {
                    getCheckoutPage,
@@ -400,5 +446,6 @@ module.exports = {
                    cancelOrder,
                    getOrderListPageAdmin,
                    getOrderDetailsPageAdmin,
-                   changeOrderStatus
+                   changeOrderStatus,
+                   returnOrder
                   }
