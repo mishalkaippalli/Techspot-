@@ -6,9 +6,17 @@ const path = require("path");
 
 const getProductAddPage = async (req, res) => {
   try {
-    const category = await Category.find({ isListed: true });
-    const brand = await Brand.find({ isBlocked: false });
-    res.render("add-product", { cat: category, brand: brand });
+    const errorfrommulter = req.query.error
+    if(errorfrommulter){
+      console.log("errorfrommulter is", errorfrommulter)
+      const category = await Category.find({ isListed: true });
+      const brand = await Brand.find({ isBlocked: false });
+      res.render("add-product", { cat: category, brand: brand , error: errorfrommulter});
+    } else {
+      const category = await Category.find({ isListed: true });
+      const brand = await Brand.find({ isBlocked: false });
+      res.render("add-product", { cat: category, brand: brand });
+    }
   } catch (error) {
     console.log(error.message);
   }
@@ -80,10 +88,21 @@ const getEditProduct = async(req, res) => {
   try {
     const id = req.query.id
     const findProduct = await Product.findOne({_id: id})
-
+     
+    if (!findProduct) {
+      // If product is not found, render an error page or redirect to a relevant page
+      return res.status(404).render("error", { message: "Product not found" });
+    }
+    
     const category = await Category.find({})
     const findBrand = await Brand.find({})
-    res.render("edit-product", {product: findProduct, cat: category, brand: findBrand})
+
+    const productcategory = await Category.find({_id: findProduct.category})
+    const productCategoryName = productcategory[0].name;
+    console.log("inside get edit product", productcategory);
+    console.log("productCategoryName", productCategoryName);
+    res.render("edit-product", {product: findProduct, cat: category, brand: findBrand,
+                                  categoryOfProduct: productCategoryName})
   } catch (error) {
     console.log(error.message)
   }
@@ -149,7 +168,9 @@ const deleteSingleImage = async (req, res) => {
 const editProduct = async(req, res) => {
   try {
     const id = req.params.id
+    console.log(req.body);
     const data = req.body
+    console.log("inside editProduct req body is", data)
     const images = []
     if(req.files && req.files.length > 0){
       for(let i = 0; i < req.files.length; i++){
@@ -157,10 +178,11 @@ const editProduct = async(req, res) => {
       }
     }
     console.log("I am inside post editproduct in producontroler, the files i recieved is ", req.files)
-    const {category} = req.body.category
-    const findCategory = await Category.findOne({category: category});
-    const categoryId = findCategory._id
-    console.log("categoryid inside edit product",categoryId)
+       
+     const categoryId = req.body.categoryId
+    // const findCategory = await Category.findOne({category: category});
+    //   const categoryId = findCategory._id
+    console.log("categoryid inside edit product",{categoryId})
     if(req.files.length > 0){
       console.log("Yes image is there")
       const updatedProduct = await Product.findByIdAndUpdate(id, {
@@ -204,6 +226,60 @@ const editProduct = async(req, res) => {
   }
 }
 
+const getBlockProduct = async (req, res) => {
+  try {
+     let id = req.query.id
+     await Product.updateOne({_id: id}, {$set: {isBlocked: true}})
+     console.log("product blocked")
+     res.redirect("/admin/products")
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+const getUnblockProduct = async(req, res) => {
+  try {
+     let id = req.query.id
+     await Product.updateOne({_id: id},{$set: {isBlocked: false}})
+     console.log("product unblocked")
+     res.redirect("/admin/products")
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+const addProductOffer = async (req, res) => {
+  try {
+    const {productId, percentage} = req.body
+    const findProduct = await Product.findOne({_id: productId})
+    console.log(findProduct)
+
+    findProduct.salePrice = findProduct.salePrice - Math.floor(findProduct.regularPrice * (percentage / 100))
+    findProduct.productOffer = parseInt(percentage)
+    await findProduct.save()
+
+    res.json({status: true})
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+const removeProductOffer = async(req, res) => {
+  try {
+    const {productId} = req.body
+    const findProduct = await Product.findOne({_id: productId})
+    console.log(findProduct);
+
+    const percentage = findProduct.productOffer
+    findProduct.salePrice = findProduct.salePrice + Math.floor(findProduct.regularPrice * (percentage / 100))
+    findProduct.productOffer = 0;
+    await findProduct.save()
+    res.json({status: true})
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 module.exports = {
   getProductAddPage,
   addProducts,
@@ -211,4 +287,8 @@ module.exports = {
   getEditProduct,
   editProduct,
   deleteSingleImage,
+  getBlockProduct,
+  getUnblockProduct,
+  addProductOffer,
+  removeProductOffer
 };

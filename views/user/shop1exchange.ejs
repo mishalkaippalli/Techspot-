@@ -1,0 +1,224 @@
+<%- include("../partials/header") %>
+
+<section class="mt-50 mb-50">
+    <div class="container">
+        <div class="row flex-row-reverse">
+            <div class="col-lg-9">
+                <div class="shop-product-filter">
+                    <div class="total-product">
+                        <% if (locals.count) { %>
+                             <p>We found <strong class="text-brand"><%= locals.count %></strong>items for you!</p>
+                         <% } %> 
+                    </div>
+                     <div class="sort-by-product-area">
+                        <div class="sort-by-product-wrap">
+                            <div class="sort-by">
+                                <span><i class="fi-rs-apps-sort"></i>Sort by:</span>
+                            </div>
+                            <div class="sort-by-dropdown-wrap">
+                                <select id="sortByDropdown" onchange="handleSortChange(this.value)">
+                                  <option value="featured" selected>Featured</option>
+                                  <option value="lowToHigh">Price: Low to High</option>
+                                  <option value="highToLow">Price: High to Low</option>
+                                  <option value="releaseDate">Release Date</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row product-grid-3">
+
+                    <% for (let i=0; i <product.length; i++)  { %>
+                       <div class="col-lg-4 col-md-4 col-12 col-sm-6">
+                          <div class="product-cart-wrap mb-30">
+                            <div class="product-cart-wrap mb-30"> <!--  //changes made -->
+                                <div class="product-img product-img-zoom">
+                                    <a href="/productDetails?id=<%=product[i].id%>">
+                                    <img class = "default-img" src="/uploads/product-images/<%=product[i].productImage[0]%>" alt="">
+                                    </a>
+                                </div> 
+                                
+                                <div class="product-action-1">
+                                    <a aria-label="Add to wishlist" class="action-btn hover-up" href="/addToWishlist"
+                                    onclick="addToWishlist('<%= product[i]._id %>')"><i class="fi-rs-heart"></i></a>  <!--prevents the anchor tag from causing the browser to navigate to a new URL when clicked-->
+                                </div>
+                                <!-- <div class="product-badges product-badges-position product-badges-mrg">
+                                    <span class="hot">Hot</span>
+                                </div> -->
+                            </div>
+                          </div>
+
+                          <div class="product-content-wrap">
+                            <div class="product-category">
+                                <a href="shop-grid-right.html"> <%= product[i].brand %></a>
+                            </div>
+                            <h2><a href="shop-product-right.html"><%= product[i].productName %></a></h2>
+                             <!-- <div class="rating-result" title="90%">
+                                        <span>
+                                            <span>90%</span>
+                                        </span>
+                                    </div> -->                
+                                    <!-- <div >
+                                        <span class="product-price">€-product[i].salePrice.toLocaleString('en-IN')%> </span> 
+                                        <span class="old-price">€-product[i].regularPrice.toLocaleString('en-IN')%></span>
+                                   </div> -->
+                                   <div class="product-price primary-color float-left">
+                                    <% if (product[i].salePrice) { %>
+                                        <span>€<%- product[i].salePrice.toLocaleString('en-IN') %></span>
+                                        <span class="old-price">€<%- product[i].regularPrice.toLocaleString('en-IN') %></span>  
+                                    <% } else { %>
+                                        <span class="product-price">€<%- product[i].regularPrice.toLocaleString('en-IN') %></span>
+                                     <% } %>       
+                                    </div>
+                          </div>
+                          <div class="product-action-1 show">
+                            <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
+                          </div>
+                       </div>
+                    <% } %>
+                </div>
+              
+              <% if(totalPages) { %>
+                <div class="pagination">
+                    <% if(currentPage > 1) {%>
+                        <button class="btn btn-sm"><a href="/shop?page=<%= currentPage - 1 %>">Previous</a></button>
+                    <% } %>
+
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                         <button class="btn btn-sm <%= i === currentPage? 'active' : '' %>">
+                         </button>
+                    <% } %>
+
+                    <% if(currentPage < totalPages) {%>
+                        <button class="btn btn-sm"><a href="/shop?page=<%= currentPage + 1 %>">Next</a></button>
+                    <% } %>
+                </div>
+              <% } %>
+
+            </div>
+            <div class="col-lg-3 primary-sidebar sticky-sidebar">
+                <div class="widget-category mb-30">
+                    <h5 class="section-title style-1 mb-30 wow fadeIn animated">Category</h5>
+                    <ul class="categories">
+                        
+                        <% for (let i = 0; i < category.length; i++) { %>
+                            <li><a href="/filter?category=<%= category[i]._id %>"><%= category[i].name %></a></li>
+                        <% } %> 
+                    </ul>
+                </div>
+        </div>   
+    </div>
+</section>
+
+<script>
+  
+   function addToWishlist(productId){
+         $.ajax({
+            url: "/addToWishlist",
+            method: "post",
+            data: {
+                productId : productId
+            },
+            success: (response)=> {
+                if(response.status == true){
+                    Swal.fire({
+                        title: 'Added to wishlist!',
+                        text: 'Continue Shopping',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    })
+                }else if(response.status == false){
+                    Swal.fire({
+                        title: 'you need to login first',
+                        text: 'continue shopping',
+                        icon: 'warning',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() =>{window.location.href = '/login' })
+                }
+            }
+        })
+        return false;
+    }  
+
+    function getCurrentPageFromURL(element) {
+        const url = window.location.href;
+        const match = url.match(/page=(\d+)/);  //\d: Matches any digit.
+
+        if(match && match[1]) {
+            return parseInt(match[1], 10);
+        }
+        return 1;
+    }
+
+    function handleSortChange(selectedOption) {
+      console.log(selectedOption);
+      let option = selectedOption;
+      $.ajax({
+        url: "/sortProducts",
+        method: "POST",
+        data: {
+            option: option,
+            //page: page
+        },
+        success: (response) => {
+            if(response.status === true){
+                const sortedProducts = response.data;
+                console.log(sortedProducts);
+                //clear existing product grid content
+                $(".product-grid-3").empty();
+                // $(.pagination).empty();
+
+                // render each product in the container
+                sortedProducts.currentProduct.forEach((product) => {
+                    const productDiv = $("<div class='col-lg-4 col-md-4 col-12 col-sm-6'>" +
+                        "<div class='product-cart-wrap mb-30'>" +
+                        "<div class='product-img-action-wrap'>" +
+                        "<div class='product-img product-img-zoom'>" +
+                        "<a href='/productDetails?id=" + product.id + "'>" +
+                        "<img class='default-img' src='/uploads/product-images/" + product.productImage[0] + "' alt=''>" +
+                        "</a>" +
+                        "</div>" +
+                        "<div class='product-action-1'>" +
+                        "<a aria-label='Add To Wishlist' class='action-btn hover-up' href='javascript:void(0);' onclick='addToWishlist(\"" + product._id + "\")'>" +
+                        "<i class='fi-rs-heart'></i>" +
+                        "</a>" +
+                        "</div>" +
+                        "<div class='product-badges product-badges-position product-badges-mrg'>" +
+                        "<span class='hot'>Hot</span>" +
+                        "</div>" +
+                        "</div>" +
+                        "<div class='product-content-wrap'>" +
+                        "<div class='product-category'>" +
+                        "<a href='shop-grid-right.html'>" + product.brand + "</a>" +
+                        "</div>" +
+                        "<h2><a href='shop-product-right.html'>" + product.productName + "</a></h2>" +
+                        "<div class='product-price'>" +
+                        "<span>€" + product.salePrice.toLocaleString('en-IN') + "</span>" +
+                        "<span class='old-price'>₹" + product.regularPrice.toLocaleString('en-IN') + "</span>" +
+                        "</div>" +
+                        "<div class='product-action-1 show'>" +
+                        "<a aria-label='Add To Cart' class='action-btn hover-up' href='shop-cart.html'>" +
+                        "<i class='fi-rs-shopping-bag-add'></i>" +
+                        "</a>" +
+                        "</div>" +
+                        "</div>" +
+                        "</div>" +
+                        "</div>");
+
+                    // Append the productDiv to the product grid
+                    $(".product-grid-3").append(productDiv);
+                    // $("#pagination").html(response.data.totalPages);
+                })
+            } else {
+                console.error("error in sorting products:",response)
+            }
+        }
+      });
+    }
+    
+</script>
+
+<%- include("../partials/footer") %>

@@ -321,7 +321,7 @@
         if(!payment){
         Swal.fire({
             title: 'No payment found',
-            text: 'please selct your payment',
+            text: 'please select your payment',
             icon: 'error',
             timer: 3000
         })
@@ -354,11 +354,17 @@
                         })
                         location.href("/orderHistory")
                     } else if (response.method === "online"){
-                        let orderAmount = Math.round(numericValue * 100)
-                        console.log(response, "res");
-                        var options = {
-                            //razorpaydetails
-                        }
+                        // alert(response)
+                        // let orderAmount = Math.round(numericValue * 100)
+                        console.log("response.orderId inside ajax", response.orderId);
+                        alert(response.orderId)
+                        const orderId = response.orderId
+                        // var options = {
+                        //     //razorpaydetails              
+                        // }
+
+                        window.location.href = "/onlinePaymentPage?orderId="+orderId;  
+                                     
                     } else if (response.method === "wallet") {
                         if(response.payment === true) {
                             Swal.fire({

@@ -289,6 +289,7 @@ const getShopPage = async (req, res) => {
           user: user,
           product: currentProduct,
           brand: brands,
+          category: categories,
           count: count,
           totalPages,
           currentPage, 
@@ -347,20 +348,23 @@ const filterProduct = async(req, res) => {
     const brand = req.query.brand;
     const brands = await Brand.find({});
     const findCategory = category ? await Category.findOne({_id: category}) : null;
+    console.log("inside filterproduct findcategory is", findCategory)
     const findBrand = brand ? await Brand.findOne({_id: brand}): null;
 
     const query = {
       isBlocked: false,
     };
     if(findCategory) {
-      query.category = findCategory.name;
+      query.id = findCategory._id;
+      console.log("query id", query.id)
     }
+   
 
     if(findBrand){
       query.brand = findBrand.brandName
     }
 
-    const findProducts = await Product.find(query);
+    const findProducts = await Product.find({category: query.id});
     const categories = await Category.find({isListed: true})
 
     let itemsPerPage = 6;

@@ -25,6 +25,11 @@
 
 
     <section class="content-main">
+        <% if (locals.error) { %>
+            <div class="alert alert-danger" id="alertMessage" >
+                <%= error %>
+            </div>
+        <% } %>
         <div class="row">
             <div class="col-9">
                 <div class="content-header">
@@ -206,7 +211,13 @@
 
     <script>
 
-
+    const alertElement = document.getElementById('alertMessage');
+     // to clear the error(from backend validation) after 5 seconds
+     if (alertElement) {
+     setTimeout(function () {
+      alertElement.style.display = 'none';
+      }, 3000);
+     } 
 
         function viewImage1(event) {
             document.getElementById('imgView1').src = URL.createObjectURL(event.target.files[0])
@@ -274,11 +285,6 @@
             };
             reader.readAsDataURL(input.files[0]);
         }
-
-
-
-
-
 
         // Array to store selected images
         const selectedImages = [];

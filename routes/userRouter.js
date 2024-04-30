@@ -6,6 +6,8 @@ const userProfileController = require("../controllers/userProfileController")
 const cartController = require("../controllers/cartController")
 const { isLogged, isAdmin } = require("../authenticaiton/auth");
 const orderController = require("../controllers/orderController")
+const wishlistController = require("../controllers/wishlistController")
+const paypalController = require("../controllers/paypalController")
 
 //User Actions
 Router.get("/", userController.getHomePage);
@@ -48,7 +50,15 @@ Router.get("/cancelOrder", isLogged, orderController.cancelOrder)
 Router.get("/return", isLogged, orderController.returnOrder)
 Router.post("/applyCoupon", isLogged, userController.applyCoupon)
 
+// Wishlist
+Router.get("/wishlist", isLogged, wishlistController.getWishlistPage)
+Router.post("/addToWishlist",isLogged, wishlistController.addToWishlist)
+Router.get("/deleteWishlist", isLogged, wishlistController.deleteItemWishlist)
 
+//Onlinepayment
+Router.get('/onlinePaymentPage', isLogged, paypalController.paypalpage )
+Router.post('/api/orders', isLogged, paypalController.paypalOrderCreator)
+Router.post( "/api/orders/:orderID/capture", isLogged, paypalController.paypalCaptureOrder)
 
 
 module.exports = Router;

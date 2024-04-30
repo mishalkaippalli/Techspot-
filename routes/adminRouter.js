@@ -23,9 +23,7 @@ Router.get("/blockCustomer",isAdmin, customerController.getCustomerBlocked);
 Router.get("/unblockCustomer",isAdmin, customerController.getCustomerUnblocked);
 
 //Multer settings
-const multer = require("multer");
-const storage = require("../associates/multer");
-const upload = multer({ storage: storage }); //upload holds multer middleware
+const upload = require("../associates/multer.js") //upload holds multer middleware
 Router.use("public/uploads", express.static("public/uploads"));
 
 // category management
@@ -36,6 +34,8 @@ Router.get("/listcategory",isAdmin, categoryController.getListCategory);
 Router.get("/unlistCategory",isAdmin, categoryController.getUnlistCategory);
 Router.get("/editCategory",isAdmin, categoryController.getEditCategory);
 Router.post("/editCategory/:id",isAdmin, categoryController.editCategory);
+Router.post("/addCategoryOffer", isAdmin, categoryController.addCategoryOffer)
+Router.post("/removeCategoryOffer", isAdmin, categoryController.removeCategoryOffer)
 
 // brand management
 Router.get("/brands",isAdmin, brandController.getBrandPage);
@@ -46,11 +46,22 @@ Router.get("/unblockBrand",isAdmin, brandController.unBlockBrand);
 
 // product management
 Router.get("/addProducts",isAdmin, productController.getProductAddPage);
-Router.post("/addProducts",isAdmin, upload.array("images", [3]), productController.addProducts);
+Router.post("/addProducts",isAdmin, upload.array("images", [3]),
+(req, res) => {
+    // Check if req.fileFilterError exists
+    if (req.fileFilterError) {
+      // Redirect with error message
+      return res.redirect("/admin/addProducts?error=" + encodeURIComponent(req.fileFilterError));
+    }},
+productController.addProducts);
 Router.get("/products",isAdmin, productController.getAllProducts);
 Router.get("/editProduct",isAdmin, productController.getEditProduct);
 Router.post("/editProduct/:id",isAdmin, upload.array("images", 5), productController.editProduct);
 Router.post("/deleteImage",isAdmin, productController.deleteSingleImage)
+Router.get("/blockProduct", isAdmin, productController.getBlockProduct)
+Router.get("/unBlockProduct", isAdmin, productController.getUnblockProduct)
+Router.post("/addProductOffer", isAdmin, productController.addProductOffer)
+Router.post("/removeProductOffer", isAdmin, productController.removeProductOffer)
 
 //Order Management
 Router.get("/orderList", isAdmin, orderController.getOrderListPageAdmin)

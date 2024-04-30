@@ -18,7 +18,13 @@
                  <div class="d-grid text-end mt-30 col-md-5">
                     <button id="submitButton" class="btn btn-primary" type="submit">Update Category</button>
                  </div>
+                 <% if (locals.message && message.length> 0) { %>
+                    <div id="alertMessage" class="alert alert-danger">
+                        <%= message %>
+                    </div>
+                    <% } %>
             </form>
+           
         </div>
     </div>
 </div>
