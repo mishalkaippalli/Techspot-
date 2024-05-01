@@ -2,34 +2,39 @@ const mongoose = require('mongoose'); // Erase if already required
 
 // Declare the Schema of the Mongo model
 var couponSchema = new mongoose.Schema({
-    name:{
+    couponCode:{
         type:String,
         required:true,
-        unique:true,
-    },
-    createdOn:{
-        type:Date,
+     },
+     couponDescription:{
+        type:String,
         required:true,
-    },
-    expireOn:{
-        type:Date,
-        required:true,
-    },
-    offerPrice:{
+     },
+     discountPercentage:{
         type:Number,
         required:true,
-    },
-    minimumPrice: {
-        type: Number,
-        required: true
-    },
-    isList: {
-        type: Boolean,
-        default: true
-    },
-    userId: {
-        type: Array
-    }
+     },
+     minOrderAmount:{
+        type:Number,
+        required:true,
+     },
+     maxDiscountAmount:{
+        type:Number,
+        required:true,
+     },
+     validFor:{
+        type:Date,
+        required:true,
+     },
+     createdOn:{
+        type:Date,
+        required:true,
+     },
+     isActive:{
+        type:Boolean,
+        default:true,
+        required:true,
+     }
 });
 
 const Coupon = mongoose.model("coupon", couponSchema)

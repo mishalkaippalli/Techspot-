@@ -1,0 +1,150 @@
+<%- include("../partials/adminHeader") %>
+
+<section class="content-main">
+    <div class="content-header">
+       <div>
+          <h2 class="content-title card-title">Add New Coupon </h2>
+       </div>
+    </div>
+    <div class="card">
+       <div class="card-body">
+          <div class="row">
+             <div class="col-md-12">
+                <!--Catergory adding form-->
+                <form method="post" action="" id="couponForm">
+                   <div class="row">
+                      <div class="mb-4 col-md-6">
+                         <label for="couponCode" class="form-label">Coupon Code</label>
+                         <input id="couponCode" name="couponCode" type="text" placeholder="Type here"
+                            class="form-control" />
+                         <p id="couponCodeError" style="color : red"></p>
+                      </div>
+                      <div class="mb-4 col-md-6">
+                         <label for="couponDiscount" class="form-label">Discount Percentage</label>
+                         <input id="couponDiscount" name="couponDiscount" type="text" placeholder="Type here" class="form-control" />
+                         <p id="couponDiscountError" style="color : red"></p>
+                      </div>
+                   </div>
+                   <div class="mb-4">
+                      <label for="couponMinAmount" class="form-label">Minimum Order Amount</label>
+                      <input id="couponMinAmount" name="couponMinAmount" type="text" placeholder="Type here"
+                         class="form-control" />
+                      <p id="couponMinAmountError" style="color : red"></p>
+                   </div>
+                   <div class="mb-4">
+                      <label for="couponMaxDiscountAmount" class="form-label">Maximum Discount Amount</label>
+                      <input id="couponMaxDiscountAmount" name="couponMaxDiscountAmount" type="text" placeholder="Type here"
+                         class="form-control" />
+                      <p id="couponMaxDiscountAmountError" style="color : red"></p>
+                   </div>
+                   <div class="row"> 
+                      <div class="mb-4 col-md-6">
+                         <label for="couponCreated" class="form-label">Starting Date</label>
+                         <input id="couponCreated" name="couponCreated" value="" type="date" placeholder="Type here" class="form-control" />
+                         <p id="couponCreatedError" style="color : red"></p>
+                      </div>
+                      <div class="mb-4 col-md-6">
+                         <label for="couponExpiration" class="form-label">Expiration Date</label>
+                         <input id="couponExpiration" name="couponExpiration" type="date" placeholder="Type here" class="form-control" />
+                         <p id="couponExpirationError" style="color : red"></p>
+                      </div>
+                   </div>
+                   
+                   <div class="mb-4">
+                      <label class="form-label">Description</label>
+                      <textarea id="couponDescription" name="couponDescription" placeholder="Type here"
+                         class="form-control"></textarea>
+                      <p id="couponDescriptionError" style="color : red"></p>
+                   </div>
+                   
+                   <div class="d-grid">
+                      <button type="submit" class="btn btn-primary">Add Coupon</button>
+                   </div>
+                </form>
+                <a href="/admin/coupon" class="btn btn-dark mt-3">Go Back</a>
+             </div>
+
+          </div> <!-- .row // -->
+       </div> <!-- card body .// -->
+    </div> <!-- card .// -->
+ </section> <!-- content-main end// -->
+ <footer class="main-footer font-xs">
+    <div class="row pb-30 pt-15">
+       <div class="col-sm-6">
+          <script>
+             document.write(new Date().getFullYear())
+          </script> ©, Techspot - HTML Ecommerce Template .
+       </div>
+       <div class="col-sm-6">
+          <div class="text-sm-end">
+             All rights reserved
+          </div>
+       </div>
+    </div>
+ </footer>
+
+
+
+</main>
+<script>
+ document.getElementById('couponCreated').valueAsDate = new Date();
+</script>
+<!-- // Date -->
+<script>
+ document.getElementById('couponForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const isValid = couponValidate();
+    alert("isvalid"+ isValid)
+    if (isValid) {
+       const formData = {
+          couponCode: event.currentTarget.couponCode.value,
+          couponDiscount: event.currentTarget.couponDiscount.value,
+          couponMinAmount: event.currentTarget.couponMinAmount.value,
+          couponMaxDiscountAmount : event.currentTarget.couponMaxDiscountAmount.value,
+          couponCreated:event.currentTarget.couponCreated.value,
+          couponExpiration: event.currentTarget.couponExpiration.value,
+          couponDescription: event.currentTarget.couponDescription.value,
+       }
+       alert(formData)
+       try {
+        const response = await fetch('/admin/createCoupon', {
+          method: "POST",
+          headers: {
+             'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData),
+       })
+
+       const result = await response.json()
+
+       if (result.status === 'success') {
+          Swal.fire({
+                       icon: 'success',
+                       title: result.message,
+                       showConfirmButton: false,
+                       timer: 1000
+                   })
+             setTimeout(()=>{
+                location.href = '/admin/coupon'
+             },1500)
+       } else {
+          Swal.fire({
+                       icon: 'error',
+                       title: result.message,
+                       showConfirmButton: false,
+                       timer: 1000
+                   })
+       }
+
+       } catch (error) {
+        console.log(error.message)
+       }
+      
+       
+    }
+ })
+</script>
+<script src="/js/addCouponValidate.js"></script>
+
+<%- include("../partials/adminFooter") %>

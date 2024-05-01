@@ -8,6 +8,7 @@ const productController = require("../controllers/productController");
 const brandController = require("../controllers/brandController");
 const orderController = require("../controllers/orderController.js")
 const Category = require("../models/categorySchema");
+const couponController = require("../controllers/couponController.js")
 
 const {isAdmin} = require("../authenticaiton/auth.js")
 
@@ -69,8 +70,17 @@ Router.get("/orderDetailsAdmin", isAdmin, orderController.getOrderDetailsPageAdm
 Router.get("/changeStatus", isAdmin, orderController.changeOrderStatus)
 
 //Coupon Management
-Router.get("/coupon", isAdmin, adminController.getCouponPageAdmin)
-Router.post("/createCoupon", isAdmin, adminController.createCoupon)
+// To load the list of coupons
+Router.get("/list-coupons", isAdmin, couponController.listCoupons)
+
+// Load Add the coupons page
+Router.get("/add-coupon", isAdmin, couponController.loadAddCoupons)
+
+// Add coupons
+Router.post("/add-coupon", isAdmin, couponController.addCoupons)
+
+// Inactivate the coupon
+Router.get('/change-coupon-status',isAdmin,couponController.changeCouponStatus);
 
 //Sales Report
 Router.get("/salesReport", isAdmin, adminController.getSalesReportPage)
