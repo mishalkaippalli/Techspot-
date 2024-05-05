@@ -1,0 +1,80 @@
+<ul>
+    <% if (locals.coupons) {%>
+        <% for(let i = 0; i < coupons.length; i++) { %>
+            <li>
+                <div class="coupon-card col-4" style="margin-left: 150px; margin-top: 20px">
+                <div class="coupon-details">
+                    <span class="coupon-name">
+                        <%= coupons[i].name %>
+                    </span><br>
+                    <!-- other coupons an be added here -->
+                </div>
+                <button onclick="useCoupon('<%= coupons[i].name %>')" id="useButton_<%= coupons[i].name %>" class="use-button">Use</button>
+                <button onclick="cancelCoupon('<%= coupons[i].name %>')" id="cancelButton_<%= coupons[i].name %>" class="cancel-button btn-danger" style="display: none;">Cancel</button>
+                </div>
+            </li>
+        <% } %>
+    <% } else { %>
+        <h3>No coupons Available</h3>
+     <% } %>
+</ul>
+
+
+
+
+
+
+
+
+
+<div class="modal fade" id="addCouponModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            alert("dsfdsf")
+            <% if (locals.coupons) { %>          
+                <% for( let i=0; i < coupons.length; i++ ) { %>
+                    <div class="modal-body">
+                        <div class="card bg-light-green">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="couponCode<%- i %>" class="form-label"><%-
+                                            coupons[i].couponDescription %></label>
+                                    <div class="coupon-code" id="couponCode<%- i %>"><%- coupons[i].couponCode %>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-primary copy-button "
+                                        data-clipboard-target="#couponCode<%- i %>">Copy</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <% } %>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">OK</button>
+                            <!-- You can add a "Save" button here if needed -->
+                        </div>
+                        <% }else{ %>
+                            <div class="modal-body">
+                                <div class="card bg-light-green">
+                                    <div class="card-body">
+                                        <div class="mb-3">
+
+                                            <div class="text-center">
+                                                <h2>No Coupons Found</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                <!-- You can add a "Save" button here if needed -->
+                            </div>
+                            <% } %>
+
+
+        </div>
+    </div>
+</div>

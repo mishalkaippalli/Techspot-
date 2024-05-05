@@ -26,25 +26,28 @@ const getCheckoutPage = async(req, res) => {
             const userId = req.session.user
             const findUser = await User.findOne({_id: userId})
             const addressData = await Address.findOne({userId: userId})
+            const coupons = await Coupon.find({isActive: true})
             console.log("addressdata: ",addressData)
             console.log("findproduct", findProduct);
 
             const today = new Date().toISOString(); 
-
-            const findCoupons = await Coupon.find({
-                isList: true,
-                createdOn: {$lt: new Date(today)},
-                expireOn: {$gt: new Date(today)},
-                minimumPrice: {$lt: findProduct[0].salePrice}
-            });
-            console.log(findCoupons, "this is coupon");
+            
+            const availableCoupons = coupons.filter((coupons)=> coupons.minOrderAmount < grandTotal)
+            // const findCoupons = await Coupon.find({
+            //     isList: true,
+            //     createdOn: {$lt: new Date(today)},
+            //     expireOn: {$gt: new Date(today)},
+            //     minimumPrice: {$lt: findProduct[0].salePrice}
+            // });
+            // console.log(findCoupons, "this is coupon");
 
             res.render("checkout", {product: findProduct, user: userId, findUser: findUser,
-                                     userAddress: addressData, isSingle: true, coupons: findCoupons}) 
+                                     userAddress: addressData, isSingle: true, coupons: availableCoupons}) 
         } else {                             
             const user = req.query.userId
             const findUser = await User.findOne({_id: user})
             console.log(findUser);
+            // const coupons = await Coupon.find({isActive: true})
             const addressData = await Address.findOne({userId: user})
             const oid = new mongodb.ObjectId(user);
             const data = await User.aggregate([
@@ -65,21 +68,27 @@ const getCheckoutPage = async(req, res) => {
                     }
                 },
             ])
+            console.log("data",data)
 
             const grandTotal = req.session.grandTotal
             console.log("grandtotal", grandTotal)
             const today = new Date().toISOString();
 
             const findCoupons = await Coupon.find({
-                isList: true,
-                createdOn: {$lt: new Date(today)},
-                expireOn: {$gt: new Date(today)},
-                minimumPrice: {$lt: grandTotal}
+                isActive: true,
+                createdOn: { $lt: new Date(today) },
+                validFor: { $gt: new Date(today) },
+                minOrderAmount: { $lt: grandTotal },
             });
-            console.log("coupons", findCoupons);
+            
+            console.log("findCoupons", findCoupons);
+            // cartItemsCount = 2;
+            // userWallet = {walletAmount: 1000}
+            
+            res.render("checkoutlaptry", {data: data, user: findUser, isCart: true,
+                 userAddress: addressData, isSingle: false, grandTotal, coupons: findCoupons})   
 
-            res.render("checkout", {data: data, user: findUser, isCart: true,
-                 userAddress: addressData, isSingle: false, grandTotal, coupons: findCoupons })   
+                 //chaned for trials uderAddress to address, data to cart, cartItemsCount added, userWallet added
         }
     } catch (error) {
         console.log(error.message)
@@ -170,8 +179,17 @@ const orderPlaced = async (req, res) => {
         // } else {
             console.log("from cart")
 
-            const {totalPrice, addressId, payment} = req.body
-            console.log(totalPrice, addressId, payment);
+        //     totalPrice: numericValue,
+        //     couponDiscount: discountValue,
+        //     netTotal: actualNumericValue,
+        //     addressId: address,
+        //     payment: payment,
+        //     productId: prodId,
+        //     isSingle
+        // },
+
+            const {totalPrice,couponDiscount,netTotal, addressId, payment} = req.body
+            console.log(totalPrice,couponDiscount,netTotal, addressId, payment);
 
             const userId = req.session.user
             const findUser = await User.findOne({_id: userId})
@@ -213,7 +231,9 @@ const orderPlaced = async (req, res) => {
 
                 const newOrder = new Order({
                     product: orderedProducts,
-                    totalPrice: grandTotal,
+                    totalPrice: totalPrice,
+                    actualTotalAmount: netTotal,
+                    couponDiscount: couponDiscount,
                     address: desiredAddress,
                     payment: payment,
                     userId: userId,

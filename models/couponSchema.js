@@ -34,7 +34,10 @@ var couponSchema = new mongoose.Schema({
         type:Boolean,
         default:true,
         required:true,
-     }
+     },
+     userId : {
+      type : Array
+  }
 });
 
 const Coupon = mongoose.model("coupon", couponSchema)

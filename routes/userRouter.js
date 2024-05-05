@@ -8,6 +8,7 @@ const { isLogged, isAdmin } = require("../authenticaiton/auth");
 const orderController = require("../controllers/orderController")
 const wishlistController = require("../controllers/wishlistController")
 const paypalController = require("../controllers/paypalController")
+const couponController = require("../controllers/couponController.js")
 
 //User Actions
 Router.get("/", userController.getHomePage);
@@ -48,7 +49,9 @@ Router.post("/orderPlaced", isLogged, orderController.orderPlaced)
 Router.get("/orderDetails", isLogged, orderController.getOrderDetailsPage)
 Router.get("/cancelOrder", isLogged, orderController.cancelOrder)
 Router.get("/return", isLogged, orderController.returnOrder)
-Router.post("/applyCoupon", isLogged, userController.applyCoupon)
+
+//coupon
+Router.post("/applyCoupon", isLogged, couponController.applyCoupon)
 
 // Wishlist
 Router.get("/wishlist", isLogged, wishlistController.getWishlistPage)

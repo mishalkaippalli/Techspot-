@@ -1,15 +1,22 @@
 const mongoose = require('mongoose'); 
 
-
 var orderSchema = new mongoose.Schema({
     product:{
         type:Array,
         required:true,
     },
+    couponDiscount:{
+        type:Number,
+        default:0
+     },
     totalPrice:{
         type:Number,
         required:true,
     },
+    actualTotalAmount:{
+        type:Number,
+        required:true
+     },
     address:{
         type:Array,
         required:true,

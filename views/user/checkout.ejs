@@ -141,35 +141,38 @@
                             <label class="form-check-label" for="Razorpay" data-bs-toggle="collapse"
                                 data-target="#Paypal" aria-controls="paypal">Paypal</label>
                         </div>
+
+                        
                         <div class="mb-25 ml-150 pt-40">
                             <h5>Available Coupons</h5>
                         </div>
 
                         <ul>
-                            <% if (locals.coupons) {%>
-                                <% for(let i = 0; i < coupons.length; i++) { %>
+                            <% if (locals.coupons) { %>
+                                <% for (let i=0; i < coupons.length; i++) { %>
                                     <li>
-                                        <div class="coupon-card col-4" style="margin-left: 150px; margin-top: 20px">
-                                        <div class="coupon-details">
-                                            <span class="coupon-name">
-                                                <%= coupons[i].name %>
-                                            </span><br>
-                                            <!-- other coupons an be added here -->
-                                        </div>
-                                        <button onclick="useCoupon('<%= coupons[i].name %>')" id="useButton_<%= coupons[i].name %>" class="use-button">Use</button>
-                                        <button onclick="cancelCoupon('<%= coupons[i].name %>')" id="cancelButton_<%= coupons[i].name %>" class="cancel-button btn-danger" style="display: none;">Cancel</button>
+                                        <div class="coupon-card col-4" style="margin-left: 150px; margin-top: 20px;">
+                                            <div class="coupon-details">
+                                                <span class="coupon-name">
+                                                    <%= coupons[i].couponCode %>
+                                                </span><br>
+                                                <!-- Add other coupon details if needed -->
+                                            </div>
+                                            <button onclick="useCoupon('<%= coupons[i].couponCode %>')" id="useButton_<%= coupons[i].couponCode %>" class="use-button">Use</button>
+                                            <button onclick="cancelCoupon('<%= coupons[i].couponCode %>')" id="cancelButton_<%= coupons[i].couponCode %>" class="cancel-button btn-danger" style="display: none;">Cancel</button>
                                         </div>
                                     </li>
-                                <% } %>
-                            <% } else { %>
-                                <h3>No coupons Available</h3>
-                             <% } %>
-                        </ul>
+                                    
+                                    <% } %>
+                                        <% }else{ %>
 
+                                            <h3>No coupons available</h3>
+
+                                            <% } %>
+                        </ul>
+                
                     </div>
                  </div>
-
-              
 
                  <div class="col-8">
                     <div class="row align-items-start mt-30 ml-150">
@@ -258,6 +261,14 @@
                                 <tr>
                                     <th>Shipping</th>
                                     <td colspan="2"><em>Free Shipping</em></td>
+                                </tr>
+                                <tr>
+                                    <th>Total for All Products</th>
+                                    <td colspan="2" class="product-subtotal"
+                                    >
+                                        <span class="font-xl text-brand fw-900" id="totalValue"><%=
+                                                totalAmount %></span>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Discount</th>
