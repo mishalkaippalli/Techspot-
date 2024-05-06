@@ -32,15 +32,17 @@ const getHomePage = async (req, res) => {
   try {
     const today = new Date().toISOString();
     const user = req.session.user;
+    console.log("req.session.user inside get home page",user)
     //banner here
 
-    const userData = await User.findOne({});
+    const userData = await User.findOne({_id: user});
+    console.log("userdata inside get home page", userData)
     const brandData = await Brand.find({ isBlocked: false });
     const productData = await Product.find({ isBlocked: false })
       .sort({ _id: -1 })
       .limit(4);
        
-      console.log("inside gethomePage productdata is", productData)
+      // console.log("inside gethomePage productdata is", productData)
     if (user) {
       res.render("home", {
         user: userData,
@@ -321,15 +323,16 @@ const getProductDetailPage = async (req, res) => {
     console.log(id);
     const findProduct = await Product.findOne({ id: id });
     console.log("Iam inside getproduct details page", findProduct);
-    const findCategory = await Category.findOne({ name: findProduct.category });
+    const findCategory = await Category.findOne({ _id: findProduct.category });
+    console.log("find category inside getproductdetail page",findCategory);
 
     // let totalOffer
     // if(findCategory.categoryOffer || findProduct.productOffer){
     //   totalOffer = findCategory.categoryOffer + findProduct.productOffer
     // }
 
-    console.log("findproduct is", findProduct);
-    console.log("findcategory is", findCategory);
+    // console.log("findproduct is", findProduct);
+    // console.log("findcategory is", findCategory);
 
     if (user) {
       res.render("productDetails", { data: findProduct, user: user });

@@ -364,6 +364,149 @@ const dateWiseFilter = async (req, res) => {
   }
 }
 
+const loadSalesReport = async(req,res)=>{
+  try{
+     const orders = await Order.aggregate([{$match:{orderStatus:'Delivered'}},{$sort:{date:-1}}]);
+    
+     res.render('salesreporttrialwillys',{orders});
+  }catch(error){
+     console.log(error.message);
+  }
+}
+
+
+// Sales report filtering
+
+const filterSales = async(req,res)=>{
+   try {
+    console.log("Iam inside filterSales req.query. is => ",req.query )
+      const number = req.query.identify
+      // Number is 0 === All orders
+      // Number is 1 === Today
+      // Number is 2 === Weekly
+      // Number is 3 === Monthly
+      // Number is 4 === Yearly
+      // console.log(number)
+ 
+      const today = new Date();
+      if(number === '0'){ // All time report
+
+         // Finding data using aggregate
+         const orders = await Order.aggregate([{$match:{orderStatus:'Delivered'}},{$sort:{date:-1}}]);
+         res.json({orders});
+
+      }else if (number === '1') { // Daily report
+
+         const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+         const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+      
+         // Finding data using aggregate
+         const orders = await Order.aggregate([ 
+            {
+               $match: {
+                  orderStatus: 'Delivered',
+                  date: {
+                     $gte: startOfDay,
+                     $lt: endOfDay
+                  }
+               }
+            },
+            {$project:{
+               date:1,
+               actualTotalAmount:1
+            }},
+            {$sort:{date:-1}}
+         ]);
+         
+         res.json({ orders });
+
+      }else if(number === '2'){ // Weekly Report
+
+         const currentDay = today.getDay();
+         const startofWeek = new Date(today)
+         startofWeek.setDate(today.getDate()-currentDay) // We will get the sunday "0"
+
+         const endofWeek = new Date(today)
+         endofWeek.setDate(today.getDate() + 6-currentDay); // we will get the saturday it means "6"
+
+         const orders = await Order.aggregate([
+            {$match:{
+               orderStatus:'Delivered',
+               date:{
+                  $gte:startofWeek,
+                  $lte:endofWeek
+               }
+            }},
+            {$project:{
+               date:1,
+               actualTotalAmount:1
+            }},
+            {$sort:{date:-1}}
+         ])
+         console.log("orders inside weekly report ", orders);
+         res.json({orders});
+
+      }else if(number === '3'){ // Monthly Report
+
+         // Finding data using aggregate
+         const startofMonth = new Date(today.getFullYear(),today.getMonth(),1);
+         const endofMonth = new Date(today.getFullYear(),today.getMonth()+1, 0, 23, 59, 59, 999);
+         
+        //  const orders = await Order.aggregate([
+        //   {
+        //     $match: {
+        //       createdOn: {
+        //         $gte: startOfTheDay,
+        //         $lt: endOfTheDay
+        //       },
+        //       status: "Delivered"
+        //     }
+        //   }
+        // ]).sort({createdOn: -1})
+
+         const orders = await Order.aggregate([
+            {$match:{
+               status:'Delivered',
+               date:{
+                  $gte:startofMonth,
+                  $lte:endofMonth
+               }
+            }},
+            {$project:{
+               date:1,
+               actualTotalAmount:1
+            }},
+            {$sort:{date:-1}}
+         ])
+         res.json({orders});
+      }else if(number ==='4'){ // Yearly Report
+
+         const startOfYear = new Date(today.getFullYear(), 0, 1); // January is 0
+         const endOfYear = new Date(today.getFullYear() + 1, 0, 0, 23, 59, 59, 999); // December 31, last millisecond
+
+         const orders = await Order.aggregate([
+            {$match:{
+               orderStatus:'Delivered',
+               date:{
+                  $gte:startOfYear,
+                  $lte:endOfYear
+               }
+            }},
+            {$project:{
+               date:1,
+               actualTotalAmount:1
+            }},
+            {$sort:{date:-1}}
+         ])
+         res.json({orders});
+
+      }
+      // res.render('sales-report')
+   } catch (error) {
+      console.log(error.message);
+   }
+}
+
 
 
 
@@ -378,5 +521,7 @@ module.exports = {
                     salesYearly,
                     generatePdf,
                     downloadExcel,
-                    dateWiseFilter
+                    dateWiseFilter,
+                    loadSalesReport,
+                    filterSales
                   };

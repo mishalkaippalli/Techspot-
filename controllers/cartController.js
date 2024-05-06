@@ -77,6 +77,7 @@ const addToCart = async (req, res) => {
         const id = req.query.id
         console.log(id)
         const userId = req.session.user
+        console.log("user id inside addtocart", userId)
         const findUser = await User.findById(userId)
         console.log(findUser)
         const product = await Product.findById({_id: id}).lean()  //In Mongoose, the .lean() method is used to return a plain JavaScript object (POJO - Plain Old JavaScript Object) instead of a Mongoose document
@@ -110,10 +111,11 @@ const addToCart = async (req, res) => {
                 );
                 res.json({status:true})
             } else {
-                res.json({status: "out of stock"})
+                res.json({status: "Out of stock"})
             }
           }
-        } else { res.json({status: "out of stock"})
+        } else { res.json({status: "Out of stock"})
+        console.log("out of stock ind first if case")
     }
     } catch (error) {
         console.log(error.message)

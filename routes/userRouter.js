@@ -18,7 +18,7 @@ Router.get("/signup", userController.getSignupPage);
 Router.post("/signup", userController.signupUser);
 Router.post("/resendOtp", userController.resendOtp);
 Router.post("/verify-otp", userController.verifyOtp);
-Router.get("/logout", userController.getLogoutUser)
+Router.get("/logout",isLogged, userController.getLogoutUser)
 
 //Product based routes
 Router.get("/shop", isLogged, userController.getShopPage);

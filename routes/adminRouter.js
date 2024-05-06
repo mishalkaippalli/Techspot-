@@ -47,6 +47,7 @@ Router.get("/unblockBrand",isAdmin, brandController.unBlockBrand);
 
 // product management
 Router.get("/addProducts",isAdmin, productController.getProductAddPage);
+
 Router.post("/addProducts",isAdmin, upload.array("images", [3]),
 (req, res) => {
     // Check if req.fileFilterError exists
@@ -55,6 +56,7 @@ Router.post("/addProducts",isAdmin, upload.array("images", [3]),
       return res.redirect("/admin/addProducts?error=" + encodeURIComponent(req.fileFilterError));
     }},
 productController.addProducts);
+
 Router.get("/products",isAdmin, productController.getAllProducts);
 Router.get("/editProduct",isAdmin, productController.getEditProduct);
 Router.post("/editProduct/:id",isAdmin, upload.array("images", 5), productController.editProduct);
@@ -91,5 +93,10 @@ Router.get("/salesYearly", isAdmin, adminController.salesYearly)
 Router.get("/dateWiseFilter", isAdmin, adminController.dateWiseFilter)
 Router.post('/generatePdf', isAdmin, adminController.generatePdf)
 Router.post('/downloadExcel', isAdmin, adminController.downloadExcel)
+
+//sales report trial
+Router.get('/sales-report', isAdmin, adminController.loadSalesReport);
+Router.get('/filter-sales',isAdmin, adminController.filterSales)
+
 
 module.exports = Router;

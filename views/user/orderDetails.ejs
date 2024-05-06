@@ -39,8 +39,8 @@
             <header class="card-header"?>
                 <div class="row align-items-cneter">
                     <div class="col-lg-4 col-md-4 ms-auto text-md-end">
-                        <% if(orders.status !== "Canceled") { %>
-                            <% if (orders.status === "Delivered") { %>
+                        <% if(order.orderStatus !== "Canceled") { %>
+                            <% if (order.orderStatus === "Delivered") { %>
                                 <div class="row">
                                     <div class="col-2" style="margin-right: 40px;">
                                       <a class="btn custom-btn" id="print-button" >Invoice</a>
@@ -53,7 +53,7 @@
                                       <h4 class="text-success">Delivered</h4>
                                     </div>
                                 </div>
-                            <% } else if (orders.status === "Returned") {%>
+                            <% } else if (order.orderStatus === "Returned") {%>
                                   <h4 class="text-warning">Returned</h4>
                                   <% } else { %>
                                         <select id="actionDropdown"
@@ -96,19 +96,19 @@
                             <h6 class="mb-1">Order info</h6>
                             <p class="mb-1">
                                <% if(locals.orders) { %>
-                                 Pay method: <%=orders.payment%> <br> Status:
-                                   <% if(orders.status == "Pending") { %>
+                                 Pay method: <%=orders.paymentMethod%> <br> Status:
+                                   <% if(order.orderStatus == "Pending") { %>
                                        Pending
-                                       <% } else if(orders.status === "Delivered") { %>
+                                       <% } else if(order.orderStatus === "Delivered") { %>
                                           Delivered
-                                           <% } else if(orders.status==="Confirmed") { %>
+                                           <% } else if(order.orderStatus==="Confirmed") { %>
                                             Confirmed
                                               <% } else if
-                                              (orders.status==="Returned" ) {%>
+                                              (order.orderStatus==="Returned" ) {%>
                                                 Returned
-                                                <% } else if (orders.status==="Canceled" ){ %>
+                                                <% } else if (order.orderStatus==="Canceled" ){ %>
                                                     Cancelled
-                                                    <% } else if (orders.status==="Shipped" ){ %>
+                                                    <% } else if (order.orderStatus==="Shipped" ){ %>
                                                         Shipped
                                                     <% } %>
                               <% } %>
@@ -154,12 +154,12 @@
                   <tbody>
                      <%if(locals.orders){%>
                         <% let orderId; %>
-                            <% for (let i=0; i < orders.product.length; i++) { %>
+                            <% for (let i=0; i < orders.products.length; i++) { %>
                                 <tr>
                                    <td class="text-center">
                                     <a class="itemside" href="#">
                                         <div class="left">
-                                            <img src="/uploads/product-images/<%= orders.product[i].image %>"
+                                            <img src="/uploads/product-images/<%= orders.products[i].image %>"
                                                 style="height: 7rem; width: 7rem;" class="img-xs"
                                                 alt="Item">
                                         </div>
@@ -167,31 +167,31 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="info">
-                                            <%= orders.product[i].name || orders.product[i].title %>
+                                            <%= orders.products[i].name || orders.products[i].title %>
                                         </div>
                                     </td>
                                     <td class="text-center">
-                                        ₹<%= orders.product[i].price.toLocaleString() %>
+                                        €<%= orders.products[i].price.toLocaleString() %>
                                     </td>
                                     <td class="text-center">
-                                        <%= orders.product[i].quantity %>
+                                        <%= orders.products[i].quantity %>
                                     </td>
                                     <td class="text-center">
-                                        €<%= (parseInt(orders.product[i].price) *
-                                        parseInt(orders.product[i].quantity)).toLocaleString() %>
+                                        €<%= (parseInt(orders.products[i].price) *
+                                        parseInt(orders.products[i].quantity)).toLocaleString() %>
                                     </td>
 
 
                                      <% } %>
 
                                     <% let totalProductPrice=0; %>
-                                    <% for (let i=0; i < orders.product.length; i++) { %>
-                                        <% totalProductPrice +=parseInt(orders.product[i].price)
-                                          * parseInt(orders.product[i].quantity); %>
+                                    <% for (let i=0; i < orders.products.length; i++) { %>
+                                        <% totalProductPrice +=parseInt(orders.products[i].price)
+                                          * parseInt(orders.products[i].quantity); %>
                                     <% } %>
 
 
-                                  <% let discount=totalProductPrice - orders.totalPrice; %>
+                                  <% let discount = totalProductPrice - orders.totalPrice; %>
 
                                    <!-- Display discount and total price for the order -->
                                    <td class="text-center">

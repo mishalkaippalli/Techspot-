@@ -191,6 +191,8 @@ const orderPlaced = async (req, res) => {
             const {totalPrice,couponDiscount,netTotal, addressId, payment} = req.body
             console.log(totalPrice,couponDiscount,netTotal, addressId, payment);
 
+            //used coupon management to be added
+
             const userId = req.session.user
             const findUser = await User.findOne({_id: userId})
             console.log("finduser",findUser)
@@ -204,7 +206,7 @@ const orderPlaced = async (req, res) => {
 
             if(findAddress){
                 const desiredAddress = findAddress.address.find(item => item._id.toString() === addressId.toString());
-                //console.log(desired Address)
+                console.log("desired address", desiredAddress);
 
                 const findProducts = await Product.find({_id: {$in: productIds}})
 
@@ -230,17 +232,18 @@ const orderPlaced = async (req, res) => {
                 }));
 
                 const newOrder = new Order({
-                    product: orderedProducts,
-                    totalPrice: totalPrice,
-                    actualTotalAmount: netTotal,
-                    couponDiscount: couponDiscount,
-                    address: desiredAddress,
-                    payment: payment,
                     userId: userId,
-                    status: 'Confirmed',
-                    createdOn: Date.now()
+                    totalAmount: totalPrice,
+                    couponDiscount: couponDiscount,
+                    actualTotalAmount: netTotal,
+                    paymentMethod: payment,
+                    products: orderedProducts,                
+                    address: desiredAddress,              
                 })
                 console.log("inside ordercontroller.js new order is",newOrder)
+
+                const placedOrder = await newOrder.save()
+               console.log("placed order details", placedOrder);
 
                 await User.updateOne(
                     {_id: userId},
@@ -305,7 +308,10 @@ const getOrderDetailsPage = async(req, res) => {
         const orderId = req.query.id
         const findOrder = await Order.findOne({_id: orderId})
         const findUser = await User.findOne({_id: orderId})
-        console.log(findOrder, findUser);
+
+        // const orderDetails = await Order.findById(orderId).populate('products.productId').sort({date:1})
+        // console.log("order details inside getOrderdetailspage in ordercontroller",);
+
         res.render("orderDetails", {orders: findOrder, user: findUser, orderId})
     } catch (error) {
         console.log(error.message)
