@@ -1,4 +1,5 @@
 const Brand = require("../models/brandSchema");
+const Category = require("../models/categorySchema");
 const Product = require("../models/productSchema");
 
 const getBrandPage = async (req, res) => {

@@ -1,4 +1,5 @@
 const User = require("../models/userSchema")
+const Category = require("../models/categorySchema");
 const Product = require("../models/productSchema")
 const Address = require("../models/addressSchema")
 const Order = require("../models/orderSchema")
@@ -385,6 +386,7 @@ const cancelOrder = async(req, res) => {
     }
 }
 
+// Admin can view the order list
 const getOrderListPageAdmin = async(req, res) => {
     try {
         const orders = await Order.find({}).sort({createdOn: -1});
@@ -396,12 +398,23 @@ const getOrderListPageAdmin = async(req, res) => {
         let endIndex = startIndex + itemsPerPage
         let totalPages = Math.ceil(orders.length / 3)
         const currentOrder = orders.slice(startIndex, endIndex)
-
+         
+        console.log("current orders", currentOrder);
         res.render("orders-list", {orders: currentOrder, totalPages, currentPage})
     } catch (error) {
         console.log(error.message)
     }
 }
+
+// const getOrderListPageAdmin = async(req,res)=>{
+//     try {
+//        const orders = await Order.find().populate('userId');
+//        console.log("orders", orders)
+//        res.render('order-listtry',{orders});
+//     } catch (error) {
+//        console.log(error.message);
+//     }
+//  }
 
 const changeOrderStatus = async(req, res) => {
     try {

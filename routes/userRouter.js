@@ -40,8 +40,10 @@ Router.get("/deleteAddress", isLogged, userProfileController.getDeleteAddress)
 //cart management
 Router.get("/cart", isLogged, cartController.getCartPage)
 Router.post("/addToCart", isLogged, cartController.addToCart)
-Router.post("/changeQuantity", isLogged, cartController.changeQuantity)
+// Router.post("/changeQuantity", isLogged, cartController.changeQuantity)
+Router.post("/update-quantity", isLogged, cartController.updateQuantity)
 Router.get("/deleteItem", isLogged, cartController.deleteProduct)
+Router.get('/remove-from-cart', isLogged, cartController.removeFromCart);
 
 //orders
 Router.get("/checkout", isLogged, orderController.getCheckoutPage)

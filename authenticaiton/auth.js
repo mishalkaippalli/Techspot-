@@ -4,9 +4,9 @@ const User = require("../models/userSchema");
 const isLogged = async (req, res, next) => {
     if (req.session.user) {
         try {
-            console.log("I am inside isLogged middleware");
+            // console.log("I am inside isLogged middleware req.session is ",req.session);
             const data = await User.findById(req.session.user).lean();
-            console.log("User data:", data);
+            // console.log("User data:", data);
             //this is for when the admin blocks user then user cannot acces the web app anymore
                 if (data && data.isBlocked === true) {
                     try {

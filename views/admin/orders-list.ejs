@@ -58,9 +58,9 @@
                             
                             <tr>
                             <td><%= orders[i]._id %></td>
-                            <td><b><%= orders[i].address[0].name %></b></td>
-                            <td><%= orders[i].address[0].phone %></td>
-                            <td><%= orders[i].totalPrice.toLocaleString() %></td>
+                            <td><b><%= orders[i].address.name %></b></td>
+                            <td><%= orders[i].address.phone %></td>
+                            <td><%= orders[i].actualTotalAmount.toLocaleString() %></td>
                             <td>
                                 <% if (orders[i].status == "Canceled") { %>
                                     <span class="badge rounded-pill alert-danger"><%= orders[i].status %></span>
@@ -76,7 +76,7 @@
                             </td>
                             
                             <td> <% const dateOptions = { day: '2-digit', month: 'short', year: 'numeric' }; %>
-                                <%= new Date(orders[0].createdOn).toLocaleDateString('en-US', dateOptions) %></td>
+                                <%= new Date(orders[0].date).toLocaleDateString('en-US', dateOptions) %></td>
                             <td class="text-end">
                                 <a href="/admin/orderDetailsAdmin?id=<%= orders[i]._id %>" class="btn btn-md rounded font-sm">Detail</a>
                                

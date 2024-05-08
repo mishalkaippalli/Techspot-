@@ -1,4 +1,5 @@
 const User = require('../models/userSchema') 
+const Category = require("../models/categorySchema");
 const Product = require('../models/productSchema')
 
 const getWishlistPage = async(req, res) => {

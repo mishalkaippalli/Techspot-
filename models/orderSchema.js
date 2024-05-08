@@ -80,13 +80,13 @@ var orderSchema = new mongoose.Schema({
         state:{
             type: String,
             required: true
-        }
-     },
-     orderStatus:{
-        type:String,
-        default:'Pending',
-     },
-    returnOrderStatus:{
+        },
+      },
+      orderStatus:{
+         type:String,
+         default:'Pending',
+        },
+     returnOrderStatus:{
         status:{
            type:String,
            default:'Not requested'

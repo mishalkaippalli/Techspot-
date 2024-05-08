@@ -245,29 +245,28 @@
                quantity: quantity
             },
             success: (res) => {
-                if(res.status === true) {
+                if(res.status === 'success') {
                     Swal.fire({
-                        title: 'Added to Cart!',
+                        title: res.message,
                         text: 'Continue Shopping',
                         icon: 'success',
                         timer: 2000,
                         showConfirmButton: false
                     })
-                } else if (res.status === 'Out of stock'){
+                } else if (res.status === 'sessionError'){
                     Swal.fire({
-                        title: 'Stock!!',
-                        text: "Sorry, product is out of stock",
-                        icon: 'error',
-                        timer:2000,
-                    })
+                        icon: 'info',
+					    title: res.message,
+					    showConfirmButton: false,
+					    timer: 2000
+                    }).then(() => {window.location.href = '/login'});
                 } else {
                     Swal.fire({
-                        title: 'You need to login first',
-                        text: 'continue shopping',
-                        icon: 'warning',
-                        timer: 2000,
-                        showConfirmButton: false
-                    }).then(() => {window.location.href = '/login'});
+					icon: 'error',
+					title: res.message,
+					showConfirmButton: false,
+					timer: 1500
+				})
                 }
             },
             error: (err) => {

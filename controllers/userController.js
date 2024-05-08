@@ -1,11 +1,12 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/userSchema");
 const nodemailer = require("nodemailer");
+const Category = require("../models/categorySchema");
 const Product = require("../models/productSchema");
 const Brand = require("../models/brandSchema");
-const Category = require("../models/categorySchema");
 const { resolveConfig } = require("prettier");
 const Coupon = require("../models/couponSchema");
+const CartCountHelper = require('../associates/cartItemsCount');
 
 // pagenotfound
 const pageNotFound = async (req, res) => {
@@ -271,6 +272,7 @@ const userLogin = async (req, res) => {
 const getShopPage = async (req, res) => {
   try {
     const user = req.session.id;
+    console.log("inside shop req.session is ", req.session)
     const products = await Product.find({ isBlocked: false });
   
     const count = await Product.find({ isBlocked: false }).count();
@@ -321,7 +323,7 @@ const getProductDetailPage = async (req, res) => {
     console.log("Iam inside gettrialfordetailpage page user is", user);
     const id = req.query.id
     console.log(id);
-    const findProduct = await Product.findOne({ id: id });
+    const findProduct = await Product.findById(id);
     console.log("Iam inside getproduct details page", findProduct);
     const findCategory = await Category.findOne({ _id: findProduct.category });
     console.log("find category inside getproductdetail page",findCategory);
@@ -343,6 +345,29 @@ const getProductDetailPage = async (req, res) => {
     console.log(error.message);
   }
 };
+
+// Load Single Product
+// const getProductDetailPagetry = async(req,res)=>{
+//   try {
+//      const id = req.query.id;
+//      console.log(id)
+//      const productData = await Product.findById(id).populate('category');
+//      console.log("inside getproductdetail page", productData)
+//      if(productData){
+//         if(req.session && req.session.user){
+//            // Finding the total amount in the cart
+//            const cartItemsCount = await CartCountHelper.findCartItemsCount(req.session.user);
+//            res.render('productDetailstrialwillys',{product:productData,cartItemsCount});
+
+//         }else{
+//            res.render('productDetailstrialwillys',{product:productData});
+//         }
+//      }
+//   } catch (error) {
+//      console.log(error.message)
+//   }
+// }
+
 
 const filterProduct = async(req, res) => {
    try {

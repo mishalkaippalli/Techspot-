@@ -1,0 +1,213 @@
+
+<%- include('../partials/header') %>
+
+<body>
+
+	<!-- Start Header Area -->
+	<header class="header_area sticky-header">
+		<div class="main_menu">
+			<nav class="navbar navbar-expand-lg navbar-light main_box"
+				style="border-radius: 25px; background-color: #f1f0f0;">
+				<div class="container">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<a class="navbar-brand logo_h" href="/home">
+						<div class="" style="height: 80px;">
+							<img src="/assets/imgs/theme/Techspotlogo.png"
+								style="height: 80px; width: 100%; object-fit: cover;" alt="">
+						</div>
+					</a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+						aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+						<ul class="nav navbar-nav d-flex align-items-center  menu_nav ml-auto">
+							<li class="nav-item active"><a href="/home" class="profile-icon nav-link"><span
+										style="font-size: 22px; width: 30px; height: 30px; color: rgb(0, 0, 0);"
+										class="bi bi-house"></span></a></li>
+							<li class="nav-item"><a href="/show-all-products" class="profile-icon nav-link"><span
+										style="font-size: 22px; width: 30px; height: 30px; color: black;"
+										class="bi bi-shop"></span></a></li>
+							<li class="nav-item"><a href="/user-profile" class="profile-icon nav-link"><span
+										style="font-size: 22px; width: 30px; height: 30px; color: black;"
+										class="bi bi-person"></span></a></li>
+							<li class="nav-item"><a href="/cart" class="profile-icon nav-link"><span
+										style="font-size: 20px; width: 30px; height: 30px; color: black;"
+										class="bi bi-cart"></span>
+									<% if (typeof cartItemsCount !=='undefined' ) { %>
+										<span id="cartItemsCount"
+											class="badge badge-danger position-absolute top-0 start-50 translate-middle"><%-
+												cartItemsCount %></span>
+										<% } %>
+								</a></li>
+							<li class="nav-item"><a href="/whishlist" class="profile-icon nav-link"><span
+										style="font-size: 20px; width: 30px; height: 30px; color: black; margin-right: 48px;"
+										class="bi bi-heart"></span></a></li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</div>
+	</header>
+	<!-- End Header Area -->
+
+	<!-- Start Banner Area -->
+	<section class="">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+				</div>
+			</div>
+		</div>
+	</section>
+	<section>
+		<div class="container">
+			<h1 class="text-center">PRODUCT DETAILS</h1>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+
+	<!--================Single Product Area =================-->
+
+	<div class="product_image_area">
+		<div class="container">
+			<div class="row s_product_inner">
+				<div class="col-lg-4">
+					<div class="s_Product_carousel">
+						<% for( let i=0; i < product.productImage.length; i++ ) { %>
+							<div class="single-prd-item d-flex">
+								<a href="/uploads/product-images/<%- product.productImage[i] %>" class="MagicZoom"
+									data-options="zoomWidth:100%"><img class="img-fluid"
+										style="height: 390px; width: 410px; object-fit: contain;"
+										src="/uploads/product-images/<%- product.productImage[i] %>" alt=""> </a>
+							</div>
+							<% } %>
+					</div>
+				</div>
+				<div class="col-lg-5 offset-lg-1">
+					<div class="s_product_text">
+						<h3><%- product.productName %></h3>
+						<h2>&#x20B9;<%- product.salePrice %></h2>
+						<ul class="list">
+							<li><a class="active" href="#"><span>Category</span> <%- product.category.categoryName %></a></li>
+							<% if (product.stock===0) { %>
+								<li class="text-danger">Out of Stock</li>
+								<% }else{ %>
+									<li class="text-success">In Stock (<%- product.stock %>)</li>
+									<% } %>
+						</ul>
+						<p><%- product.description %></p>
+
+						<div class="card_area d-flex align-items-center justify-content-center">
+							<% if (product.stock===0) { %>
+
+								<% }else{ %>
+									<a class="primary-btn" href="" id="addToCart">Add to Cart</a>
+									<% } %>
+										<a class="icon_btn addtoWishlist" data-productId="<%- product._id %>" href="#"><i
+												class="bi bi-heart"></i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--================End Single Product Area =================-->
+
+	<!--================Product Description Area =================-->
+	<section class="product_description_area">
+
+	</section>
+	<!--================End Product Description Area =================-->
+
+	<!-- add to Cart -->
+	<script>
+		document.getElementById('addToCart').addEventListener('click', async (event) => {
+			event.preventDefault();
+
+			const productId = '<%- product._id %>' // Get data-id attribute
+			console.log(productId)
+			const response = await fetch(`/add-to-cart/?productId=${productId}`);
+			const result = await response.json();
+			if (result.status === 'success') {
+				Swal.fire({
+					icon: 'success',
+					title: result.message,
+					showConfirmButton: false,
+					timer: 1500
+				})
+				document.getElementById('cartItemsCount').textContent = result.cartItemsCount;
+			} else if (result.status === 'sessionError') {
+				Swal.fire({
+					icon: 'info',
+					title: result.message,
+					showConfirmButton: false,
+					timer: 1000
+				})
+				setTimeout(() => {
+					location.href = '/login'
+				}, 1500);
+			}
+			else {
+				Swal.fire({
+					icon: 'error',
+					title: result.message,
+					showConfirmButton: false,
+					timer: 1500
+				})
+			}
+		})
+
+
+	</script>
+
+	<!-- Add to WISHLIST -->
+
+	<script>
+		const addtoWhishlistBtn = document.querySelectorAll('.addtoWishlist')
+
+		addtoWhishlistBtn.forEach((btn) => {
+			btn.addEventListener('click', async (event) => {
+				event.preventDefault();
+
+				const productId = event.currentTarget.getAttribute('data-productId')
+
+				if (productId) {
+					const response = await fetch(`/add-to-whishlist/?productId=${productId}`);
+					const result = await response.json()
+					if (result.status === 'success') {
+						Swal.fire({
+							icon: 'success',
+							title: result.message,
+							showConfirmButton: false,
+							timer: 1000
+						})
+
+					} else if (result.status === 'sessionError') {
+						Swal.fire({
+							icon: 'info',
+							title: result.message,
+							showConfirmButton: false,
+							timer: 1000
+						})
+						setTimeout(() => {
+							location.href = '/login'
+						}, 1500);
+					} else {
+						Swal.fire({
+							icon: 'info',
+							title: result.message,
+							showConfirmButton: false,
+							timer: 1000
+						})
+					}
+				}
+			})
+		})
+	</script>
+
+</body>
+<%- include('../partials/footer') %>
