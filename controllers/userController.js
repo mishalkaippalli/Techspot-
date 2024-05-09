@@ -6,6 +6,7 @@ const Product = require("../models/productSchema");
 const Brand = require("../models/brandSchema");
 const { resolveConfig } = require("prettier");
 const Coupon = require("../models/couponSchema");
+const Wallet = require('../models/walletSchema');
 const CartCountHelper = require('../associates/cartItemsCount');
 
 // pagenotfound
@@ -527,6 +528,40 @@ const searchProducts = async(req, res) => {
   }
 }
 
+//------------------------------------Wallet management-----------------
+
+// Load the wallet page
+const loadWallet = async(req,res)=>{
+  try {
+     const user_id = req.session.user;
+     // Taking the wallet details from db
+     let userWallet = await Wallet.findOne({userId:user_id});
+     if(!userWallet){
+        userWallet = new Wallet({userId:user_id});
+        await userWallet.save();
+     }
+     const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
+     res.render('view-wallet',{userWallet,cartItemsCount});
+  } catch (error) {
+     console.log(error.message);
+  }
+}
+
+// Recharge the wallet
+const rechargeWallet  = async(req,res)=>{
+  try{
+     let {amount} = (req.body);
+     amount = Number(amount);
+     const orderId = ""+Date.now();
+
+     RazorPayHelper.generateRazorPay(orderId,amount).then((response)=>{
+        res.json({status:'RAZORPAY',response})
+     })
+     
+  }catch(error){
+     console.log(error.message);
+  }
+}
 
 module.exports = {
   getLoginPage,
@@ -545,4 +580,6 @@ module.exports = {
   filterByPrice,
   getSortProducts,
   searchProducts,
+  loadWallet,
+  rechargeWallet
 };

@@ -2,6 +2,9 @@ const { default: mongoose } = require('mongoose');
 const User = require('../models/userSchema')
 const Category = require("../models/categorySchema");
 const Product = require('../models/productSchema')
+const Address = require('../models/addressSchema');
+const Wallet = require('../models/walletSchema')
+const Coupon = require('../models/couponSchema')
 const mongodb = require('mongodb')
 const Cart = require('../models/cartModel');
 const CartCountHelper = require('../associates/cartItemsCount');
@@ -357,11 +360,55 @@ const deleteProduct = async (req, res) => {
     }
 }
 
+// Loading the checkout page
+
+const loadCheckOut = async(req,res)=>{
+   try {
+      const user_id = req.session.user;
+      let userAddress = await Address.findOne({userId:user_id}); // Find the user
+      let userWallet = await Wallet.findOne({userId:user_id});
+
+      // If user have no wallet then we create one 
+
+      if(!userWallet){
+         userWallet = new Wallet({
+            userId:user_id,
+         })
+         await userWallet.save();
+      }
+
+      // If no user
+      if(!userAddress){
+         userAddress = new Address({userId:user_id,address:[]});
+         await userAddress.save();
+      }
+      const coupons = await Coupon.find({isActive:true});
+      const cart = await Cart.findOne({userId:user_id}).populate('products.productId'); // Taking the product details
+      const cartDetails = cart.products;
+      const grandTotal = cart.products.reduce((total,product)=>{
+         return total + product.total;
+      },0);
+
+      // Taking the available coupons for user with this price range
+      const availableCoupons = coupons.filter((coupons)=> coupons.minOrderAmount < grandTotal  );
+      console.log(availableCoupons)
+      
+
+      const address = userAddress.address;
+
+      const cartItemsCount = await CartCountHelper.findCartItemsCountFromCart(cart)
+      res.render('checkoutwilys',{address,cartDetails,grandTotal,coupons:availableCoupons,userWallet,cartItemsCount});
+   } catch (error) {
+      console.log(error.message)
+   }
+}
+
 module.exports = {
                 getCartPage,
                 addToCart,
                 changeQuantity,
                 deleteProduct,
                 updateQuantity,
-                removeFromCart
+                removeFromCart,
+                loadCheckOut
                  }
