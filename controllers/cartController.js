@@ -397,7 +397,7 @@ const loadCheckOut = async(req,res)=>{
       const address = userAddress.address;
 
       const cartItemsCount = await CartCountHelper.findCartItemsCountFromCart(cart)
-      res.render('checkoutwilys',{address,cartDetails,grandTotal,coupons:availableCoupons,userWallet,cartItemsCount});
+      res.render('checkoutwilys',{address,cartDetails,grandTotal,coupons:availableCoupons,userWallet,cartItemsCount,user_id});
    } catch (error) {
       console.log(error.message)
    }

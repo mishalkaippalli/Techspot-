@@ -1,11 +1,15 @@
 const User = require("../models/userSchema")
 const Category = require("../models/categorySchema");
+const Cart = require('../models/cartModel')
 const Product = require("../models/productSchema")
 const Address = require("../models/addressSchema")
+const Wallet = require('../models/walletSchema');
 const Order = require("../models/orderSchema")
 const Coupon = require("../models/couponSchema")
 const mongodb = require("mongodb")
-const { ObjectId } = require('mongodb');
+const CartCountHelper = require('../associates/cartItemsCount');
+const fs = require('fs');
+const {Readable} = require('stream');
 
 const express = require('express')
 const app = express()
@@ -17,291 +21,430 @@ const paypal = require('@paypal/checkout-server-sdk')
 // const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PORT} = process.env;
 const base = "https://api-m.sandbox.paypal.com";
 
-const getCheckoutPage = async(req, res) => {
-    try {
-        console.log("I am inside getcheckoutpage in ordercontroller, request query is", req.query);
-        //isSingle is for buying one product for buy now
-        if(req.query.isSingle == "true") {   
-            const id = req.query.id
-            const findProduct = await Product.find({id: id}).lean()
-            const userId = req.session.user
-            const findUser = await User.findOne({_id: userId})
-            const addressData = await Address.findOne({userId: userId})
-            const coupons = await Coupon.find({isActive: true})
-            console.log("addressdata: ",addressData)
-            console.log("findproduct", findProduct);
 
-            const today = new Date().toISOString(); 
+// const getCheckoutPage = async(req, res) => {
+//     try {
+//         console.log("I am inside getcheckoutpage in ordercontroller, request query is", req.query);
+//         //isSingle is for buying one product for buy now
+//         if(req.query.isSingle == "true") {   
+//             const id = req.query.id
+//             const findProduct = await Product.find({id: id}).lean()
+//             const userId = req.session.user
+//             const findUser = await User.findOne({_id: userId})
+//             const addressData = await Address.findOne({userId: userId})
+//             const coupons = await Coupon.find({isActive: true})
+//             console.log("addressdata: ",addressData)
+//             console.log("findproduct", findProduct);
+
+//             const today = new Date().toISOString(); 
             
-            const availableCoupons = coupons.filter((coupons)=> coupons.minOrderAmount < grandTotal)
-            // const findCoupons = await Coupon.find({
-            //     isList: true,
-            //     createdOn: {$lt: new Date(today)},
-            //     expireOn: {$gt: new Date(today)},
-            //     minimumPrice: {$lt: findProduct[0].salePrice}
-            // });
-            // console.log(findCoupons, "this is coupon");
+//             const availableCoupons = coupons.filter((coupons)=> coupons.minOrderAmount < grandTotal)
+//             // const findCoupons = await Coupon.find({
+//             //     isList: true,
+//             //     createdOn: {$lt: new Date(today)},
+//             //     expireOn: {$gt: new Date(today)},
+//             //     minimumPrice: {$lt: findProduct[0].salePrice}
+//             // });
+//             // console.log(findCoupons, "this is coupon");
 
-            res.render("checkout", {product: findProduct, user: userId, findUser: findUser,
-                                     userAddress: addressData, isSingle: true, coupons: availableCoupons}) 
-        } else {                             
-            const user = req.query.userId
-            const findUser = await User.findOne({_id: user})
-            console.log(findUser);
-            // const coupons = await Coupon.find({isActive: true})
-            const addressData = await Address.findOne({userId: user})
-            const oid = new mongodb.ObjectId(user);
-            const data = await User.aggregate([
-                {$match: {_id: oid}},
-                {$unwind: "$cart"},
-                {
-                    $project: {
-                        proId: {'$toObjectId': '$cart.productId'},
-                        quantity: "$cart.quantity"
-                    }
-                },
-                {
-                    $lookup: {
-                        from: 'products',
-                        localField: 'proId',
-                        foreignField: '_id',
-                        as: 'productDetails'
-                    }
-                },
-            ])
-            console.log("data",data)
+//             res.render("checkout", {product: findProduct, user: userId, findUser: findUser,
+//                                      userAddress: addressData, isSingle: true, coupons: availableCoupons}) 
+//         } else {                             
+//             const user = req.query.userId
+//             const findUser = await User.findOne({_id: user})
+//             console.log(findUser);
+//             // const coupons = await Coupon.find({isActive: true})
+//             const addressData = await Address.findOne({userId: user})
+//             const oid = new mongodb.ObjectId(user);
+//             const data = await User.aggregate([
+//                 {$match: {_id: oid}},
+//                 {$unwind: "$cart"},
+//                 {
+//                     $project: {
+//                         proId: {'$toObjectId': '$cart.productId'},
+//                         quantity: "$cart.quantity"
+//                     }
+//                 },
+//                 {
+//                     $lookup: {
+//                         from: 'products',
+//                         localField: 'proId',
+//                         foreignField: '_id',
+//                         as: 'productDetails'
+//                     }
+//                 },
+//             ])
+//             console.log("data",data)
 
-            const grandTotal = req.session.grandTotal
-            console.log("grandtotal", grandTotal)
-            const today = new Date().toISOString();
+//             const grandTotal = req.session.grandTotal
+//             console.log("grandtotal", grandTotal)
+//             const today = new Date().toISOString();
 
-            const findCoupons = await Coupon.find({
-                isActive: true,
-                createdOn: { $lt: new Date(today) },
-                validFor: { $gt: new Date(today) },
-                minOrderAmount: { $lt: grandTotal },
-            });
+//             const findCoupons = await Coupon.find({
+//                 isActive: true,
+//                 createdOn: { $lt: new Date(today) },
+//                 validFor: { $gt: new Date(today) },
+//                 minOrderAmount: { $lt: grandTotal },
+//             });
             
-            console.log("findCoupons", findCoupons);
-            // cartItemsCount = 2;
-            // userWallet = {walletAmount: 1000}
+//             console.log("findCoupons", findCoupons);
+//             // cartItemsCount = 2;
+//             // userWallet = {walletAmount: 1000}
             
-            res.render("checkoutlaptry", {data: data, user: findUser, isCart: true,
-                 userAddress: addressData, isSingle: false, grandTotal, coupons: findCoupons})   
+//             res.render("checkoutlaptry", {data: data, user: findUser, isCart: true,
+//                  userAddress: addressData, isSingle: false, grandTotal, coupons: findCoupons})   
 
-                 //chaned for trials uderAddress to address, data to cart, cartItemsCount added, userWallet added
-        }
-    } catch (error) {
-        console.log(error.message)
-    }
-}
+//                  //chaned for trials uderAddress to address, data to cart, cartItemsCount added, userWallet added
+//         }
+//     } catch (error) {
+//         console.log(error.message)
+//     }
+// }
 
-const orderPlaced = async (req, res) => {
-    try {
-        console.log("req.body => ", req.body);
-        // if(req.body.isSingle === "true"){
-        //     const {totalPrice, addressId, payment, productId } = req.body
-        //     const userId = req.session.user
-        //     console.log(req.session.grandTotal, "from session");
-        //     const grandTotal = req.session.grandTotal
-        //     console.log(req.body)
-        //     console.log(totalPrice, addressId, payment, productId )
-        //     const findUser = await User.findOne({_id: userId})
-        //     console.log("finduser", findUser)
-        //     const address = await Address.findOne({userId: userId})
-        //     console.log("address",address);
-        //     // const findAddress = address.find(item => item._id.toString()=== addressId);
-        //     const findAddress = address.address.find(item => item._id.toString() === addressId)
-        //     console.log(findAddress);
-        //     console.log("before product search")
-        //     const findProduct = await Product.findOne({_id: productId})
-        //     console.log(findProduct);
+// const orderPlaced = async (req, res) => {
+//     try {
+//         console.log("req.body => ", req.body);
+//         // if(req.body.isSingle === "true"){
+//         //     const {totalPrice, addressId, payment, productId } = req.body
+//         //     const userId = req.session.user
+//         //     console.log(req.session.grandTotal, "from session");
+//         //     const grandTotal = req.session.grandTotal
+//         //     console.log(req.body)
+//         //     console.log(totalPrice, addressId, payment, productId )
+//         //     const findUser = await User.findOne({_id: userId})
+//         //     console.log("finduser", findUser)
+//         //     const address = await Address.findOne({userId: userId})
+//         //     console.log("address",address);
+//         //     // const findAddress = address.find(item => item._id.toString()=== addressId);
+//         //     const findAddress = address.address.find(item => item._id.toString() === addressId)
+//         //     console.log(findAddress);
+//         //     console.log("before product search")
+//         //     const findProduct = await Product.findOne({_id: productId})
+//         //     console.log(findProduct);
 
-        //     const productDetails = {
-        //         _id: findProduct._id,
-        //         price: findProduct.salePrice, 
-        //         name: findProduct.productName,
-        //         image: findProduct.productImage[0],
-        //         quantity: 1
-        //     }
-        //     console.log("before order placing")
+//         //     const productDetails = {
+//         //         _id: findProduct._id,
+//         //         price: findProduct.salePrice, 
+//         //         name: findProduct.productName,
+//         //         image: findProduct.productImage[0],
+//         //         quantity: 1
+//         //     }
+//         //     console.log("before order placing")
 
-        //     const newOrder = new Order(({
-        //         product: productDetails,
-        //         totalPrice: grandTotal,
-        //         address: findAddress,
-        //         payment: payment,
-        //         userId: userId,
-        //         createdOn: Date.now(),
-        //         status: 'Confirmed'
-        //     }))
+//         //     const newOrder = new Order(({
+//         //         product: productDetails,
+//         //         totalPrice: grandTotal,
+//         //         address: findAddress,
+//         //         payment: payment,
+//         //         userId: userId,
+//         //         createdOn: Date.now(),
+//         //         status: 'Confirmed'
+//         //     }))
 
-        //     console.log("order placed")
-        //     findProduct.quantity = findProduct.quantity - 1
+//         //     console.log("order placed")
+//         //     findProduct.quantity = findProduct.quantity - 1
 
-        //     let orderDone;
+//         //     let orderDone;
 
-        //     if(newOrder.payment == 'cod'){
-        //         console.log('order placed with COD');
-        //         await findProduct.save()
-        //         orderDone = await newOrder.save()
-        //         res.json({payment: true, method: "cod", order: orderDone, quantity: 1, orderId: userId})
-        //     } else if(newOrder.payment == 'online'){
-        //         console.log('order placed by razorpay');
-        //         orderDone = await newOrder.save()
-        //         const generatedOrder = await generatedOrderRazorpay(orderDone._id, orderDone.totalPrice);
-        //         console.log(generatedOrder, "order generated");
-        //         await findProduct.save()
-        //         res.json({payment: false, method: 'online', razorpayOrder: generatedOrder,
-        //                   order: orderDone, orderId: orderDone._id, quantity: 1 })
-        //     } else if (newOrder.payment == 'wallet') {
-        //         if(newOrder.totalPrice <= findUser.wallet){
-        //             console.log("order placed with wallet");
-        //             const data = findUser.wallet -= newOrder.totalPrice;
-        //             const newHistory = {
-        //                 amount: data,
-        //                 status: 'debit',
-        //                 data: Date.now()
-        //             };
-        //             findUser.history.push(newHistory);
-        //             await findUser.save()
-        //             await findProduct.save()
-        //             orderDone = await newOrder.save()
+//         //     if(newOrder.payment == 'cod'){
+//         //         console.log('order placed with COD');
+//         //         await findProduct.save()
+//         //         orderDone = await newOrder.save()
+//         //         res.json({payment: true, method: "cod", order: orderDone, quantity: 1, orderId: userId})
+//         //     } else if(newOrder.payment == 'online'){
+//         //         console.log('order placed by razorpay');
+//         //         orderDone = await newOrder.save()
+//         //         const generatedOrder = await generatedOrderRazorpay(orderDone._id, orderDone.totalPrice);
+//         //         console.log(generatedOrder, "order generated");
+//         //         await findProduct.save()
+//         //         res.json({payment: false, method: 'online', razorpayOrder: generatedOrder,
+//         //                   order: orderDone, orderId: orderDone._id, quantity: 1 })
+//         //     } else if (newOrder.payment == 'wallet') {
+//         //         if(newOrder.totalPrice <= findUser.wallet){
+//         //             console.log("order placed with wallet");
+//         //             const data = findUser.wallet -= newOrder.totalPrice;
+//         //             const newHistory = {
+//         //                 amount: data,
+//         //                 status: 'debit',
+//         //                 data: Date.now()
+//         //             };
+//         //             findUser.history.push(newHistory);
+//         //             await findUser.save()
+//         //             await findProduct.save()
+//         //             orderDone = await newOrder.save()
 
-        //             res.json({payment: true, method: 'wallet', order: orderDone, orderId: orderDone._id,
-        //                         quantity: 1, successs: true }); return;
-        //         } else {
-        //             console.log("wallet amount is lesser than total amount");
-        //             res.json({payment: false, method: "wallet", success: false});
-        //             return;
-        //         }
-        //     }
+//         //             res.json({payment: true, method: 'wallet', order: orderDone, orderId: orderDone._id,
+//         //                         quantity: 1, successs: true }); return;
+//         //         } else {
+//         //             console.log("wallet amount is lesser than total amount");
+//         //             res.json({payment: false, method: "wallet", success: false});
+//         //             return;
+//         //         }
+//         //     }
 
-        // } else {
-            console.log("from cart")
+//         // } else {
+//         //     console.log("from cart")
 
-        //     totalPrice: numericValue,
-        //     couponDiscount: discountValue,
-        //     netTotal: actualNumericValue,
-        //     addressId: address,
-        //     payment: payment,
-        //     productId: prodId,
-        //     isSingle
-        // },
+//         //     totalPrice: numericValue,
+//         //     couponDiscount: discountValue,
+//         //     netTotal: actualNumericValue,
+//         //     addressId: address,
+//         //     payment: payment,
+//         //     productId: prodId,
+//         //     isSingle
+//         // },
 
-            const {totalPrice,couponDiscount,netTotal, addressId, payment} = req.body
-            console.log(totalPrice,couponDiscount,netTotal, addressId, payment);
+//             const {totalPrice,couponDiscount,netTotal, addressId, payment} = req.body
+//             console.log(totalPrice,couponDiscount,netTotal, addressId, payment);
 
-            //used coupon management to be added
+//             //used coupon management to be added
 
-            const userId = req.session.user
-            const findUser = await User.findOne({_id: userId})
-            console.log("finduser",findUser)
-            const productIds = findUser.cart.map(item => item.productId)
-            console.log("productids", productIds)
-            const grandTotal = req.session.grandTotal
-            console.log(grandTotal, "grandTotal");
-            //const address = await Address.findOne({userId: userId})
+//             const userId = req.session.user
+//             const findUser = await User.findOne({_id: userId})
+//             console.log("finduser",findUser)
+//             const productIds = findUser.cart.map(item => item.productId)
+//             console.log("productids", productIds)
+//             const grandTotal = req.session.grandTotal
+//             console.log(grandTotal, "grandTotal");
+//             //const address = await Address.findOne({userId: userId})
          
-            const findAddress = await Address.findOne({'address._id': addressId})
+//             const findAddress = await Address.findOne({'address._id': addressId})
 
-            if(findAddress){
-                const desiredAddress = findAddress.address.find(item => item._id.toString() === addressId.toString());
-                console.log("desired address", desiredAddress);
+//             if(findAddress){
+//                 const desiredAddress = findAddress.address.find(item => item._id.toString() === addressId.toString());
+//                 console.log("desired address", desiredAddress);
 
-                const findProducts = await Product.find({_id: {$in: productIds}})
+//                 const findProducts = await Product.find({_id: {$in: productIds}})
 
-                const cartItemQuantities = findUser.cart.map((item) => ({
-                    productId: item.productId,
-                    quantity: item.quantity
-                }))
+//                 const cartItemQuantities = findUser.cart.map((item) => ({
+//                     productId: item.productId,
+//                     quantity: item.quantity
+//                 }))
 
-                console.log("cartItemQuantities", cartItemQuantities)
+//                 console.log("cartItemQuantities", cartItemQuantities)
 
 
-                const orderedProducts = findProducts.map((item) => ({
-                    _id: item._id,
-                    price: item.salePrice,
-                    name: item.productName,
-                    image: item.productImage[0],
-                    quantity: (() => {
-                        const cartItem = cartItemQuantities.find(cartItem =>
-                            cartItem.productId.toString() === item._id.toString()
-                        );
-                        return cartItem ? cartItem.quantity : 0; // Return quantity if cartItem is found, otherwise return 0
-                    })()
-                }));
+//                 const orderedProducts = findProducts.map((item) => ({
+//                     _id: item._id,
+//                     price: item.salePrice,
+//                     name: item.productName,
+//                     image: item.productImage[0],
+//                     quantity: (() => {
+//                         const cartItem = cartItemQuantities.find(cartItem =>
+//                             cartItem.productId.toString() === item._id.toString()
+//                         );
+//                         return cartItem ? cartItem.quantity : 0; // Return quantity if cartItem is found, otherwise return 0
+//                     })()
+//                 }));
 
-                const newOrder = new Order({
-                    userId: userId,
-                    totalAmount: totalPrice,
-                    couponDiscount: couponDiscount,
-                    actualTotalAmount: netTotal,
-                    paymentMethod: payment,
-                    products: orderedProducts,                
-                    address: desiredAddress,              
-                })
-                console.log("inside ordercontroller.js new order is",newOrder)
+//                 const newOrder = new Order({
+//                     userId: userId,
+//                     totalAmount: totalPrice,
+//                     couponDiscount: couponDiscount,
+//                     actualTotalAmount: netTotal,
+//                     paymentMethod: payment,
+//                     products: orderedProducts,                
+//                     address: desiredAddress,              
+//                 })
+//                 console.log("inside ordercontroller.js new order is",newOrder)
 
-                const placedOrder = await newOrder.save()
-               console.log("placed order details", placedOrder);
+//                 const placedOrder = await newOrder.save()
+//                console.log("placed order details", placedOrder);
 
-                await User.updateOne(
-                    {_id: userId},
-                    {$set: {cart: []}}
-                );
+//                 await User.updateOne(
+//                     {_id: userId},
+//                     {$set: {cart: []}}
+//                 );
 
-                for(let i = 0; i < orderedProducts.length; i++){
-                    const product = await Product.findOne({_id: orderedProducts[i]._id});
-                    if(product) {
-                        const newQuantity = product.quantity - orderedProducts[i].quantity;
-                        product.quantity = Math.max(newQuantity, 0);
-                        await product.save();
-                    }
-                }
-              let orderDone
-              if(newOrder.payment == 'cod') {
-                console.log('order placed by cod');
-                orderDone = await newOrder.save();
-                res.json({payment: true, method: "cod", order: orderDone, quantity: cartItemQuantities, orderId: findUser})
-              } else if(newOrder.payment == 'online') {
-                console.log('order placed by paypal')
-                orderDone = await newOrder.save();
-                console.log("insiden orderplaced orderDone._id is", orderDone._id);
-                console.log("inside paypal option order id done is", orderDone)
-                // const generatedOrder = await generatedOrderPaypal(orderDone._id, orderDone.totalPrice);
-                // console.log(generatedOrder, "order generated")
-                res.json({ payment: false, method: "online", order: orderDone, orderId: orderDone._id, productIdAndQuantity: cartItemQuantities });
-              } else if (newOrder.payment == "wallet") {
-                if(newOrder.totalPrice <= findUser.wallet) {
-                    console.log("order placed with wallet");
-                    const data = findUser.wallet -= newOrder.totalPrice
-                    const newHistory = {
-                        amount: data,
-                        status: "debit",
-                        date: Date.now()
-                    }
-                    findUser.history.push(newHistory)
-                    await findUser.save()
+//                 for(let i = 0; i < orderedProducts.length; i++){
+//                     const product = await Product.findOne({_id: orderedProducts[i]._id});
+//                     if(product) {
+//                         const newQuantity = product.quantity - orderedProducts[i].quantity;
+//                         product.quantity = Math.max(newQuantity, 0);
+//                         await product.save();
+//                     }
+//                 }
+//               let orderDone
+//               if(newOrder.payment == 'cod') {
+//                 console.log('order placed by cod');
+//                 orderDone = await newOrder.save();
+//                 res.json({payment: true, method: "cod", order: orderDone, quantity: cartItemQuantities, orderId: findUser})
+//               } else if(newOrder.payment == 'online') {
+//                 console.log('order placed by paypal')
+//                 orderDone = await newOrder.save();
+//                 console.log("insiden orderplaced orderDone._id is", orderDone._id);
+//                 console.log("inside paypal option order id done is", orderDone)
+//                 // const generatedOrder = await generatedOrderPaypal(orderDone._id, orderDone.totalPrice);
+//                 // console.log(generatedOrder, "order generated")
+//                 res.json({ payment: false, method: "online", order: orderDone, orderId: orderDone._id, productIdAndQuantity: cartItemQuantities });
+//               } else if (newOrder.payment == "wallet") {
+//                 if(newOrder.totalPrice <= findUser.wallet) {
+//                     console.log("order placed with wallet");
+//                     const data = findUser.wallet -= newOrder.totalPrice
+//                     const newHistory = {
+//                         amount: data,
+//                         status: "debit",
+//                         date: Date.now()
+//                     }
+//                     findUser.history.push(newHistory)
+//                     await findUser.save()
 
-                    orderDone = await newOrder.save()
+//                     orderDone = await newOrder.save()
 
-                    res.json({ payment: true, method: "wallet", order: orderDone, orderId: orderDone._id, quantity: cartItemQuantities, success: true })
-                    return;
-                } else {
-                    console.log('wallet amount is lesser than total amount');
-                    res.json({payment: false, method: 'wallet', success: false});
-                    return;
-                }
-              }
-            } else {
-                console.log('Address not found')
-            }
-        // }
+//                     res.json({ payment: true, method: "wallet", order: orderDone, orderId: orderDone._id, quantity: cartItemQuantities, success: true })
+//                     return;
+//                 } else {
+//                     console.log('wallet amount is lesser than total amount');
+//                     res.json({payment: false, method: 'wallet', success: false});
+//                     return;
+//                 }
+//               }
+//             } else {
+//                 console.log('Address not found')
+//             }
+//         // }
+//     } catch (error) {
+//         console.log(error.message)
+//     }
+// }
+
+const placeOrder = async(req,res)=>{
+    try {
+       const user_id = req.session.user;
+       // Finding the user
+       const cart = await Cart.findOne({userId:user_id}).populate('products.productId');
+ 
+       const {totalAmount,paymentMethod,couponDiscount,actualAmount,addressId,couponId} = req.body;
+       // console.log(totalAmount)
+       // console.log(paymentMethod)
+       // console.log(addressId)
+       // console.log(user_id)
+       // console.log(cart.products)
+       // console.log(couponId)
+ 
+       //=== Coupon Mangement=====
+       if(couponId){
+          const usedCoupons = await userUsedCoupons.findOne({userId:user_id});
+          if(!usedCoupons){
+             usedCoupons = new userUsedCoupons({
+                userId:user_id,
+                userCoupons:[{couponId:couponId}]
+             })
+          }else{
+             usedCoupons.userCoupons.push({couponId});
+          }
+          await usedCoupons.save()
+       }
+ 
+       const productData = cart.products;
+       let orderedProducts=[];
+       productData.forEach(async(product)=>{
+          const products ={
+             productId:product.productId._id,
+             quantity:product.quantity,
+             salePrice:product.productId.salePrice,
+             total:product.total,
+             productStatus:'Placed'
+          }
+          orderedProducts.push(products);
+       })
+       // console.log(orderedProducts)
+ 
+ 
+       const userAddress = await Address.findOne({userId:user_id})
+       const shippingAddress = userAddress.address.find(address=>address._id.toString()===addressId);
+       // console.log(shippingAddress)
+ 
+       // Address --
+       const address = {
+          name:shippingAddress.name,
+          mobile:shippingAddress.mobile,
+          homeAddress:shippingAddress.homeAddress,
+          city:shippingAddress.city,
+          street:shippingAddress.street,
+          postalCode:shippingAddress.postalCode
+       }
+       // console.log(address);
+ 
+       const orderDetails = new Order({
+          userId:user_id,
+          totalAmount:totalAmount,
+          couponDiscount:couponDiscount,
+          actualTotalAmount:actualAmount,
+          paymentMethod:paymentMethod,
+          products:orderedProducts,
+          address:address,
+       })
+       const placedOrder = await orderDetails.save()
+       // console.log(placedOrder);
+ 
+       // Payment method integration 
+       // ==== COD====
+       if(placedOrder.paymentMethod === 'COD'){
+          placedOrder.orderStatus = 'Placed'
+          await placedOrder.save();
+          if(cart){
+             cart.products = [];
+             await cart.save();
+          }
+          // Reducing the product stock
+          productData.forEach(async(product)=>{
+             product.productId.stock -=product.quantity;
+             await product.productId.save()
+          })
+          res.json({status:'COD',placedOrderId:placedOrder._id})
+ 
+          // === WALLET===
+       }else if(placedOrder.paymentMethod === 'WALLET'){
+          // Taking the wallet of user 
+          let userWallet = await Wallet.findOne({userId:user_id});
+          if(!userWallet){
+             userWallet = new Wallet({userId:user_id});
+             await userWallet.save();
+          }
+          const walletAmount = userWallet.walletAmount;
+          // console.log('Wallet amount is :',walletAmount)
+          if(walletAmount){
+             userWallet.walletAmount = walletAmount - actualAmount;
+             const amount = (-1*actualAmount);
+             userWallet.transactionHistory.push(amount);
+             await userWallet.save()
+             placedOrder.orderStatus = 'Placed'
+             await placedOrder.save();
+             if(cart){
+                cart.products = [];
+                await cart.save();
+             }
+             productData.forEach(async(product)=>{
+                product.productId.stock -=product.quantity;
+                await product.productId.save()
+             })
+             return res.json({status:'WALLET',placedOrderId:placedOrder._id});
+          }
+ 
+          // ===RAZORPAY===
+       }else if(placedOrder.paymentMethod === 'RAZORPAY'){
+          const orderId = placedOrder._id;
+          const totalAmount = placedOrder.actualTotalAmount;
+          // Calling razorpay 
+          RazorPayHelper.generateRazorPay(orderId,totalAmount).then((response)=>{
+             res.json({status:'RAZORPAY',response})
+          })
+          if(cart){
+             cart.products = [];
+             await cart.save();
+          }
+          productData.forEach(async(product)=>{
+             product.productId.stock -=product.quantity;
+             await product.productId.save()
+          })
+ 
+       }
     } catch (error) {
-        console.log(error.message)
+       console.log(error.message);
     }
-}
+ }
+
 
 const getOrderDetailsPage = async(req, res) => {
     try {
@@ -639,8 +782,7 @@ const returnOrder = async (req, res) => {
 
 
 module.exports = {
-                   getCheckoutPage,
-                   orderPlaced,
+                   
                    getOrderDetailsPage,
                    cancelOrder,
                    getOrderListPageAdmin,

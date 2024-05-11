@@ -6,21 +6,38 @@ const Order = require("../models/orderSchema")
 const nodemailer = require("nodemailer")
 const bcrypt = require("bcryptjs")
 const address = require("../models/addressSchema")
+const Wallet = require('../models/walletSchema');
+const mongodb = require("mongodb")
+const CartCountHelper = require('../associates/cartItemsCount');
 
-const getUserProfile = async(req, res)=>{
+// const getUserProfile = async(req, res)=>{
 
+//   try {
+//     const userId = req.session.user
+//     console.log("heyo,I am inside getUserProfile. req.session.user is", req.session.user);
+//     const userData = await User.findById({_id: userId})
+//     console.log("UserData : ",userData)
+//     const addressData = await Address.findOne({userId: userId})
+//     console.log("addressData", addressData);
+//     const orderData = await Order.find({userId: userId}).sort({createdOn: -1})
+//     console.log(orderData)
+//     res.render("profile", {user: userData, userAddress: addressData,order: orderData})
+//   } catch (error) {
+//     console.log(error.message)
+//   }
+// }
+
+// User Profile
+const userProfile = async(req,res)=>{
   try {
-    const userId = req.session.user
-    console.log("heyo,I am inside getUserProfile. req.session.user is", req.session.user);
-    const userData = await User.findById({_id: userId})
-    console.log("UserData : ",userData)
-    const addressData = await Address.findOne({userId: userId})
-    console.log("addressData", addressData);
-    const orderData = await Order.find({userId: userId}).sort({createdOn: -1})
-    console.log(orderData)
-    res.render("profile", {user: userData, userAddress: addressData,order: orderData})
+     const user_id = req.session.user;
+     // console.log(user_id);
+     const userData = await User.findById(user_id);
+     console.log("inside controller userprofile", userData)
+     const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
+     res.render('user-profile',{userData,cartItemsCount});
   } catch (error) {
-    console.log(error.message)
+     console.log(error.message);
   }
 }
 
@@ -37,69 +54,204 @@ const editUserDetails = async (req, res) => {
   }
 }
 
-const getAddressAddPage = async (req, res) => {
+// const editProfile = async(req,res)=>{
+//   try {
+//      const {firstName,lastName,email,mobile,userId} = req.body;
+//      const usersData = await User.find();
+
+//     // Find other Users and find is the email already exist or not
+
+//      const anotherUser = usersData.filter(user=>user._id.toString() !== userId);
+//      const emailExists = anotherUser.filter(user=>user.email === email);
+//      const mobileExist = anotherUser.filter(user=>user.mobile.toString() === mobile);
+     
+//      if(emailExists.length && mobileExist.length){
+//         res.json({status:'error',message:'Email and Mobile Number Already Exists'});
+//      }else if(emailExists.length){
+//         res.json({status:'error',message:'Email Already Exists'});
+//      }else if(mobileExist.length){
+//         res.json({status:'error',message:'Mobile Number Already Exists'});
+//      }else{
+//         const user = await User.findByIdAndUpdate(userId,
+//            {$set:{
+//               firstName:firstName,
+//               lastName:lastName,
+//               email:email,
+//               mobile:mobile
+//            }},
+//            {new:true});
+//         res.json({status:'success',message:'Profile Edited'});
+//      }
+//   } catch (error) {
+//      console.log(error.message);
+//      res.json({status:'error',message:'Something went Wrong'});
+//   }
+// }
+
+// Edit user profile 
+
+const editProfile = async(req,res)=>{
+   try {
+      const {firstName,email,mobile,userId} = req.body;
+      const usersData = await User.find();
+
+     // Find other Users and find is the email already exist or not
+
+      const anotherUser = usersData.filter(user=>user._id.toString() !== userId);
+      const emailExists = anotherUser.filter(user=>user.email === email);
+      const mobileExist = anotherUser.filter(user=>user.phone.toString() === mobile);
+      
+      if(emailExists.length && mobileExist.length){
+         res.json({status:'error',message:'Email and Mobile Number Already Exists'});
+      }else if(emailExists.length){
+         res.json({status:'error',message:'Email Already Exists'});
+      }else if(mobileExist.length){
+         res.json({status:'error',message:'Mobile Number Already Exists'});
+      }else{
+         const user = await User.findByIdAndUpdate(userId,
+            {$set:{
+               name:firstName,
+               email:email,
+               phone:mobile
+            }},
+            {new:true});
+            console.log("user updated data is", user)
+         res.json({status:'success',message:'Profile Edited'});
+      }
+   } catch (error) {
+      console.log(error.message);
+      res.json({status:'error',message:'Something went Wrong'});
+   }
+}
+
+// ===============================ADDRESS=========================
+
+// const getAddressAddPage = async (req, res) => {
+//   try {
+//     const user = req.session.user
+//     res.render("add-address", {user: user})
+//   } catch (error) {
+//     console.log(error).message
+//   }
+// }
+
+//load manage address
+const loadManageAddress = async(req,res)=>{
   try {
-    const user = req.session.user
-    res.render("add-address", {user: user})
+     const user_id = req.session.user;
+     let userAddress = await Address.findOne({userId:user_id});
+
+     if(!userAddress){
+        userAddress = new Address({userId:user_id,address:[]});
+        await userAddress.save();
+     }
+     // console.log(userAddress)
+     const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
+     res.render('manage-address',{address:userAddress.address,cartItemsCount});
   } catch (error) {
-    console.log(error).message
+     console.log(error.message);
   }
 }
 
-const postAddress = async (req, res) => {
+
+// const postAddress = async (req, res) => {
+//   try {
+//     const session = req.session
+//     console.log("I am inside post address, session is", session)
+//     const user = req.session.user
+//     console.log(user)
+//     const userData = await User.findOne({_id: user})
+//     const {
+//             addressType,
+//             name,
+//             city,
+//             landMark,
+//             state,
+//             pincode,
+//             phone,
+//             altPhone,
+//     } = req.body;
+//     const userAddress = await Address.findOne({userId: userData._id})
+//     console.log(userAddress);
+//     if(!userAddress){
+//       console.log(userData._id);
+//       const newAddress = new Address({
+//         userId: userData._id,
+//         address:[{
+//             addressType,
+//             name,
+//             city,
+//             landMark,
+//             state,
+//             pincode,
+//             phone,
+//             altPhone,
+//         }]
+//       })
+//       await newAddress.save()
+//     } else{
+//       console.log("I am in else, ie user adress exists")
+//       userAddress.address.push({
+//         addressType,
+//         name,
+//         city,
+//         landMark,
+//         state,
+//         pincode,
+//         phone,
+//         altPhone,
+//       })
+//       await userAddress.save()
+//     }
+//     res.redirect("/profile")
+//   } catch (error) {
+//     console.log(error.message)
+//   }
+// }
+
+//Adding Address
+const addingAddress = async(req,res)=>{
   try {
-    const session = req.session
-    console.log("I am inside post address, session is", session)
-    const user = req.session.user
-    console.log(user)
-    const userData = await User.findOne({_id: user})
-    const {
-            addressType,
-            name,
-            city,
-            landMark,
-            state,
-            pincode,
-            phone,
-            altPhone,
-    } = req.body;
-    const userAddress = await Address.findOne({userId: userData._id})
-    console.log(userAddress);
-    if(!userAddress){
-      console.log(userData._id);
-      const newAddress = new Address({
-        userId: userData._id,
-        address:[{
-            addressType,
-            name,
-            city,
-            landMark,
-            state,
-            pincode,
-            phone,
-            altPhone,
-        }]
-      })
-      await newAddress.save()
-    } else{
-      console.log("I am in else, ie user adress exists")
-      userAddress.address.push({
-        addressType,
-        name,
-        city,
-        landMark,
-        state,
-        pincode,
-        phone,
-        altPhone,
-      })
-      await userAddress.save()
-    }
-    res.redirect("/profile")
+     const {name,mobile,homeAddress,city,street,postalCode} = req.body;
+     // console.log(name)
+     // console.log(mobile)
+     // console.log(homeAddress)
+     // console.log(city)
+     // console.log(street)
+     // console.log(postalCode)
+
+     let newAddress ={
+        name:name,
+        mobile:mobile,
+        homeAddress:homeAddress,
+        city:city,
+        street:street,
+        postalCode:postalCode,
+        isDefault:false,
+     }
+     const user_id  = req.session.user
+     let userAddress = await Address.findOne({userId:user_id});
+
+     if(!userAddress){
+        newAddress.isDefault = true;
+        userAddress = new Address({userId:user_id,address:[newAddress]});
+     }else{
+        userAddress.address.push(newAddress);
+
+        if(userAddress.address.length === 1){
+           userAddress.address[0].isDefault = true;
+        }
+     }
+      
+     await userAddress.save();
+     console.log("inside adding address, added address data is",userAddress);
+     res.json({status:'success'});
   } catch (error) {
-    console.log(error.message)
+     console.log(error.message);
+     res.json({status:'error'});
   }
 }
+
 
 const getEditAddress = async (req, res) =>{
   try {
@@ -176,12 +328,13 @@ const getDeleteAddress = async(req, res) => {
 }
 
 module.exports = {
-                  getUserProfile,
+                  userProfile,
                   editUserDetails,
-                  getAddressAddPage,
-                  postAddress,
+                  editProfile,
                   getEditAddress,
                   postEditAddress,
-                  getDeleteAddress
+                  getDeleteAddress,
+                  loadManageAddress,
+                  addingAddress
 
                 }

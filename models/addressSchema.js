@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { asNumber } = require('pdf-lib');
 
 const addressSchema = mongoose.Schema({
     userId: {
@@ -7,38 +8,30 @@ const addressSchema = mongoose.Schema({
         required: true
     },
     address: [{
-        addressType: {
-            type: String,
-            required: true
-        },
         name: {
             type: String,
             required: true
         },
+        mobile: {
+            type: Number,
+        },
+        homeAddress:{
+            type:String,
+        },
         city:{
             type: String,
-            required: true
-        },
-        landMark:{
-            type: String,
-            required: true
         },
         state:{
             type: String,
-            required: true
         },
-        pincode:{
+        postalCode:{
             type: Number,
-            required: true
+           
         },
-        phone:{
-            type: Number,
-            required: true
-        },
-        altPhone:{
-            type: Number,
-            required: true
-        }
+        isDefault:{
+            type:Boolean,
+            default:false
+         }
     }]
 })
 

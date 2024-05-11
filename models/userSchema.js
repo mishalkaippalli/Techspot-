@@ -55,7 +55,7 @@ var userSchema = new Mongoose.Schema({
   redeemedUsers: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ref: "User",
     },
   ],
 });
