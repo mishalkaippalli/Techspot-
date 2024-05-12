@@ -212,12 +212,12 @@ const loadManageAddress = async(req,res)=>{
 //Adding Address
 const addingAddress = async(req,res)=>{
   try {
-     const {name,mobile,homeAddress,city,street,postalCode} = req.body;
+     const {name,mobile,homeAddress,city,state,postalCode} = req.body;
      // console.log(name)
      // console.log(mobile)
      // console.log(homeAddress)
      // console.log(city)
-     // console.log(street)
+     // console.log(state)
      // console.log(postalCode)
 
      let newAddress ={
@@ -225,7 +225,7 @@ const addingAddress = async(req,res)=>{
         mobile:mobile,
         homeAddress:homeAddress,
         city:city,
-        street:street,
+        state:state,
         postalCode:postalCode,
         isDefault:false,
      }
@@ -253,88 +253,167 @@ const addingAddress = async(req,res)=>{
 }
 
 
-const getEditAddress = async (req, res) =>{
-  try {
-    const addressId = req.query.id
-    const user = req.session.user
-    console.log(req.session)
-    const currAddress = await Address.findOne({"address._id": addressId})
+// const getEditAddress = async (req, res) =>{
+//   try {
+//     const addressId = req.query.id
+//     const user = req.session.user
+//     console.log(req.session)
+//     const currAddress = await Address.findOne({"address._id": addressId})
 
-    const addressData = currAddress.address.find((item) => {
-      return item._id.toString() == addressId.toString()    //The code compares the _id of each address object (item._id) with the provided addressId to find the specific address that matches the addressId.
-    })
-    console.log(addressData);
-    res.render("edit-address", {address: addressData, user: user})  
-  } catch (error) {
-    console.log(error.message)
+//     const addressData = currAddress.address.find((item) => {
+//       return item._id.toString() == addressId.toString()    //The code compares the _id of each address object (item._id) with the provided addressId to find the specific address that matches the addressId.
+//     })
+//     console.log(addressData);
+//     res.render("edit-address", {address: addressData, user: user})  
+//   } catch (error) {
+//     console.log(error.message)
+//   }
+// }
+
+//Load the Edit User address page
+const loadEditAddress = async(req,res)=>{
+  try{
+     const user_id = req.session.user;
+     const addressId = req.query.addressId;
+     const user = await Address.findOne({userId:user_id});
+     // console.log(userAddress)
+     
+     const userAddress = user.address.find((address)=>{
+        return address._id.toString() === addressId;
+     })
+
+     // console.log(userAddress);
+     const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
+     res.render('edit-address',{userAddress, cartItemsCount});
+  }catch(error){
+     console.log(error.message);
   }
 }
 
-const postEditAddress = async (req, res) => {
-  try {
-    console.log(req.body)
-    const data = req.body
-    const addressId = req.query.id
-    console.log("heyo iam inside postefitaddress , addressId", addressId)
-    const user = req.session.user
-    const findAddress = await Address.findOne({"address._id": addressId}); // for finding id of the document
-    const matchedAddress = findAddress.address.find(item => item._id == addressId)  //to find id of the adress in doc
-    console.log("matchedAdress", matchedAddress);
-    await Address.updateOne(
-      {
-        "address._id": addressId,
-        "_id": findAddress._id
-      }, 
-      {
-        $set: {
-          "address.$": {                        //The $ operator acts as a placeholder for the first element that matches the query condition. It allows you to update the specific element in the array without knowing its exact position.
-            _id: addressId,
-            addressType: data.addressType,
-            name: data.name,
-            city: data.city,
-            landMark: data.landMark,
-            state: data.state,
-            pincode: data.pincode,
-            phone: data.phone,
-            altPhone: data.altPhone,
-          },
-        }
-      }
-    ).then((result) => {
-      res.redirect("/profile")
-    })
-  } catch (error) {
-    console.log(error.message)
-  }
+// const postEditAddress = async (req, res) => {
+//   try {
+//     console.log(req.body)
+//     const data = req.body
+//     const addressId = req.query.id
+//     console.log("heyo iam inside postefitaddress , addressId", addressId)
+//     const user = req.session.user
+//     const findAddress = await Address.findOne({"address._id": addressId}); // for finding id of the document
+//     const matchedAddress = findAddress.address.find(item => item._id == addressId)  //to find id of the adress in doc
+//     console.log("matchedAdress", matchedAddress);
+//     await Address.updateOne(
+//       {
+//         "address._id": addressId,
+//         "_id": findAddress._id
+//       }, 
+//       {
+//         $set: {
+//           "address.$": {                        //The $ operator acts as a placeholder for the first element that matches the query condition. It allows you to update the specific element in the array without knowing its exact position.
+//             _id: addressId,
+//             addressType: data.addressType,
+//             name: data.name,
+//             city: data.city,
+//             landMark: data.landMark,
+//             state: data.state,
+//             pincode: data.pincode,
+//             phone: data.phone,
+//             altPhone: data.altPhone,
+//           },
+//         }
+//       }
+//     ).then((result) => {
+//       res.redirect("/profile")
+//     })
+//   } catch (error) {
+//     console.log(error.message)
+//   }
+// }
+
+// Edit address
+
+const editAddress = async(req,res)=>{
+   try {
+      const {name,mobile,homeAddress,city,state,postalCode,addressId} = req.body
+      
+      const user_id = req.session.user;
+      const updatedAddress = await Address.findOneAndUpdate({userId:user_id,'address._id':addressId},
+      {$set:{
+         'address.$.name':name,
+         'address.$.mobile':mobile,
+         'address.$.homeAddress':homeAddress,
+         'address.$.city':city,
+         'address.$.state':state,
+         'address.$.postalCode':postalCode,
+      }},
+      {new:true});
+      
+      // console.log(updatedAddress)
+      res.json({status:'success',message:'Address Edited'});
+   } catch (error) {
+      res.json({status:'error',message:'Something went wrong'});
+      console.log(error.message);
+   }
 }
 
-const getDeleteAddress = async(req, res) => {
-  try {
-    const addressId = req.query.id
-    const findAddress = await Address.findOne({"address._id": addressId})
-    await Address.updateOne(
-      {"address._id": addressId},
-      {
-        $pull: {
-          address : {
-            _id: addressId
-          }
-        }
+// const getDeleteAddress = async(req, res) => {
+//   try {
+//     const addressId = req.query.id
+//     const findAddress = await Address.findOne({"address._id": addressId})
+//     await Address.updateOne(
+//       {"address._id": addressId},
+//       {
+//         $pull: {
+//           address : {
+//             _id: addressId
+//           }
+//         }
+//       }
+//     ).then((data) => res.redirect("/profile"))
+//   } catch (error) {
+//     console.log(error.message)
+//   }
+// }
+
+// Delete the user address 
+const deleteAddress = async(req,res)=>{
+   try {
+      const user_id = req.session.user;
+      const addressId = req.query.addressId;
+      // console.log(req.query.addressId);
+      const address = await Address.findOne({userId:user_id});
+
+      const deletedAddress = address.address.find(address=>address._id.toString() === addressId);
+      // console.log(deletedAddress);
+
+      const isDefaultedAddress = deletedAddress.isDefault;
+      // console.log(isDefaultedAddress);
+
+      // Remove the address
+      address.address = address.address.filter((addr)=>addr._id.toString() !== addressId);
+      // console.log(address.address);
+      console.log(address.address.length)
+      if(isDefaultedAddress && address.address.length > 0){
+         let newDefaultAddress = address.address.find(addr=>addr._id.toString() !== addressId);
+         if(newDefaultAddress){
+            newDefaultAddress.isDefault = true;
+         }
+         // console.log(newDefaultAddress)
       }
-    ).then((data) => res.redirect("/profile"))
-  } catch (error) {
-    console.log(error.message)
-  }
+      // console.log(address);
+      await address.save();
+      res.json({status:'success',message:'Address Removed'});
+   } catch (error) {
+      res.json({status:'success',message:'Something went wrong'});
+      console.log(error.message);
+   }
 }
 
 module.exports = {
                   userProfile,
                   editUserDetails,
                   editProfile,
-                  getEditAddress,
-                  postEditAddress,
-                  getDeleteAddress,
                   loadManageAddress,
-                  addingAddress
-
+                  addingAddress,
+                  loadEditAddress,
+                  editAddress,
+                  deleteAddress
                 }

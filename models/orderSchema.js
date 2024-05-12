@@ -61,19 +61,19 @@ var orderSchema = new mongoose.Schema({
            type:String,
            required:true,
         },
-        phone:{
+        mobile:{
            type:Number,
+           required:true,
+        },
+        homeAddress:{
+           type:String,
            required:true,
         },
         city:{
            type:String,
            required:true,
         },
-        landMark:{
-           type:String,
-           required:true,
-        },
-        pincode:{
+        postalCode:{
            type:Number,
            required:true
         },

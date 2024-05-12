@@ -41,11 +41,18 @@ Router.post("/editUserDetails", isLogged, userProfileController.editUserDetails)
 Router.post("/edit-profile", isLogged,userProfileController.editProfile)
 // Router.get("/addAddress", isLogged, userProfileController.getAddressAddPage )
 // Router.post("/addAddress", isLogged, userProfileController.postAddress )
-Router.get('/manage-address',isLogged,userProfileController.loadManageAddress);
-Router.post('/add-address',isLogged, userProfileController.addingAddress)
+
 // Router.get("/editAddress", isLogged, userProfileController.getEditAddress)
 // Router.post("/editAddress", isLogged, userProfileController.postEditAddress)
 // Router.get("/deleteAddress", isLogged, userProfileController.getDeleteAddress)
+
+// ===============================Address management ==============================
+Router.get('/manage-address',isLogged,userProfileController.loadManageAddress);
+Router.post('/add-address',isLogged, userProfileController.addingAddress)
+Router.get('/edit-address',isLogged, userProfileController.loadEditAddress);
+Router.post('/edit-address', isLogged, userProfileController.editAddress)
+Router.get('/delete-address', isLogged, userProfileController.deleteAddress)
+
 
 // ===============================cart management ==============================
 
@@ -61,7 +68,7 @@ Router.get("/checkout", isLogged, cartController.loadCheckOut)
 
 // Router.get("/checkout", isLogged, orderController.getCheckoutPage)
 // Router.post("/orderPlaced", isLogged, orderController.orderPlaced)
-// Router.post('/place-order',isLogged, orderController.placeorder)
+Router.post('/place-order',isLogged, orderController.placeOrder)
 Router.get("/orderDetails", isLogged, orderController.getOrderDetailsPage)
 Router.get("/cancelOrder", isLogged, orderController.cancelOrder)
 Router.get("/return", isLogged, orderController.returnOrder)

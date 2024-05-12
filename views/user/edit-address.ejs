@@ -1,81 +1,355 @@
-<%- include("../partials/header") %>
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
 
-<div class="container mt-4">
-    <h3 class="mt-3" style="color: #046963; margin-bottom:70px">Edit user Address</h3>
-    <form id="addressForm" method="post" action="/editAddress?id=<%= address._id.toLocaleString() %>"
-        class="border-0 p-3">
-      <div class="row mb-50">
-        <div class="form-group col-md-4">
-            <label for="addressType">Address Type:</label>
-            <input type="text" class="form-control border-3" value="<%= address.addressType %>"
-             id="addressType" name="addressType" required>
-        </div>
-        <div class="form-group col-md-4">
-            <label for="name">Name:</label>
-            <input type="text" class="form-control border-3" value="<%= address.name %>"
-             id="name" name="name" required>
-        </div>
-        <div class="form-group col-md-4">
-            <label for="city">City:</label>
-            <input type="text" class="form-control border-3" value="<%= address.city %>"
-             id="city" name="city" required>
-        </div>
-      </div>
-      <div class="row mb-50" >
-        <div class="form-group col-md-4">
-            <label for="landMark">Landmark</label>
-            <input type="text" class="form-control border-3" value="<%= address.landMark %>"
-             id="landMark" name="landMark" required>
-        </div>
-        <div class="form-group col-md-4">
-            <label for="state">State</label>
-            <input type="text" class="form-control border-3" value="<%= address.state %>"
-             id="state" name="state" required>
-        </div>
-        <div class="form-group col-md-4">
-            <label for="pincode">Pincode</label>
-            <input type="text" class="form-control border-3" value="<%= address.pincode %>"
-             id="pincode" name="pincode" required>
-        </div>
-      </div>
-      <div class="row mb-50">
-        <div class="form-group col-md-4">
-            <label for="phone">Phone:</label>
-            <input type="text" class="form-control border-3" value="<%= address.phone %>"
-             id="phone" name="phone" required>
-        </div>
-        <div class="form-group col-md-4">
-            <label for="altPhone">Alternate Phone</label>
-            <input type="text" class="form-control border-3" value="<%= address.altPhone%>"
-             id="altPhone" name="altPhone" required>
-        </div>
-      </div>
-      <button type = "submit" id="submitButton" class="btn btn-primary">Submit</button>
-    </form>
-</div>
+<head>
+   <!-- Mobile Specific Meta -->
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <!-- Favicon-->
+   <link rel="shortcut icon" href="/assets/imgs/theme/willink-watches-logo (2).png">
+   <!-- Author Meta -->
+   <meta name="author" content="CodePixar">
+   <!-- Meta Description -->
+   <meta name="description" content="">
+   <!-- Meta Keyword -->
+   <meta name="keywords" content="">
+   <!-- meta character set -->
+   <meta charset="UTF-8">
+   <!-- Site Title -->
+   <title>Techspot</title>
 
-<script>
-    document.getElementById('submitButton').addEventListener('click', function (event){
-        if(!validateForm()){
-            event.preventDefault();
-        }
-    })
+   <!--
+            CSS
+            ============================================= -->
+   <link rel="stylesheet" href="/user-assets/css/linearicons.css">
+   <link rel="stylesheet" href="/user-assets/css/owl.carousel.css">
+   <link rel="stylesheet" href="/user-assets/css/themify-icons.css">
+   <link rel="stylesheet" href="/user-assets/css/font-awesome.min.css">
+   <link rel="stylesheet" href="/user-assets/css/nice-select.css">
+   <link rel="stylesheet" href="/user-assets/css/nouislider.min.css">
+   <link rel="stylesheet" href="/user-assets/css/bootstrap.css">
+   <link rel="stylesheet" href="/user-assets/css/main.css">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <style>
+      /* Style for the card */
+      .card {
+         border: 1px solid #f3efef;
+         border-radius: 8px;
+         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+         margin-bottom: 20px;
+         background-color: rgb(14, 13, 13);
+      }
 
-    function validateForm() {
-        let isValid = true;
-        const requiredFields = ["addressType", "name", "city", "landMark", "state", "pincode", "phone", "altPhone"];
-        requiredFields.forEach(function (field){
-            if(input.value.trim() ==="") {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Please fill all the field.',
-                    icon: 'error'
-                });
-                isValid = false
+      /* Style for the radio button and label */
+      .radion_btn {
+         display: flex;
+         align-items: center;
+         margin-bottom: 10px;
+      }
+
+      .radion_btn input[type="radio"] {
+         margin-right: 10px;
+      }
+
+      /* Style for the card text */
+      .card-text {
+         font-size: 14px;
+         color: #ffffff;
+      }
+
+      /* Optional: Style for the card header (if needed) */
+      .card-header {
+         background-color: #f8f9fa;
+         font-weight: bold;
+         padding: 10px;
+         border-bottom: 1px solid #e5e5e5;
+      }
+
+      .addAddress_form p {
+         color: red;
+      }
+
+      /* Style the radio button */
+      .radio_btn {
+         appearance: none;
+         /* Remove the default radio button appearance */
+         width: 15px;
+         /* Adjust the width of the radio button */
+         height: 15px;
+         /* Adjust the height of the radio button */
+         border: 1px solid #09b01a;
+         /* Border color */
+         border-radius: 10%;
+         /* Make it round */
+         outline: none;
+         /* Remove the outline when focused */
+         cursor: pointer;
+         /* Add a pointer cursor */
+         vertical-align: middle;
+         /* Center it vertically with the label */
+         margin-right: 10px;
+         /* Add some spacing between the radio button and label */
+      }
+
+      /* Style the radio button when checked */
+      .radio_btn:checked {
+         background-color: #09b01a;
+         /* Background color when checked */
+      }
+
+      /* Style the radio button label */
+      label {
+         font-size: 14px;
+         /* Label text size */
+         color: #000000;
+         /* Label text color */
+         margin-bottom: 10px;
+      }
+   </style>
+</head>
+
+<body>
+
+   <!-- Start Header Area -->
+   <header class="header_area sticky-header">
+      <div class="main_menu">
+         <nav class="navbar navbar-expand-lg navbar-light main_box"
+            style="border-radius: 25px; background-color: #f1f0f0;">
+            <div class="container">
+               <!-- Brand and toggle get grouped for better mobile display -->
+               <a class="navbar-brand logo_h" href="/home">
+                  <div class="" style="height: 80px;">
+                     <img src="/user-assets/imgs/theme/Techspotlogo.png"
+                        style="height: 80px; width: 100%; object-fit: cover;" alt="">
+                  </div>
+               </a>
+               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                  aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+               </button>
+               <!-- Collect the nav links, forms, and other content for toggling -->
+               <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                  <ul class="nav navbar-nav d-flex align-items-center  menu_nav ml-auto">
+                     <li class="nav-item active"><a href="/home" class="profile-icon nav-link"><span
+                              style="font-size: 22px; width: 30px; height: 30px; color: rgb(0, 0, 0);"
+                              class="bi bi-house"></span></a></li>
+                     <li class="nav-item"><a href="/show-all-products" class="profile-icon nav-link"><span
+                              style="font-size: 22px; width: 30px; height: 30px; color: black;"
+                              class="bi bi-shop"></span></a></li>
+                     <li class="nav-item"><a href="/user-profile" class="profile-icon nav-link"><span
+                              style="font-size: 22px; width: 30px; height: 30px; color: rgb(219, 134, 7);"
+                              class="bi bi-person"></span></a></li>
+                     <li class="nav-item"><a href="/cart" class="profile-icon nav-link"><span
+                              style="font-size: 20px; width: 30px; height: 30px; color: black;"
+                              class="bi bi-cart"></span>
+                           <span id="cartItemsCount"
+                              class="badge badge-danger position-absolute top-0 start-50 translate-middle"><%-
+                                 cartItemsCount %></span>
+                        </a></li>
+                     <li class="nav-item"><a href="/whishlist" class="profile-icon nav-link"><span
+                              style="font-size: 20px; width: 30px; height: 30px; color: black; margin-right: 48px;"
+                              class="bi bi-heart"></span></a></li>
+                  </ul>
+               </div>
+            </div>
+         </nav>
+      </div>
+
+   </header>
+   <!-- End Header Area -->
+
+   <!-- Start Banner Area -->
+   <section class="">
+      <div class="container">
+         <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+
+         </div>
+      </div>
+   </section>
+   <section>
+      <div class="container">
+         <h1 class="text-center">EDIT ADDRESS</h1>
+         <!-- Add this line -->
+      </div>
+   </section>
+   <!-- End Banner Area -->
+
+   <!--================Checkout Area =================-->
+
+   <section class="checkout_area section_gap">
+      <div class="container">
+         <div class="billing_details">
+            <div class="row">
+               <div class="col-lg-12">
+                  <h3>Edit Address</h3>
+                  <form class="row addAddress_form" id="editAddressForm" action="" method="post"
+                     novalidate="novalidate">
+                     <div class="col-md-6 form-group ">
+                        <input type="text" class="form-control" value="<%- userAddress.name %>" id="name" name="name"
+                           placeholder="Name">
+                        <p id="nameError"></p>
+                     </div>
+                     <div class="col-md-6 form-group">
+                        <input type="text" class="form-control" value="<%- userAddress.mobile %>" id="mobileNumber"
+                           name="mobileNumber" placeholder="Phone number">
+                        <p id="mobileError"></p>
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <input type="text" class="form-control" value="<%- userAddress.homeAddress %>" id="address"
+                           name="address" placeholder="Address">
+                        <p id="addressError"></p>
+                     </div>
+                     <div class="col-md-12 form-group ">
+                        <input type="text" class="form-control" value="<%- userAddress.city %>" id="city" name="city"
+                           placeholder="Town/City">
+                        <p id="cityError"></p>
+                     </div>
+                     <div class="col-md-12 form-group ">
+                        <input type="text" class="form-control" value="<%- userAddress.state %>" id="state"
+                           name="state" placeholder="state">
+                        <p id="stateError"></p>
+                     </div>
+
+                     <div class="col-md-12 form-group">
+                        <input type="text" class="form-control" value="<%- userAddress.postalCode %>" id="pcode"
+                           name="pcode" placeholder="Postcode">
+                        <p id="pcodeError"></p>
+                     </div>
+                     <input type="text" id="addressId" value="<%- userAddress._id %>" hidden>
+                     <div class="col-12 col-md-12 form-group justify-content-center d-flex">
+                        <button type="submit" class="btn btn-primary">Edit Address</button>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <!--================End Checkout Area =================-->
+
+   <!-- start footer Area -->
+   <footer class="footer-area pt-5 pb-5" style="background-color: black;  border-radius: 20px 20px 0 0;">
+      <div class="container">
+         <div class="row  d-flex justify-content-between">
+            <div class="col-lg-3  col-md-6 col-sm-6">
+               <div class="single-footer-widget">
+                  <h6>About Us</h6>
+                  <p>
+                    Welcome to Techspot, your destination for sleek mobile devices that seamlessly 
+                    fuse cutting-edge technology with style. We are committed to offering you premium 
+                    smartphones and tablets that marry innovation, elegance, and performance.
+                    
+
+                  </p>
+               </div>
+            </div>
+            <div class="col-lg-4  col-md-6 col-sm-6">
+               <div class="single-footer-widget">
+                  <h6>Contact Us</h6>
+                  <p>Have a question or need assistance? Don't hesitate to reach out. We're here to help.</p>
+                  <div class="" id="mc_embed_signup">
+                     <p style="margin-bottom: 0px; cursor: pointer;"><span>Email : info@techspot.com</span></p>
+                     <p style="margin-top: 0px; cursor: pointer;"> <span>Phone : +91 987654321</span></p>
+
+                  </div>
+               </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+               <div class="single-footer-widget">
+                  <h6>Follow Us</h6>
+                  <p>Stay updated with our latest arrivals, promotions, and news by following us on social media.</p>
+                  <div class="footer-social d-flex align-items-center">
+                     <a href="#"><i class="fa fa-instagram"></i></a>
+                     <a href="#"><i class="fa fa-twitter"></i></a>
+                     <a href="#"><i class="fa fa-facebook"></i></a>
+                     <a href="#"><i class="fa fa-linkedin"></i></a>
+                     <a href="#"><i class="fa fa-github"></i></a>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="footer-bottom d-flex justify-content-center align-items-center flex-wrap">
+            <p class="footer-text m-0">
+               <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+               Copyright &copy;
+               <script>document.write(new Date().getFullYear());</script> Techspot | All rights reserved
+               <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            </p>
+         </div>
+      </div>
+   </footer>
+   <!-- End footer Area -->
+
+   <script>
+      document.getElementById('editAddressForm').addEventListener('submit', async (event) => {
+         event.preventDefault()
+
+         const isValid = addressValidate();
+
+         if (isValid) {
+
+            const formData = {
+               name: event.currentTarget.name.value,
+               mobile: event.currentTarget.mobileNumber.value,
+               homeAddress: event.currentTarget.address.value,
+               city: event.currentTarget.city.value,
+               state: event.currentTarget.state.value,
+               postalCode: event.currentTarget.pcode.value,
+               addressId: event.currentTarget.addressId.value
             }
-        });
-        return isValid;
-    }
-</script>
 
-<%- include("../partials/footer") %>
+            const response = await fetch('/edit-address', {
+               method: 'post',
+               headers: {
+                  'Content-Type': 'application/json'
+               },
+               body: JSON.stringify(formData)
+            })
+
+            const result = await response.json();
+
+            if (result.status === 'success') {
+               Swal.fire({
+                  icon: 'success',
+                  title: result.message,
+                  showConfirmButton: false,
+                  timer: 1500
+               })
+               setTimeout(() => {
+                  location.href = '/manage-address'
+               }, 2000);
+            } else {
+               Swal.fire({
+                  icon: 'error',
+                  title: result.message,
+                  showConfirmButton: false,
+                  timer: 1500
+               })
+            }
+         }
+      })
+
+   </script>
+
+
+   <script src="/user-assets/js/vendor/jquery-2.2.4.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+      integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+      crossorigin="anonymous"></script>
+   <script src="/user-assets/js/vendor/bootstrap.min.js"></script>
+   <script src="/user-assets/js/jquery.ajaxchimp.min.js"></script>
+   <script src="/user-assets/js/jquery.nice-select.min.js"></script>
+   <script src="/user-assets/js/jquery.sticky.js"></script>
+   <script src="/user-assets/js/nouislider.min.js"></script>
+   <script src="/user-assets/js/jquery.magnific-popup.min.js"></script>
+   <script src="/user-assets/js/owl.carousel.min.js"></script>
+   <!--gmaps Js-->
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
+   <script src="/user-assets/js/gmaps.min.js"></script>
+   <script src="/user-assets/js/main.js"></script>
+   <script src="/js/addressValidate.js"></script>
+</body>
+
+</html>

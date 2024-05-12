@@ -4,13 +4,14 @@ const Cart = require('../models/cartModel')
 const Product = require("../models/productSchema")
 const Address = require("../models/addressSchema")
 const Wallet = require('../models/walletSchema');
-const Order = require("../models/orderSchema")
+const Order = require("../models/orderSchema");
 const Coupon = require("../models/couponSchema")
+const userUsedCoupons = require('../models/usedCouponSchema');
 const mongodb = require("mongodb")
 const CartCountHelper = require('../associates/cartItemsCount');
 const fs = require('fs');
 const {Readable} = require('stream');
-
+const RazorPayHelper = require('../associates/razorpayHelper');
 const express = require('express')
 const app = express()
 const fetch = require("node-fetch");
@@ -337,6 +338,7 @@ const placeOrder = async(req,res)=>{
        }
  
        const productData = cart.products;
+       console.log("inside placeorder product data from cart is",productData )
        let orderedProducts=[];
        productData.forEach(async(product)=>{
           const products ={
@@ -352,8 +354,9 @@ const placeOrder = async(req,res)=>{
  
  
        const userAddress = await Address.findOne({userId:user_id})
+       console.log("userAddress",userAddress )
        const shippingAddress = userAddress.address.find(address=>address._id.toString()===addressId);
-       // console.log(shippingAddress)
+       console.log("shipping address", shippingAddress)
  
        // Address --
        const address = {
@@ -361,10 +364,10 @@ const placeOrder = async(req,res)=>{
           mobile:shippingAddress.mobile,
           homeAddress:shippingAddress.homeAddress,
           city:shippingAddress.city,
-          street:shippingAddress.street,
+          state:shippingAddress.state,
           postalCode:shippingAddress.postalCode
        }
-       // console.log(address);
+       console.log(address);
  
        const orderDetails = new Order({
           userId:user_id,
@@ -376,7 +379,7 @@ const placeOrder = async(req,res)=>{
           address:address,
        })
        const placedOrder = await orderDetails.save()
-       // console.log(placedOrder);
+       console.log("placed order", placedOrder);
  
        // Payment method integration 
        // ==== COD====
@@ -389,7 +392,7 @@ const placeOrder = async(req,res)=>{
           }
           // Reducing the product stock
           productData.forEach(async(product)=>{
-             product.productId.stock -=product.quantity;
+             product.productId.quantity -=product.quantity;
              await product.productId.save()
           })
           res.json({status:'COD',placedOrderId:placedOrder._id})
@@ -416,7 +419,7 @@ const placeOrder = async(req,res)=>{
                 await cart.save();
              }
              productData.forEach(async(product)=>{
-                product.productId.stock -=product.quantity;
+                product.productId.quantity -=product.quantity;
                 await product.productId.save()
              })
              return res.json({status:'WALLET',placedOrderId:placedOrder._id});
@@ -424,18 +427,21 @@ const placeOrder = async(req,res)=>{
  
           // ===RAZORPAY===
        }else if(placedOrder.paymentMethod === 'RAZORPAY'){
-          const orderId = placedOrder._id;
+          const orderId = ""+placedOrder._id;
           const totalAmount = placedOrder.actualTotalAmount;
+          console.log("inside razorpay",orderId, totalAmount)
           // Calling razorpay 
           RazorPayHelper.generateRazorPay(orderId,totalAmount).then((response)=>{
+            console.log("response form razorpay created data response", response)
              res.json({status:'RAZORPAY',response})
+             
           })
           if(cart){
              cart.products = [];
              await cart.save();
           }
           productData.forEach(async(product)=>{
-             product.productId.stock -=product.quantity;
+             product.productId.quantity -=product.quantity;
              await product.productId.save()
           })
  
@@ -789,4 +795,5 @@ module.exports = {
                    getOrderDetailsPageAdmin,
                    changeOrderStatus,
                    returnOrder,
+                   placeOrder
                   }
