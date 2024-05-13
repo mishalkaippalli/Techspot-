@@ -32,11 +32,6 @@ var orderSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    
-    address:{
-        type:Array,
-        required:true,
-    },
     products:[{
         productId:{
            type:mongoose.Types.ObjectId,

@@ -10,7 +10,7 @@ const orderController = require("../controllers/orderController.js")
 const Category = require("../models/categorySchema");
 const couponController = require("../controllers/couponController.js")
 
-const {isAdmin} = require("../authenticaiton/auth.js")
+const {isAdmin, isLogged} = require("../authenticaiton/auth.js")
 
 //admin actions
 Router.get("/login", adminController.getLoginPage);
@@ -66,9 +66,11 @@ Router.get("/unBlockProduct", isAdmin, productController.getUnblockProduct)
 Router.post("/addProductOffer", isAdmin, productController.addProductOffer)
 Router.post("/removeProductOffer", isAdmin, productController.removeProductOffer)
 
-//Order Management
-Router.get("/orderList", isAdmin, orderController.getOrderListPageAdmin)
-Router.get("/orderDetailsAdmin", isAdmin, orderController.getOrderDetailsPageAdmin)
+// //Order Management
+// Router.get("/orderList", isAdmin, orderController.getOrderListPageAdmin)
+Router.get('/list-orders',isAdmin,orderController.loadOrdersPage)
+// Router.get("/orderDetailsAdmin", isAdmin, orderController.getOrderDetailsPageAdmin)
+Router.get("/order-details",isAdmin, orderController.adminOrderDetails)
 Router.get("/changeStatus", isAdmin, orderController.changeOrderStatus)
 
 //Coupon Management

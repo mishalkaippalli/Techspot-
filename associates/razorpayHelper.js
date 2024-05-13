@@ -9,17 +9,17 @@ var instance = new Razorpay({
 
 
 const generateRazorPay = async(orderId,total)=>{
+   console.log(typeof(orderId), typeof(total))
    return new Promise((resolve,reject)=>{
       var options = {
          amount: total *100,
          currency:"INR",
-         receipt:orderId,
+         receipt: orderId,
       };
       console.log("inside generate razor pay",options)
       instance.orders.create(options,function(err,order){
          if (err) {
             console.error("Error creating Razorpay order:", err);
-            reject(err); // Reject the promise with the error
         } else {
             resolve(order);
         }

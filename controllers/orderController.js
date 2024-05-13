@@ -427,7 +427,7 @@ const placeOrder = async(req,res)=>{
  
           // ===RAZORPAY===
        }else if(placedOrder.paymentMethod === 'RAZORPAY'){
-          const orderId = ""+placedOrder._id;
+          const orderId = placedOrder._id;
           const totalAmount = placedOrder.actualTotalAmount;
           console.log("inside razorpay",orderId, totalAmount)
           // Calling razorpay 
@@ -451,22 +451,80 @@ const placeOrder = async(req,res)=>{
     }
  }
 
+ // Verify online payment
+// const verifyOnlinePayment = async(req,res)=>{
+//     const user_id = req.session.user;
+//     const data = req.body
+//     console.log(data)
+//     // console.log('Our orderId : ',req.body.order.receipt);
+//     let receiptId = data.order.receipt;
+    
+//     RazorPayHelper.verifyOnlinePayment(data).then(()=>{
+//        console.log('Resolved')
+ 
+//        // If it is from wallet then only it works
+ 
+//        if(data.from === 'wallet'){
+//           const amount = (data.order.amount)/100;
+//           Wallet.findOneAndUpdate({userId:user_id},{$inc:{walletAmount:amount},$push:{transactionHistory:amount}},{new:true})
+//           .then((updatedWallet)=>{
+//              console.log('Wallet Updated :',updatedWallet)
+//              res.json({status:'rechargeSuccess',message:'Wallet Updated'});
+//           })
+//           .catch(()=>{
+//              console.log('Wallet Not updated');
+//              res.json({status:'error',message:'Wallet Not Updated'});
+//           })
+//        }else{
+//           let paymentSuccess = true;
+ 
+//           RazorPayHelper.updatePaymentStatus(receiptId,paymentSuccess).then(()=>{
+//              res.json({status:'paymentSuccess',placedOrderId:receiptId});
+//           })
+//        }
+       
+//     }).catch((err)=>{
+//        console.log('Rejected')
+//        if(err){
+//           console.log(err.message);
+ 
+//           let paymentSuccess = false;
+//           RazorPayHelper.updatePaymentStatus(receiptId,paymentSuccess).then(()=>{
+//              res.json({status:'paymentFailed',placedOrderId:receiptId})
+//           })
+//        }
+//     })
+    
+//  }
 
-const getOrderDetailsPage = async(req, res) => {
+
+// ==============================Admin Order management=================
+
+// const getOrderDetailsPage = async(req, res) => {
+//     try {
+//         const userId = req.session.user
+//         const orderId = req.query.id
+//         const findOrder = await Order.findOne({_id: orderId})
+//         const findUser = await User.findOne({_id: orderId})
+
+//         // const orderDetails = await Order.findById(orderId).populate('products.productId').sort({date:1})
+//         // console.log("order details inside getOrderdetailspage in ordercontroller",);
+
+//         res.render("orderDetails", {orders: findOrder, user: findUser, orderId})
+//     } catch (error) {
+//         console.log(error.message)
+//     }
+// }
+
+// Admin can view the order list
+const loadOrdersPage = async(req,res)=>{
     try {
-        const userId = req.session.user
-        const orderId = req.query.id
-        const findOrder = await Order.findOne({_id: orderId})
-        const findUser = await User.findOne({_id: orderId})
-
-        // const orderDetails = await Order.findById(orderId).populate('products.productId').sort({date:1})
-        // console.log("order details inside getOrderdetailspage in ordercontroller",);
-
-        res.render("orderDetails", {orders: findOrder, user: findUser, orderId})
+       const orders = await Order.find().populate('userId');
+       res.render('list-orders',{orders});
     } catch (error) {
-        console.log(error.message)
+       console.log(error.message);
     }
-}
+ }
 
 const getOrderDetailsPageAdmin = async(req, res) => {
     try {
@@ -555,6 +613,19 @@ const getOrderListPageAdmin = async(req, res) => {
     }
 }
 
+// Admin can view the order specific details
+const adminOrderDetails = async(req,res)=>{
+    try {
+       const orderId = req.query.orderId
+       // console.log(orderId);
+       const orderDetails = await Order.findById(orderId).populate('products._id')
+       console.log("inside adminorderdetails orderdetails.product is",orderDetails)
+       res.render('order-details',{orderDetails});
+    } catch (error) {
+       console.log(error.message);
+    }
+ }
+
 // const getOrderListPageAdmin = async(req,res)=>{
 //     try {
 //        const orders = await Order.find().populate('userId');
@@ -564,6 +635,8 @@ const getOrderListPageAdmin = async(req, res) => {
 //        console.log(error.message);
 //     }
 //  }
+
+
 
 const changeOrderStatus = async(req, res) => {
     try {
@@ -789,11 +862,12 @@ const returnOrder = async (req, res) => {
 
 module.exports = {
                    
-                   getOrderDetailsPage,
+                   loadOrdersPage,
                    cancelOrder,
                    getOrderListPageAdmin,
                    getOrderDetailsPageAdmin,
                    changeOrderStatus,
                    returnOrder,
-                   placeOrder
+                   placeOrder,
+                   adminOrderDetails
                   }
