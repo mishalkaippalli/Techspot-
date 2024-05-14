@@ -451,51 +451,52 @@ const placeOrder = async(req,res)=>{
     }
  }
 
- // Verify online payment
-// const verifyOnlinePayment = async(req,res)=>{
-//     const user_id = req.session.user;
-//     const data = req.body
-//     console.log(data)
-//     // console.log('Our orderId : ',req.body.order.receipt);
-//     let receiptId = data.order.receipt;
+//  Verify online payment
+const verifyOnlinePayment = async(req,res)=>{
+
+    const user_id = req.session.user;
+    const data = req.body
+    console.log(data)
+    // console.log('Our orderId : ',req.body.order.receipt);
+    let receiptId = data.order.receipt;
     
-//     RazorPayHelper.verifyOnlinePayment(data).then(()=>{
-//        console.log('Resolved')
+    RazorPayHelper.verifyOnlinePayment(data).then(()=>{
+       console.log('Resolved')
  
-//        // If it is from wallet then only it works
+       // If it is from wallet then only it works
  
-//        if(data.from === 'wallet'){
-//           const amount = (data.order.amount)/100;
-//           Wallet.findOneAndUpdate({userId:user_id},{$inc:{walletAmount:amount},$push:{transactionHistory:amount}},{new:true})
-//           .then((updatedWallet)=>{
-//              console.log('Wallet Updated :',updatedWallet)
-//              res.json({status:'rechargeSuccess',message:'Wallet Updated'});
-//           })
-//           .catch(()=>{
-//              console.log('Wallet Not updated');
-//              res.json({status:'error',message:'Wallet Not Updated'});
-//           })
-//        }else{
-//           let paymentSuccess = true;
+       if(data.from === 'wallet'){
+          const amount = (data.order.amount)/100;
+          Wallet.findOneAndUpdate({userId:user_id},{$inc:{walletAmount:amount},$push:{transactionHistory:amount}},{new:true})
+          .then((updatedWallet)=>{
+             console.log('Wallet Updated :',updatedWallet)
+             res.json({status:'rechargeSuccess',message:'Wallet Updated'});
+          })
+          .catch(()=>{
+             console.log('Wallet Not updated');
+             res.json({status:'error',message:'Wallet Not Updated'});
+          })
+       }else{
+          let paymentSuccess = true;
  
-//           RazorPayHelper.updatePaymentStatus(receiptId,paymentSuccess).then(()=>{
-//              res.json({status:'paymentSuccess',placedOrderId:receiptId});
-//           })
-//        }
+          RazorPayHelper.updatePaymentStatus(receiptId,paymentSuccess).then(()=>{
+             res.json({status:'paymentSuccess',placedOrderId:receiptId});
+          })
+       }
        
-//     }).catch((err)=>{
-//        console.log('Rejected')
-//        if(err){
-//           console.log(err.message);
+    }).catch((err)=>{
+       console.log('Rejected')
+       if(err){
+          console.log(err.message);
  
-//           let paymentSuccess = false;
-//           RazorPayHelper.updatePaymentStatus(receiptId,paymentSuccess).then(()=>{
-//              res.json({status:'paymentFailed',placedOrderId:receiptId})
-//           })
-//        }
-//     })
+          let paymentSuccess = false;
+          RazorPayHelper.updatePaymentStatus(receiptId,paymentSuccess).then(()=>{
+             res.json({status:'paymentFailed',placedOrderId:receiptId})
+          })
+       }
+    })
     
-//  }
+ }
 
 
 // ==============================Admin Order management=================
@@ -869,5 +870,6 @@ module.exports = {
                    changeOrderStatus,
                    returnOrder,
                    placeOrder,
-                   adminOrderDetails
+                   adminOrderDetails,
+                   verifyOnlinePayment
                   }
