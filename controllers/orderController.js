@@ -498,6 +498,84 @@ const verifyOnlinePayment = async(req,res)=>{
     
  }
 
+ const loadConfirmation = async(req,res)=>{
+   try {
+      const user_id = req.session.user;
+      const orderId = req.query.orderId
+      
+      const orderDetails = await Order.findById(orderId).populate('products.productId')
+
+      const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
+      console.log(orderDetails.products)
+      res.render('confirmation',{orderDetails,cartItemsCount});
+   } catch (error) {
+      console.log(error.message);
+   }
+}
+
+// List orders in user-side
+const listOrders = async(req,res)=>{
+   try {
+      const user_id = req.session.user;
+      const userOrders = await Order.find({userId:user_id}).populate('products.productId');
+      const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
+      res.render('list-orders',{userOrders,cartItemsCount});
+   } catch (error) {
+      console.log(error.message);
+   }
+}
+
+// When user click into the details 
+const orderDetails = async(req,res)=>{
+   try {
+      const user_id = req.session.user;
+      const orderId = req.query.orderId;
+      const orderDetails = await Order.findById(orderId).populate('products.productId').sort({date:1})
+      // console.log(orderDetails)
+      const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
+      res.render('order-details',{orderDetails,cartItemsCount});
+   } catch (error) {
+      console.log(error.message);
+   }
+}
+// Cancel order
+const cancelOrder = async(req,res)=>{
+   try {
+      const orderId = req.query.orderId;
+      const orderDetails = await Order.findByIdAndUpdate(orderId,
+         {$set:{
+            orderStatus:'Cancelled'
+         }},
+         {new:true}
+         ).populate('products.productId');
+
+         if(orderDetails.paymentMethod !== 'COD'){
+            const userWallet = await Wallet.findOne({userId:req.session.user});
+            if(!userWallet){
+               userWallet = new Wallet({userId:req.session.user});
+               await userWallet.save();
+            }
+               const amount = (1*orderDetails.actualTotalAmount)
+               userWallet.walletAmount += orderDetails.actualTotalAmount;
+               userWallet.transactionHistory.push(amount);
+               await userWallet.save();
+      
+         }
+         // Re setting the products stock
+         orderDetails.products.forEach((products)=>{
+            // console.log(products.productId.stock)
+            products.productId.quantity += products.quantity;
+            // console.log(products.productId.stock)
+         })
+         await orderDetails.save();
+         // console.log(userWallet);
+         res.json({status:'success',message:'Order Cancelled'});
+   } catch (error) {
+      res.json({status:'error',message:'Something went wrong'});
+      console.log(error.message)
+   }
+}
+
 
 // ==============================Admin Order management=================
 
@@ -540,59 +618,59 @@ const getOrderDetailsPageAdmin = async(req, res) => {
     }
 }
 
-const cancelOrder = async(req, res) => {
-    try {
-        const userId = req.session.user
-        console.log("Iam inside cancelOrder in orderController, userid is: ", userId)
-        const findUser = await User.findOne({_id: userId})
+// const cancelOrder = async(req, res) => {
+//     try {
+//         const userId = req.session.user
+//         console.log("Iam inside cancelOrder in orderController, userid is: ", userId)
+//         const findUser = await User.findOne({_id: userId})
 
-        if(!findUser) {
-            return res.status(404).json({message: 'User not found'});
-        }
+//         if(!findUser) {
+//             return res.status(404).json({message: 'User not found'});
+//         }
 
-        const orderId = req.query.orderId
-        console.log("order Id from query is", orderId)
+//         const orderId = req.query.orderId
+//         console.log("order Id from query is", orderId)
 
-        await Order.updateOne({_id: orderId},{status: "Canceled"})
-            .then((data) => console.log(data))
+//         await Order.updateOne({_id: orderId},{status: "Canceled"})
+//             .then((data) => console.log(data))
         
-        const findOrder = await Order.findOne({_id: orderId})
-        console.log("find order", findOrder)
+//         const findOrder = await Order.findOne({_id: orderId})
+//         console.log("find order", findOrder)
 
-        if(findOrder.payment === "wallet" || findOrder.payment === "online"){
-            findUser.wallet += findOrder.totalPrice;
+//         if(findOrder.payment === "wallet" || findOrder.payment === "online"){
+//             findUser.wallet += findOrder.totalPrice;
 
-            const newHistory = {
-                amount: findOrder.totalPrice,
-                status: "credit",
-                date: Date.now()
-            }
+//             const newHistory = {
+//                 amount: findOrder.totalPrice,
+//                 status: "credit",
+//                 date: Date.now()
+//             }
 
-            findUser.history.push(newHistory)
-            await findUser.save();
-        }
+//             findUser.history.push(newHistory)
+//             await findUser.save();
+//         }
         
-        for(const productData of findOrder.product) {
+//         for(const productData of findOrder.product) {
 
-           const productId = productData._id;
-           console.log("inside for productId: ",productId)
-           const quantity = productData.quantity;
-           console.log("inside for productId: ",quantity)
+//            const productId = productData._id;
+//            console.log("inside for productId: ",productId)
+//            const quantity = productData.quantity;
+//            console.log("inside for productId: ",quantity)
 
-           const product = await Product.findById(productId);
-           console.log("product", product)
+//            const product = await Product.findById(productId);
+//            console.log("product", product)
 
-           if(product) {
-            product.quantity += quantity;
-            await product.save()
-           }
-        }
-        res.redirect('/profile#orders');
+//            if(product) {
+//             product.quantity += quantity;
+//             await product.save()
+//            }
+//         }
+//         res.redirect('/profile#orders');
 
-    } catch (error) {
-        console.log(error.message)
-    }
-}
+//     } catch (error) {
+//         console.log(error.message)
+//     }
+// }
 
 // Admin can view the order list
 const getOrderListPageAdmin = async(req, res) => {
@@ -864,12 +942,15 @@ const returnOrder = async (req, res) => {
 module.exports = {
                    
                    loadOrdersPage,
-                   cancelOrder,
                    getOrderListPageAdmin,
                    getOrderDetailsPageAdmin,
                    changeOrderStatus,
                    returnOrder,
                    placeOrder,
                    adminOrderDetails,
-                   verifyOnlinePayment
+                   verifyOnlinePayment,
+                   loadConfirmation,
+                   listOrders,
+                   orderDetails,
+                   cancelOrder
                   }

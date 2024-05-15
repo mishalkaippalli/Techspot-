@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
+
+<head>
+    <!-- Mobile Specific Meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="/user-assets/imgs/theme/Techspotlogo.png">
+    <!-- Author Meta -->
+    <meta name="author" content="CodePixar">
+    <!-- Meta Description -->
+    <meta name="description" content="">
+    <!-- Meta Keyword -->
+    <meta name="keywords" content="">
+    <!-- meta character set -->
+    <meta charset="UTF-8">
+    <!-- Site Title -->
+    <title>Techspot</title>
+
+    <!--
+            CSS
+            ============================================= -->
+    <link rel="stylesheet" href="/user-assets/css/linearicons.css">
+    <link rel="stylesheet" href="/user-assets/css/owl.carousel.css">
+    <link rel="stylesheet" href="/user-assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/user-assets/css/themify-icons.css">
+    <link rel="stylesheet" href="/user-assets/css/nice-select.css">
+    <link rel="stylesheet" href="/user-assets/css/nouislider.min.css">
+    <link rel="stylesheet" href="/user-assets/css/bootstrap.css">
+    <link rel="stylesheet" href="/user-assets/css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <style>
+        .table-success th,
+        .table-success td {
+            border-right: 1px solid #000;
+            /* This adds a 1px black border on the right side of each cell */
+        }
+
+        .dataTables_wrapper .dataTables_filter {
+            float: none;
+            text-align: end;
+            margin-bottom: 5px;
+        }
+
+        .custom-card {
+            /* Add your custom styles here */
+            border: 2px solid #ccc;
+            /* Example: Add a border */
+            border-radius: 10px;
+            /* Example: Add border radius */
+            background-color: #f9f9f9;
+            /* Example: Change background color */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* Example: Add box shadow */
+            /* ... (add any other styles you want) ... */
+        }
+
+        #listOrders th,
+        #listOrders td {
+            border-right: 1px solid #a8a5a5;
+            border-bottom: 1px solid #a8a5a5;
+            /* Add a vertical line between cells */
+        }
+
+        .header_area {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background-color: #fff;
+            /* Set the background color of the sticky header */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            /* Add a shadow for better visibility */
+        }
+
+        .main_menu {
+            padding: 0;
+        }
+
+        .content-area {
+            padding-top: 140px; /* Adjust based on the height of the header */
+        }
+
+        div.dataTables_filter,
+        div.dataTables_length {
+            padding: 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Start Header Area -->
+    <header class="header_area sticky-header">
+        <div class="main_menu">
+            <nav class="navbar navbar-expand-lg navbar-light main_box" style="border-radius: 25px; background-color: #f1f0f0;">
+                <div class="container">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <a class="navbar-brand logo_h" href="/home">
+                        <div class="" style="height: 80px;">
+                            <img src="/user-assets/imgs/theme/Techspotlogo.png"
+                                style="height: 80px; width: 100%; object-fit: cover;" alt="">
+                        </div>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                        
+                        <ul class="nav navbar-nav d-flex align-items-center  menu_nav ml-auto">
+                            <li class="nav-item active"><a href="/home" class="profile-icon nav-link"><span
+                                style="font-size: 22px; width: 30px; height: 30px; color: rgb(0, 0, 0);"
+                                class="bi bi-house"></span></a></li>
+                            <li class="nav-item"><a href="/show-all-products" class="profile-icon nav-link"><span
+                                style="font-size: 22px; width: 30px; height: 30px; color: black;"
+                                class="bi bi-shop"></span></a></li>
+                            <li class="nav-item"><a href="/user-profile" class="profile-icon nav-link"><span
+                                        style="font-size: 22px; width: 30px; height: 30px; color: rgb(219, 134, 7);"
+                                        class="bi bi-person"></span></a></li>
+                            <li class="nav-item"><a href="/cart" class="profile-icon nav-link"><span
+                                        style="font-size: 20px; width: 30px; height: 30px; color: black;"
+                                        class="bi bi-cart"></span>
+                                        <span id="cartItemsCount" class="badge badge-danger position-absolute top-0 start-50 translate-middle"><%- cartItemsCount %></span>
+                                    </a></li>
+                            <li class="nav-item"><a href="/whishlist" class="profile-icon nav-link"><span
+                                        style="font-size: 20px; width: 30px; height: 30px; color: black; margin-right: 48px;"
+                                        class="bi bi-heart"></span></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+    </header>
+    <!-- End Header Area -->
+
+    <!-- Start Banner Area -->
+    <section class="content-area">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <h1 class="text-center">ORDERS</h1>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+
+    <!--================Cart Area =================-->
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card mb-4 custom-card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="listOrders">
+                            <thead class="table-dark text-center">
+                                <tr>
+                                    <th>OrderId</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Total Amount</th>
+                                    <th>Info</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <% if (userOrders.length > 0) { %>
+                                    <% for (let i = 0; i < userOrders.length; i++) { %>
+                                        <tr>
+                                            <td>
+                                                <% for (let j = 0; j < userOrders[i].products.length; j++) { %>
+                                                    <%- userOrders[i].products[j].productId.productName %>
+                                                        <br>
+                                                <% } %>
+                                            </td>
+                                            <td><%- userOrders[i].date.toLocaleString('en-US', {
+                                                    month: 'short',
+                                                    weekday: 'short',
+                                                    day: '2-digit',
+                                                    hour: 'numeric',
+                                                    minute: '2-digit',
+                                                    hour12: true
+                                                }) %>
+                                            </td>
+                                            <td><%- userOrders[i].orderStatus %></td>
+                                            <td><%- userOrders[i].actualTotalAmount %></td>
+                                            <td><a href="/order-details/?orderId=<%- userOrders[i]._id %>"
+                                                    class="btn btn-primary" type="button">Details</a></td>
+                                        </tr>
+                                    <% } %>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <a href="/user-profile" class="btn btn-secondary">Go Back</a>
+            </div>
+        </div>
+    </div>
+
+    <!--================End Cart Area =================-->
+
+    <!-- start footer Area -->
+    <footer class="footer-area pt-5 pb-5" style="background-color: black; border-radius: 20px 20px 0 0;">
+        <div class="container">
+            <div class="row d-flex justify-content-between">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6>About Us</h6>
+                        <p>
+                            Welcome to Techspot, your destination for sleek mobile devices that seamlessly
+                            fuse cutting-edge technology with style. We are committed to offering you premium
+                            smartphones and tablets that marry innovation, elegance, and performance.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6>Contact Us</h6>
+                        <p>Have a question or need assistance? Don't hesitate to reach out. We're here to help.</p>
+                        <div class="" id="mc_embed_signup">
+                            <p style="margin-bottom: 0px; cursor: pointer;"><span>Email : info@techspot.com</span></p>
+                            <p style="margin-top: 0px; cursor: pointer;"> <span>Phone : +49 56789586785</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6>Follow Us</h6>
+                        <p>Stay updated with our latest arrivals, promotions, and news by following us on social media.</p>
+                        <div class="footer-social d-flex align-items-center">
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                            <a href="#"><i class="fa fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom d-flex justify-content-center align-items-center flex-wrap">
+                <p class="footer-text m-0">
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    Copyright &copy;
+                    <script>document.write(new Date().getFullYear());</script> Willink Watches | All rights reserved
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            new DataTable('#listOrders', {
+                "order": [[1, 'desc']],
+                "columnDefs": [
+                    {
+                        "targets": 1,
+                        "type": 'date'
+                    }
+                ]
+            });
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+        integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+        crossorigin="anonymous"></script>
+    <script src="/user-assets/js/vendor/bootstrap.min.js"></script>
+    <script src="/user-assets/js/jquery.ajaxchimp.min.js"></script>
+    <script src="/user-assets/js/jquery.sticky.js"></script>
+    <script src="/user-assets/js/nouislider.min.js"></script>
+    <script src="/user-assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="/user-assets/js/owl.carousel.min.js"></script>
+    <!--gmaps Js-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
+    <script src="/user-assets/js/gmaps.min.js"></script>
+    <script src="/user-assets/js/main.js"></script>
+</body>
+
+</html>

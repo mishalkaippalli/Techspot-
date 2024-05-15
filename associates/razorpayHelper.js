@@ -38,7 +38,7 @@ const verifyOnlinePayment = async(details)=>{
       hmac.update(details.payment.razorpay_order_id+'|'+details.payment.razorpay_payment_id);
       // Converted to string format
       hmac = hmac.digest('hex');
-      // console.log(hmac);
+      // console.log("hmac", hmac);
       // Compare the two hex code that come from the razorpay signature and created hex
       // console.log(details.payment.razorpay_signature)
       if(hmac == details.payment.razorpay_signature){
