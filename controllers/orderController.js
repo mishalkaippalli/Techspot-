@@ -579,21 +579,6 @@ const cancelOrder = async(req,res)=>{
 
 // ==============================Admin Order management=================
 
-// const getOrderDetailsPage = async(req, res) => {
-//     try {
-//         const userId = req.session.user
-//         const orderId = req.query.id
-//         const findOrder = await Order.findOne({_id: orderId})
-//         const findUser = await User.findOne({_id: orderId})
-
-//         // const orderDetails = await Order.findById(orderId).populate('products.productId').sort({date:1})
-//         // console.log("order details inside getOrderdetailspage in ordercontroller",);
-
-//         res.render("orderDetails", {orders: findOrder, user: findUser, orderId})
-//     } catch (error) {
-//         console.log(error.message)
-//     }
-// }
 
 // Admin can view the order list
 const loadOrdersPage = async(req,res)=>{
@@ -604,73 +589,6 @@ const loadOrdersPage = async(req,res)=>{
        console.log(error.message);
     }
  }
-
-const getOrderDetailsPageAdmin = async(req, res) => {
-    try {
-        const orderId = req.query.id
-        console.log(orderId);
-        const findOrder = await Order.findOne({_id: orderId}).sort({createdOn: 1})
-        // console.log(findOrder)
-
-        res.render("order-details-admin", {orders: findOrder, orderId})
-    } catch (error) {
-        console.log(error.message)
-    }
-}
-
-// const cancelOrder = async(req, res) => {
-//     try {
-//         const userId = req.session.user
-//         console.log("Iam inside cancelOrder in orderController, userid is: ", userId)
-//         const findUser = await User.findOne({_id: userId})
-
-//         if(!findUser) {
-//             return res.status(404).json({message: 'User not found'});
-//         }
-
-//         const orderId = req.query.orderId
-//         console.log("order Id from query is", orderId)
-
-//         await Order.updateOne({_id: orderId},{status: "Canceled"})
-//             .then((data) => console.log(data))
-        
-//         const findOrder = await Order.findOne({_id: orderId})
-//         console.log("find order", findOrder)
-
-//         if(findOrder.payment === "wallet" || findOrder.payment === "online"){
-//             findUser.wallet += findOrder.totalPrice;
-
-//             const newHistory = {
-//                 amount: findOrder.totalPrice,
-//                 status: "credit",
-//                 date: Date.now()
-//             }
-
-//             findUser.history.push(newHistory)
-//             await findUser.save();
-//         }
-        
-//         for(const productData of findOrder.product) {
-
-//            const productId = productData._id;
-//            console.log("inside for productId: ",productId)
-//            const quantity = productData.quantity;
-//            console.log("inside for productId: ",quantity)
-
-//            const product = await Product.findById(productId);
-//            console.log("product", product)
-
-//            if(product) {
-//             product.quantity += quantity;
-//             await product.save()
-//            }
-//         }
-//         res.redirect('/profile#orders');
-
-//     } catch (error) {
-//         console.log(error.message)
-//     }
-// }
 
 // Admin can view the order list
 const getOrderListPageAdmin = async(req, res) => {
@@ -698,88 +616,87 @@ const adminOrderDetails = async(req,res)=>{
        const orderId = req.query.orderId
        // console.log(orderId);
        const orderDetails = await Order.findById(orderId).populate('products._id')
-       console.log("inside adminorderdetails orderdetails.product is",orderDetails)
+      //  console.log("inside adminorderdetails orderdetails.product is",orderDetails)
        res.render('order-details',{orderDetails});
     } catch (error) {
        console.log(error.message);
     }
  }
 
-// const getOrderListPageAdmin = async(req,res)=>{
-//     try {
-//        const orders = await Order.find().populate('userId');
-//        console.log("orders", orders)
-//        res.render('order-listtry',{orders});
-//     } catch (error) {
-//        console.log(error.message);
-//     }
-//  }
+// Admin can change the order status
+const changeStatus = async(req,res)=>{
+   try {
+      const {orderId, orderStatus} = req.body;
+      // console.log(orderId)
+      // console.log(orderStatus)
+      const orderData = await Order.findById(orderId).populate('products.productId');
+      console.log("changeStatus orderdata is ",orderData)
+      if(orderData){
+         if(orderStatus === 'Returned'){
+            // Checking if whole product is returned the whole order will returned;
+            const status = orderData.products.filter(product => {
+               return (product.productStatus !== 'Return Requested' && product.productStatus !== 'Returned');
+           });
+           if(status.length === 0){
+               orderData.orderStatus = orderStatus;
+           }
+            orderData.returnOrderStatus.status = 'Approved'
 
+            const returnAmount = orderData.products.reduce((acc,product)=>{
+               if( product.productStatus === 'Return Requested'){
+                  return acc += product.total;
+               }
+               return acc;
+            },0);
+            // console.log(returnAmount);
 
+            // Return the particular element stock
+            // Return the particular element stock
+            orderData.products.forEach(async (product) => {
+               if (product.productStatus === 'Return Requested') {
+                  product.productId.stock += product.quantity;
 
-const changeOrderStatus = async(req, res) => {
-    try {
-        console.log("I am inside changeOrderStatus in order controller",req.query);
+                  // Save the product after updating its stock
+                  await product.productId.save();
+               }
+            });
 
-        const orderId = req.query.orderId
-        console.log("orderid", orderId)
+         //   console.log('Order : ', orderData.products);
 
-        await Order.updateOne({_id: orderId},
-            {status: req.query.status})
-            .then((data) => console.log(data))
-
-        const findOrder = await Order.findOne({_id: orderId})
-        res.redirect('/admin/orderList');
-
-    } catch (error) {
-        console.log(error.message)
-    }
-}
-const returnOrder = async (req, res) => {
-    try { 
-        const userId = req.session.user
-        const findUser = await User.findOne({_id: userId})
-        console.log("Iam inside return order finduser is",findUser)
-
-        if(!findUser) {
-            return res.status(404).json({message: 'User not found'})
-        }
-
-        const id = req.query.id
-        await Order.updateOne({_id: id},
-        {status: "Returned"})
-        .then((data) => console.log("updated inside return order, data is ",data))
-
-        const findOrder = await Order.findOne({_id: id})
-
-        if(findOrder.payment === "wallet" || findOrder.payment === "online"){
-            findUser.wallet += findOrder.totalPrice;
-
-            const newHistory = {
-                amount: findOrder.totalPrice,
-                status: "credit",
-                date: Date.now()
+            // Returning the particular items
+            orderData.products.map((product)=>{
+               if( product.productStatus === 'Return Requested'){
+                  product.productStatus = 'Returned';
+               }
+            })
+            // console.log(orderData);
+            // Returning the amount into the wallet of user 
+            const userWallet = await Wallet.findOne({userId:orderData.userId});
+            if(userWallet){
+               const amount = (1*returnAmount);
+               userWallet.walletAmount += amount;
+               userWallet.transactionHistory.push(amount);
+               await userWallet.save();
             }
-            findUser.history.push(newHistory)
-            await findUser.save()
-        }
-        
-        for (const productData of findOrder.product) {
-            const productId = productData.ProductId;
-            const quantity = productData.quantity;
-
-            const product = await Product.findById(productId);
-
-            if(product){
-                product.quantity += quantity;
-                await product.save();
-            }
-        }
-        res.redirect('/profile#orders');
-
-    } catch (error) {
-        console.log(error.message)
-    }
+                      
+         }else if (orderStatus === 'Delivered'){
+            orderData.products.map((product)=>{
+               return product.productStatus = 'Delivered';
+            });
+            orderData.orderStatus = orderStatus;
+            orderData.deliveredDate = Date.now();
+         }else{
+            orderData.orderStatus = orderStatus;
+         }
+         await orderData.save();
+         console.log("changed order data", orderData);
+      }
+         // console.log(orderData);
+      res.json({status:'success',message:'Status Updated'});
+   } catch (error) {
+      res.json({status:'error',message:'Something went wrong'});
+      console.log(error.message)
+   }
 }
 
 // const paypalpage = async (req, res) => {
@@ -943,11 +860,9 @@ module.exports = {
                    
                    loadOrdersPage,
                    getOrderListPageAdmin,
-                   getOrderDetailsPageAdmin,
-                   changeOrderStatus,
-                   returnOrder,
-                   placeOrder,
                    adminOrderDetails,
+                   changeStatus,
+                   placeOrder,
                    verifyOnlinePayment,
                    loadConfirmation,
                    listOrders,

@@ -1,5 +1,8 @@
 const express = require("express");
-const Router = express.Router();
+const Router = express();
+
+Router.set("view engine", "ejs");
+Router.set("views", "./views/user");
 
 // ===============================Controller importing ==============================
 
@@ -72,7 +75,7 @@ Router.post('/place-order',isLogged, orderController.placeOrder)
 Router.post('/verify-payment',isLogged, orderController.verifyOnlinePayment)
 // Router.get("/orderDetails", isLogged, orderController.getOrderDetailsPage)
 // Router.get("/cancelOrder", isLogged, orderController.cancelOrder)
-Router.get("/return", isLogged, orderController.returnOrder)
+// Router.get("/return", isLogged, orderController.returnOrder)
 Router.get('/confirmation', isLogged, orderController.loadConfirmation )
 Router.get('/list-orders',isLogged, orderController.listOrders)
 Router.get('/order-details', isLogged, orderController.orderDetails)

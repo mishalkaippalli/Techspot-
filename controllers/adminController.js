@@ -51,188 +51,6 @@ const adminDashboard = async (req, res) => {
   }
 };
 
-
-
-const getSalesReportPage = async(req, res) => {
-  try {
-    let filterBy = req.query.day
-    if(filterBy){
-      res.redirect(`/admin/${req.query.day}`)
-    } else {
-      res.redirect(`/admin/salesMonthly`)
-    }
-  } catch (error) {
-    console.log(error.message)
-  }
-}
-
-const salesToday = async(req, res) =>{
-try {
-  let today = new Date()
-  const startOfTheDay = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate(),
-    0,
-    0,
-    0,
-    0
-  )
-
-  const endOfTheDay = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate(),
-    23,
-    59,
-    59,
-    999
-  )
-
-  const orders = await Order.aggregate([
-    {
-      $match: {
-        createdOn: {
-          $gte: startOfTheDay,
-          $lt: endOfTheDay
-        },
-        status: "Delivered"
-      }
-    }
-  ]).sort({createdOn: -1})
-
-let itemsPerPage = 5
-let currentPage = parseInt(req.query.page) || 1
-let startIndex = (currentPage -1) * itemsPerPage
-let endIndex = startIndex + itemsPerPage
-let totalPages = Math.ceil(orders.length/3)
-const currentOrder = orders.slice(startIndex, endIndex)
-
-console.log("current order", currentOrder)
-res.render('salesReport', {data: currentOrder, totalPages, currentPage, salesToday: true})
-} catch (error) {
-  console.log(error.message)
-}
-}
-
-const salesWeekly = async(req, res) => {
-  try {
-    let currentDate = new Date()
-    const startOfTheWeek = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      currentDate.getVarDate() - currentDate.getDay()
-    )
-    const endOfTheWeek = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      currentDate.getDate() + (6 - currentDate.getDay()),
-      23,59,59,999
-    )
-    const orders = await Order.aggregate([
-      {
-        $match: {
-          createdOn: {
-             $gte: startOfTheWeek,
-             $lt: endOfTheWeek
-          },
-          status: "Delivered"
-        }
-      }
-    ]).sort({createdOn: -1})
-
-    
-    let itemsPerPage = 5
-    let currentPage = parseInt(req.query.page) || 1
-    let startIndex = (currentPage - 1) * itemsPerPage
-    let endIndex = startIndex + itemsPerPage
-    let totalPages = Math.ceil(orders.length / 3)
-    const currentOrder = orders.slice(startIndex, endIndex)
-
-    
-  } catch (error) {
-    console.log(error.message)
-  }
-}
-
-const salesMonthly = async (req, res) => {
-  try {
-    console.log("inside slaes monthly");
-    let currentMonth = new Date().getMonth() + 1
-    const startOfTheMonth = new Date(
-      new Date().getFullYear(),
-      currentMonth - 1,
-      1,
-      0,0,0,0
-    )
-    console.log("current month",currentMonth)
-    const endOfTheMonth = new Date(
-      new Date().getFullYear(),
-      currentMonth,
-      0, 23, 59, 59, 999
-    )
-    console.log("end of the month",endOfTheMonth)
-    const orders = await Order.aggregate([
-      {
-        $match: {
-          createdOn: {
-            $gte: startOfTheMonth,
-            $lt: endOfTheMonth
-          },
-          status: "Delivered"
-        }
-      }
-      ]).sort({createdOn: -1})
-      console.log("orders inside sales Monthly",orders)
-
-      let itemsPerPage = 5
-      let currentPage = parseInt(req.query.page) || 1
-      let startIndex = (currentPage - 1) * itemsPerPage
-      let endIndex = startIndex + itemsPerPage
-      let totalPages = Math.ceil(orders.length / 3)
-      const currentOrder = orders.slice(startIndex, endIndex)
-
-      res.render("salesReport", { data: currentOrder, totalPages, currentPage, salesMonthly: true })
-    
-  } catch (error) {
-    
-  }
-}
-const salesYearly = async (req, res) => {
-  try {
-      const currentYear = new Date().getFullYear()
-      const startofYear = new Date(currentYear, 0, 1, 0, 0, 0, 0)
-      const endofYear = new Date(currentYear, 11, 31, 23, 59, 59, 999)
-
-      const orders = await Order.aggregate([
-          {
-              $match: {
-                  createdOn: {
-                      $gte: startofYear,
-                      $lt: endofYear
-                  },
-                  status: "Delivered"
-              }
-          }
-      ])
-
-
-      let itemsPerPage = 5
-      let currentPage = parseInt(req.query.page) || 1
-      let startIndex = (currentPage - 1) * itemsPerPage
-      let endIndex = startIndex + itemsPerPage
-      let totalPages = Math.ceil(orders.length / 3)
-      const currentOrder = orders.slice(startIndex, endIndex)
-
-      res.render("salesReport", { data: currentOrder, totalPages, currentPage, salesYearly: true })
-
-  } catch (error) {
-      console.log(error.message);
-  }
-}
-
-
-
 const generatePdf = async (req, res) => {
   try {
       const doc = new PDFDocument();
@@ -333,42 +151,11 @@ const downloadExcel = async (req, res) => {
   }
 }
 
-const dateWiseFilter = async (req, res) => {
-  try {
-    console.log(req.query);
-    const date = moment(req.query.date).startOf('day').toDate();
-    const orders = await Order.aggregate([
-      {
-        $match: {
-            createdOn: {
-              $gte: moment(date).startOf('day').toDate(),
-              $lt: moment(date).endOf('day').toDate(),
-            },
-            status: "Delivered"
-        }
-      }
-    ]);
-    console.log(orders)
-     
-    let itemsPerPage = 5
-        let currentPage = parseInt(req.query.page) || 1
-        let startIndex = (currentPage - 1) * itemsPerPage
-        let endIndex = startIndex + itemsPerPage
-        let totalPages = Math.ceil(orders.length / 3)
-        const currentOrder = orders.slice(startIndex, endIndex)
-
-        res.render("salesReport", { data: currentOrder, totalPages, currentPage, salesMonthly: true , date})
-
-  } catch (error) {
-    console.log(error.message)
-  }
-}
-
 const loadSalesReport = async(req,res)=>{
   try{
      const orders = await Order.aggregate([{$match:{orderStatus:'Delivered'}},{$sort:{date:-1}}]);
     
-     res.render('salesreporttrialwillys',{orders});
+     res.render('sales-report',{orders});
   }catch(error){
      console.log(error.message);
   }
@@ -452,33 +239,22 @@ const filterSales = async(req,res)=>{
          const startofMonth = new Date(today.getFullYear(),today.getMonth(),1);
          const endofMonth = new Date(today.getFullYear(),today.getMonth()+1, 0, 23, 59, 59, 999);
          
-        //  const orders = await Order.aggregate([
-        //   {
-        //     $match: {
-        //       createdOn: {
-        //         $gte: startOfTheDay,
-        //         $lt: endOfTheDay
-        //       },
-        //       status: "Delivered"
-        //     }
-        //   }
-        // ]).sort({createdOn: -1})
-
          const orders = await Order.aggregate([
-            {$match:{
-               status:'Delivered',
-               date:{
-                  $gte:startofMonth,
-                  $lte:endofMonth
-               }
-            }},
-            {$project:{
-               date:1,
-               actualTotalAmount:1
-            }},
-            {$sort:{date:-1}}
-         ])
-         res.json({orders});
+          {$match:{
+             orderStatus:'Delivered',
+             date:{
+                $gte:startofMonth,
+                $lte:endofMonth
+             }
+          }},
+          {$project:{
+             date:1,
+             actualTotalAmount:1
+          }},
+          {$sort:{date:-1}}
+       ])
+       res.json({orders});
+
       }else if(number ==='4'){ // Yearly Report
 
          const startOfYear = new Date(today.getFullYear(), 0, 1); // January is 0
@@ -507,6 +283,98 @@ const filterSales = async(req,res)=>{
    }
 }
 
+const dateWiseSales = async(req,res)=>{
+  try {
+     let {startingDate , endingDate} = req.body
+     // console.log('Started :',startingDate)
+     // console.log('End :',endingDate)
+     startingDate = new Date(startingDate);
+     endingDate = new Date(endingDate);
+
+     const orders = await Order.aggregate([
+        {$match:{
+           orderStatus:'Delivered',
+           date:{
+              $gte:startingDate,
+              $lte:endingDate
+           }
+        }},
+        {$project:{
+           date:1,
+           actualTotalAmount:1
+        }},
+        {$sort:{date:-1}}
+     ])
+     res.json({orders});
+  } catch (error) {
+     console.log(error.message);
+  }
+}
+// Generate sales report in pdf
+const generateSalesPdf = async (req, res) => {
+  try {
+      const doc = new PDFDocument(); //fromPdfkit library
+      const filename = 'sales-report.pdf';
+      const orders = req.body;
+
+      // Set content type to PDF
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+
+      // Pipe the PDF kit to the response
+      doc.pipe(res);
+
+      // Add content to the PDF
+      doc.fontSize(12);
+      doc.text('Sales Report', { align: 'center',fontSize: 16 });
+      const margin = 10; // 1 inch margin
+
+      doc.moveTo(margin, margin) // Top-left corner (x, y)
+      .lineTo(600 - margin, margin) // Top-right corner (x, y)
+      .lineTo(600 - margin, 842 - margin) // Bottom-right corner (x, y)
+      .lineTo(margin, 842 - margin) // Bottom-left corner (x, y)
+      .lineTo(margin, margin) // Back to top-left to close the rectangle
+      .lineTo(600 - margin, margin) // Draw line across the bottom edge
+      .lineWidth(3)
+      .strokeColor('#000000')
+      .stroke();
+   
+     doc.moveDown();
+   
+
+      // Define table headers
+      const headers = ['Order ID', 'Date', 'Total'];
+
+      // Calculate position for headers
+      let headerX = 20;
+      let headerY = doc.y + 10;
+
+      // Draw headers
+      headers.forEach(header => {
+          doc.text(header, headerX, headerY);
+          headerX += 220; // Adjust spacing as needed
+      });
+
+      // Calculate position for data
+      let dataY = headerY + 25;
+
+      // Draw data
+      orders.forEach(order => {
+          doc.text(order.orderId, 20, dataY);
+          doc.text(order.date, 240, dataY);
+          console.log(order.totalAmount)
+          doc.text(`€ ${order.totalAmount}`, 460, dataY);
+          dataY += 25; // Adjust spacing as needed
+      });
+
+      // Finalize the PDF
+      doc.end();
+  } catch (error) {
+      console.log(error.message);
+  }
+}
+
+
 
 
 
@@ -514,14 +382,10 @@ module.exports = {
                     getLoginPage, 
                     verifyLogin, 
                     adminDashboard,
-                    getSalesReportPage,
-                    salesToday,
-                    salesWeekly,
-                    salesMonthly,
-                    salesYearly,
                     generatePdf,
                     downloadExcel,
-                    dateWiseFilter,
                     loadSalesReport,
-                    filterSales
+                    filterSales,
+                    dateWiseSales,
+                    generateSalesPdf
                   };

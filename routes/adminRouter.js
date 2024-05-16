@@ -1,5 +1,8 @@
 const express = require("express");
-const Router = express.Router();
+const Router = express();
+
+Router.set("view engine", "ejs");
+Router.set("views", "./views/admin");
 
 const adminController = require("../controllers/adminController");
 const customerController = require("../controllers/customerController");
@@ -71,7 +74,7 @@ Router.post("/removeProductOffer", isAdmin, productController.removeProductOffer
 Router.get('/list-orders',isAdmin,orderController.loadOrdersPage)
 // Router.get("/orderDetailsAdmin", isAdmin, orderController.getOrderDetailsPageAdmin)
 Router.get("/order-details",isAdmin, orderController.adminOrderDetails)
-Router.get("/changeStatus", isAdmin, orderController.changeOrderStatus)
+Router.post("/change-status", isAdmin, orderController.changeStatus)
 
 //Coupon Management
 // To load the list of coupons
@@ -87,18 +90,14 @@ Router.post("/add-coupon", isAdmin, couponController.addCoupons)
 Router.get('/change-coupon-status',isAdmin,couponController.changeCouponStatus);
 
 //Sales Report
-Router.get("/salesReport", isAdmin, adminController.getSalesReportPage)
-Router.get("/salesToday", isAdmin, adminController.salesToday)
-Router.get("/salesWeekly", isAdmin, adminController.salesWeekly)
-Router.get("/salesMonthly", isAdmin, adminController.salesMonthly)
-Router.get("/salesYearly", isAdmin, adminController.salesYearly)
-Router.get("/dateWiseFilter", isAdmin, adminController.dateWiseFilter)
+
 Router.post('/generatePdf', isAdmin, adminController.generatePdf)
 Router.post('/downloadExcel', isAdmin, adminController.downloadExcel)
 
 //sales report trial
 Router.get('/sales-report', isAdmin, adminController.loadSalesReport);
 Router.get('/filter-sales',isAdmin, adminController.filterSales)
-
+Router.post('/datewise-filter-sales',isAdmin, adminController.dateWiseSales);
+Router.post('/generate-pdf',isAdmin, adminController.generateSalesPdf);
 
 module.exports = Router;

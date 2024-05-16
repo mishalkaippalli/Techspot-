@@ -262,8 +262,9 @@
                 const orderId = row.cells[0].textContent.trim();
                 const date = row.cells[1].textContent;
                 let totalAmount = row.cells[2].textContent.trim();
-                totalAmount = parseFloat(totalAmount.replace(/[^0-9]/g, ''), 10);
-                // Do something with these values, for example, log them
+                alert(totalAmount)
+                totalAmount = parseFloat(totalAmount.replace(/[^0-9.]/g, ''));//to remove euro button and convert string to floatingpoint
+                alert(totalAmount)
                 
                 const orderData = {
                     orderId: orderId,
