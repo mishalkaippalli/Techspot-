@@ -98,9 +98,10 @@ function generateOtp() {
 //User registration
 const signupUser = async (req, res) => {
   try {
+    console.log("req.body", req.body)
     const { email } = req.body;
     const findUser = await User.findOne({ email });
-
+    
     if (req.body.password === req.body.cPassword) {
       if (!findUser) {
         var otp = generateOtp();

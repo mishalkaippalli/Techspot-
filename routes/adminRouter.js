@@ -89,15 +89,11 @@ Router.post("/add-coupon", isAdmin, couponController.addCoupons)
 // Inactivate the coupon
 Router.get('/change-coupon-status',isAdmin,couponController.changeCouponStatus);
 
-//Sales Report
-
-Router.post('/generatePdf', isAdmin, adminController.generatePdf)
-Router.post('/downloadExcel', isAdmin, adminController.downloadExcel)
-
-//sales report trial
+//sales report
 Router.get('/sales-report', isAdmin, adminController.loadSalesReport);
 Router.get('/filter-sales',isAdmin, adminController.filterSales)
 Router.post('/datewise-filter-sales',isAdmin, adminController.dateWiseSales);
 Router.post('/generate-pdf',isAdmin, adminController.generateSalesPdf);
+Router.post('/downloadExcel', isAdmin, adminController.downloadExcel)
 
 module.exports = Router;

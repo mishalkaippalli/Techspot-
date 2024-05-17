@@ -6,7 +6,12 @@
                     <a href="#" id="createSalesReport" class="btn btn-primary"><i
                             class="text-muted material-icons md-post_add"></i>Create
                         report</a>
+                        <a href="" id="downloadExcelReport" class="btn btn-primary"
+                        class="text-muted material-icons md-post_add">Download Excel</a>
                 </div>
+                <!-- <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                    <a href="" id="downloadExcelReport" class="btn btn-success mb-2">Download Excel</a>
+                </div> -->
             </div>
             <div class="card mb-4">
                 <header class="card-header">
@@ -81,7 +86,7 @@
                         src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
                     <script>
                         document.write(new Date().getFullYear())
-                    </script> ©, Willink - HTML Ecommerce Template .
+                    </script> ©, Techspot - HTML Ecommerce Template .
                 </div>
                 <div class="col-sm-6">
                     <div class="text-sm-end">
@@ -302,6 +307,58 @@
             }
 
         })
+
+        document.getElementById('downloadExcelReport').addEventListener('click', async (event) => {
+                        event.preventDefault();
+                        // Get a reference to the table
+                        const salesTable = document.getElementById('salesTable');
+
+                        const tableBody = salesTable.querySelector('tbody');
+
+                        const salesData = []
+                        // Iterate through rows in the table
+                        for (const row of tableBody.rows) {
+                            // Access individual cells in the row
+                            const orderId = row.cells[0].textContent.trim();
+                            const date = row.cells[1].textContent;
+                            let totalAmount = row.cells[2].textContent.trim();
+                            totalAmount = parseFloat(totalAmount.replace(/[^0-9]/g, ''), 10);
+                            // Do something with these values, for example, log them                
+                            const dataData = {
+                                orderId: orderId,
+                                date: date,
+                                totalAmount: totalAmount
+                            }
+
+                            salesData.push(dataData);
+                        }
+
+                        try {
+                            const response = await fetch('/admin/downloadExcel', {
+                                method: 'post',
+                                headers: {
+                                    "Content-Type": 'application/json'
+                                },
+                                body: JSON.stringify(salesData)
+                            })
+
+                            if (response.ok) {
+                                const blob = await response.blob();
+                                const url = window.URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = 'report.xlsx';
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                            } else {
+                                console.error('Failed to download Excel file');
+                            }
+                        } catch (error) {
+                            console.log(error.message);
+                        }
+                    })
+
     </script>
     <script src="/assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/assets/js/vendors/bootstrap.bundle.min.js"></script>
