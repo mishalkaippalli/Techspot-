@@ -33,15 +33,15 @@ function editProfileValidate(){
    }
 
    // Last name feild empty
-   // if(lastName.trim() === ''){
-   //    document.getElementById('lastNameError').textContent = 'Feild is required';
-   //    document.getElementById('lastName').style.borderColor = 'red'
-   //    setTimeout(()=>{
-   //       document.getElementById('lastName').style.borderColor = ''
-   //       document.getElementById('lastNameError').textContent = ''
-   //    },5000)
-   //    isValid = false;
-   // }
+   if(lastName.trim() === ''){
+      document.getElementById('lastNameError').textContent = 'Feild is required';
+      document.getElementById('lastName').style.borderColor = 'red'
+      setTimeout(()=>{
+         document.getElementById('lastName').style.borderColor = ''
+         document.getElementById('lastNameError').textContent = ''
+      },5000)
+      isValid = false;
+   }
 
    // Email regex validation 
    if(!validateEmail(email)){

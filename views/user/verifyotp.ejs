@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zxx" class="no-js">
 
 <head>
@@ -30,27 +30,6 @@
 	<link rel="stylesheet" href="/user-assets/css/main.css">
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-	<!-- Option 1: Include in HTML -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-
-	<style>
-		.demo-container {
-			width: 100%;
-			height: 150px;
-			margin-bottom: 10px;
-			text-align: center;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-
-		.demo-user {
-			width: 60%;
-			height: 140px;
-			background-color: rgb(237, 184, 85);
-			border-radius: 10px;
-		}
-	</style>
 </head>
 
 <body>
@@ -58,16 +37,14 @@
 	<!-- Start Header Area -->
 	<header class="header_area sticky-header">
 		<div class="main_menu">
-			<nav class="navbar navbar-expand-lg navbar-light main_box"
-				style="border-radius: 25px; background-color: #f1f0f0;">
+			<nav class="navbar navbar-expand-lg navbar-light main_box" style="border-radius: 25px; background-color: #f1f0f0;">
 				<div class="container">
 					<!-- Brand and toggle get grouped for better mobile display -->
 					<a class="navbar-brand logo_h" href="/home">
 						<div class="" style="height: 80px;">
-							<img src="/user-assets/imgs/theme/Techspotlogo.png"
-								style="height: 80px; width: 100%; object-fit: cover;" alt="">
+							<img src="/user-assets/imgs/theme/Techspotlogo.png" style="height: 80px; width: 100%; object-fit: cover;" alt="">
 						</div>
-					</a>
+                </a>
 					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
 						aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="icon-bar"></span>
@@ -79,11 +56,11 @@
 
 						<ul class="nav navbar-nav d-flex align-items-center  menu_nav ml-auto">
 							<li class="nav-item active"><a href="/home" class="profile-icon nav-link"><span
-										style="font-size: 22px; width: 30px; height: 30px; color: rgb(0, 0, 0);"
-										class="bi bi-house"></span></a></li>
+								style="font-size: 22px; width: 30px; height: 30px; color: rgb(0, 0, 0);"
+								class="bi bi-house"></span></a></li>
 							<li class="nav-item"><a href="/show-all-products" class="profile-icon nav-link"><span
-										style="font-size: 22px; width: 30px; height: 30px; color: black;"
-										class="bi bi-shop"></span></a></li>
+								style="font-size: 22px; width: 30px; height: 30px; color: black;"
+								class="bi bi-shop"></span></a></li>
 						</ul>
 					</div>
 				</div>
@@ -93,64 +70,35 @@
 	<!-- End Header Area -->
 
 	<!-- Start Banner Area -->
-	<section>
+	<section class="">
 		<div class="container">
 			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
 				<div class="col-first">
-
 				</div>
 			</div>
 		</div>
 	</section>
 	<section>
-		<div class="container">
-			<h1 class="text-center">LOGIN</h1>
-		</div>
-	</section>
-
+      <div class="container">
+         <h1 class="text-center">OTP VERIFICATION</h1>
+      </div>
+   </section>
 	<!-- End Banner Area -->
 
 	<!--================Login Box Area =================-->
 	<section class="login_box_area section_gap">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-6">
-					<div class="login_box_img">
-						<img style="height: 500px; object-fit: cover;" class="img-fluid" src="/user-assets/img/login.jpg"
-							alt="">
-						<div class="hover">
-							<h4>New to our website?</h4>
-							<p>There are advances being made in science and technology everyday, and a good example of this is
-								the</p>
-							<a id="createAccButton" class="primary-btn" href="/login">Create an Account</a>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-6">
-					<!-- <div class="demo-container">
-						<div class="demo-user">
-							<h4>Demo User</h4>
-							<h6>Email : testuser@gmail.com</h6>
-							<h6>Password : Test@123</h6>
-						</div>
-					</div> -->
-					<div class="login_form_inner">
-
-						<h3>Log in to enter</h3>
-						<form class="row login_form" action="" method="post" id="LoginForm">
+				<div class="col-lg-12">
+					<div class="login_form_inner" style="padding-top: 0px;">
+						<h3>Verify the OTP</h3>
+						<form class="row login_form" action="" method="post" id="otpForm" novalidate="novalidate">
 							<div class="col-md-12 form-group">
-								<input type="text" class="form-control" id="email" name="email" placeholder="Email"
-									onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
-								<p style="color: red;" id="emailError"></p>
+								<input type="text" class="form-control" id="otp" name="otp" placeholder="Enter your otp" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
+								<p style="color: red;" id="otpError"></p>
 							</div>
 							<div class="col-md-12 form-group">
-								<input type="password" class="form-control" id="password" name="password" placeholder="Password"
-									onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
-								<p style="color: red;" id="passwordError"></p>
-							</div>
-							<div class="col-md-12 form-group">
-								<button type="submit" class="primary-btn">Log In</button>
-								<a href="/forgot-password">Forgot Password?</a>
+								<button type="submit" value="submit" class="primary-btn">Verify</button>
 							</div>
 						</form>
 					</div>
@@ -165,27 +113,27 @@
 		<div class="container">
 			<div class="row  d-flex justify-content-between">
 				<div class="col-lg-3  col-md-6 col-sm-6">
-					<div class="single-footer-widget">
-						<h6>About Us</h6>
-						<p>
-              Welcome to Techspot, your destination for sleek mobile devices that seamlessly 
-              fuse cutting-edge technology with style. We are committed to offering you premium 
-              smartphones and tablets that marry innovation, elegance, and performance.
-
-						</p>
-					</div>
-				</div>
-				<div class="col-lg-4  col-md-6 col-sm-6">
-					<div class="single-footer-widget">
-						<h6>Contact Us</h6>
-						<p>Have a question or need assistance? Don't hesitate to reach out. We're here to help.</p>
-						<div class="" id="mc_embed_signup">
-							<p style="margin-bottom: 0px; cursor: pointer;"><span>Email : info@techspot.com</span></p>
-							<p style="margin-top: 0px; cursor: pointer;"> <span>Phone : +49 438754398555</span></p>
-
-						</div>
-					</div>
-				</div>
+                    <div class="single-footer-widget">
+                        <h6>About Us</h6>
+                        <p>
+                            Welcome to Techspot, your destination for sleek mobile devices that seamlessly 
+                            fuse cutting-edge technology with style. We are committed to offering you premium 
+                            smartphones and tablets that marry innovation, elegance, and performance.
+                            
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4  col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6>Contact Us</h6>
+                        <p>Have a question or need assistance? Don't hesitate to reach out. We're here to help.</p>
+                        <div class="" id="mc_embed_signup">
+                            <p style="margin-bottom: 0px; cursor: pointer;"><span>Email : info@techspot.com</span></p>
+                            <p style="margin-top: 0px; cursor: pointer;"> <span >Phone : +49 116644553888</span></p>
+    
+                        </div>
+                    </div>
+                </div>
 				<div class="col-lg-3 col-md-6 col-sm-6">
 					<div class="single-footer-widget">
 						<h6>Follow Us</h6>
@@ -211,72 +159,51 @@
 		</div>
 	</footer>
 	<!-- End footer Area -->
-
-	<!-- Login form -->
 	<script>
-		document.getElementById('LoginForm').addEventListener('submit', async (event) => {
-			event.preventDefault()
+		document.getElementById('otpForm').addEventListener('submit',async(event)=>{
+			event.preventDefault();
 
-			const isValid = loginValidate()
+			const isValid = otpValidate();
 
-			if (isValid) {
-				const formData = {
-					email: event.currentTarget.email.value,
-					password: event.currentTarget.password.value,
-				};
-
-				const response = await fetch("/login", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
+			if(isValid){
+					const formData = {
+					otp:event.currentTarget.otp.value
+				}
+				const response = await fetch('/verifyotp',{
+					method:'post',
+					headers:{
+						'Content-Type':'application/json',
 					},
-					body: JSON.stringify(formData),
-				});
-
+					body:JSON.stringify(formData)
+				})
 				const result = await response.json();
 
-				if (result.status === 'success') {
+				if(result.status === 'success'){
 					Toastify({
-						text: result.message,
-						className: "info",
-						style: {
-							background: "linear-gradient(to right, #082400, #96c93d)",
-						}
+					text: result.message,
+					className: "info",
+					style:{
+						background: "linear-gradient(to right, #046407, #0aaa4f)",
+					}
 					}).showToast();
-					setTimeout(() => {
+					setTimeout(()=>{
 						location.href = '/home';
-					}, 1000)
-				} else {
+					},2000);
+				}else{
 					Toastify({
-						text: result.message,
-						className: "info",
-						style: {
-							background: "linear-gradient(to right, #240400, #ff4c00)",
-						}
+					text: result.message,
+					style: {
+						background: "linear-gradient(to right, #641204, #641204)",
+					}
 					}).showToast();
 				}
 			}
-
-		})
-	</script>
-
-	<script>
-		document.getElementById('createAccButton').addEventListener('click',(event)=>{
-			event.preventDefault()
-			Toastify({
-						text: 'Registration OTP using twilio expired...Please login with test user',
-						className: "warning",
-						style: {
-							background: "linear-gradient(to right, #007bff)",
-						}
-					}).showToast();
 		})
 	</script>
 
 	<script src="/user-assets/js/vendor/jquery-2.2.4.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
-		integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
-		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+	 crossorigin="anonymous"></script>
 	<script src="/user-assets/js/vendor/bootstrap.min.js"></script>
 	<script src="/user-assets/js/jquery.ajaxchimp.min.js"></script>
 	<script src="/user-assets/js/jquery.nice-select.min.js"></script>
@@ -288,8 +215,7 @@
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
 	<script src="/user-assets/js/gmaps.min.js"></script>
 	<script src="/user-assets/js/main.js"></script>
-	<script src="/js/userLoginValidation.js"></script>
-
+	<script src="/js/otpValidate.js"></script>
 </body>
 
 </html>

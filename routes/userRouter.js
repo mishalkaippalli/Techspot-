@@ -9,7 +9,7 @@ Router.set("views", "./views/user");
 const userController = require("../controllers/userController");
 const userProfileController = require("../controllers/userProfileController")
 const cartController = require("../controllers/cartController")
-const { isLogged, isAdmin } = require("../authenticaiton/auth");
+const { isLogged, isLogout } = require("../authenticaiton/auth");
 const orderController = require("../controllers/orderController")
 const wishlistController = require("../controllers/wishlistController")
 const paypalController = require("../controllers/paypalController")
@@ -17,14 +17,15 @@ const couponController = require("../controllers/couponController.js")
 
 // ===============================User Actions ==============================
 
-
 Router.get("/", userController.getHomePage);
-Router.get("/login", userController.getLoginPage);
-Router.post("/login", userController.userLogin);
+Router.get("/home", userController.getHomePage);
+Router.get("/login", userController.loadLogin);
+Router.post("/login", userController.verifyUser);
 Router.get("/signup", userController.getSignupPage);
-Router.post("/signup", userController.signupUser);
+Router.post("/register", userController.insertUser);
 Router.post("/resendOtp", userController.resendOtp);
-Router.post("/verify-otp", userController.verifyOtp);
+Router.get("/verifyotp", userController.loadVerifiyOTP);
+Router.post("/verifyotp", userController.verifyotp);
 Router.get("/logout",isLogged, userController.getLogoutUser)
 
 // ===============================Product based routes ==============================

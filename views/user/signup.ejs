@@ -1,148 +1,258 @@
-﻿
-<%- include("../partials/header") %>
-<style>
-    .login_wrap {
-    border: 2px solid #a0a0a0;}
-    </style> 
+﻿<!DOCTYPE html>
+<html lang="zxx" class="no-js">
 
+<head>
+	<!-- Mobile Specific Meta -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Favicon-->
+	<link rel="shortcut icon" href="/user-assets/imgs/theme/Techspotlogo.png">
+	<!-- Author Meta -->
+	<meta name="author" content="CodePixar">
+	<!-- Meta Description -->
+	<meta name="description" content="">
+	<!-- Meta Keyword -->
+	<meta name="keywords" content="">
+	<!-- meta character set -->
+	<meta charset="UTF-8">
+	<!-- Site Title -->
+	<title>Techspot</title>
+
+	<!--
+		CSS
+		============================================= -->
+	<link rel="stylesheet" href="/user-assets/css/linearicons.css">
+	<link rel="stylesheet" href="/user-assets/css/owl.carousel.css">
+	<link rel="stylesheet" href="/user-assets/css/themify-icons.css">
+	<link rel="stylesheet" href="/user-assets/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/user-assets/css/nice-select.css">
+	<link rel="stylesheet" href="/user-assets/css/nouislider.min.css">
+	<link rel="stylesheet" href="/user-assets/css/bootstrap.css">
+	<link rel="stylesheet" href="/user-assets/css/main.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+
+	<!-- Start Header Area -->
+	<header class="header_area sticky-header">
+		<div class="main_menu">
+			<nav class="navbar navbar-expand-lg navbar-light main_box" style="border-radius: 25px; background-color: #f1f0f0;">
+				<div class="container">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<a class="navbar-brand logo_h" href="/home">
+						<div class="" style="height: 80px;">
+							<img src="/user-assets/imgs/theme/Techspotlogo.png" style="height: 80px; width: 100%; object-fit: cover;" alt="">
+						</div>
+                </a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+					 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+							<ul class="nav navbar-nav d-flex align-items-center  menu_nav ml-auto">
+								<li class="nav-item active"><a href="/home" class="profile-icon nav-link"><span
+									style="font-size: 22px; width: 30px; height: 30px; color: rgb(0, 0, 0);"
+									class="bi bi-house"></span></a></li>
+								<li class="nav-item"><a href="/show-all-products" class="profile-icon nav-link"><span
+									style="font-size: 22px; width: 30px; height: 30px; color: black;"
+									class="bi bi-shop"></span></a></li>
+							</ul>
+					</div>
+				</div>
+			</nav>
+		</div>
+		
+	</header>
+	<!-- End Header Area -->
+
+	<!-- Start Banner Area -->
+	<section class="">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				
+			</div>
+		</div>
+	</section>
+	<section>
+		<div class="container">
+			 <h1 class="text-center">
+				   REGISTER
+			 </h1>
+		</div>
+  </section>
+	<!-- End Banner Area -->
+
+	<!--================Login Box Area =================-->
+	<section class="login_box_area section_gap">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="login_box_img">
+						<img style="height: 700px; object-fit: cover;" class="img-fluid" src="/user-assets/img/register.jpg" alt="">
+						<div class="hover">
+							<h4>Already a member?</h4>
+							<p>Go and Explore our new products and enjoy</p>
+							<a class="primary-btn" href="/login">Login</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="login_form_inner">
+						<h3>Create An Account</h3>
+						<form  class="row login_form" action="" method="post" id="registerForm" >
+							<div class="col-md-12 form-group">
+								<input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'First Name'">
+                        <p style="color: red;" id="fnameError"></p>
+							</div>
+							<div class="col-md-12 form-group">
+								<input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Last Name'">
+                        <p style="color: red;" id="lnameError"></p>
+							</div>
+                     <div class="col-md-12 form-group">
+								<input type="text" class="form-control" id="email" name="email" placeholder="Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
+                        <p style="color: red;" id="emailError"></p>
+							</div>
+                     <div class="col-md-12 form-group">
+								<input type="password" class="form-control" id="password" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+                        <p style="color: red;" id="passwordError"></p>
+							</div>
+                     <div class="col-md-12 form-group">
+								<input type="text" class="form-control" id="mobile" name="mobile" placeholder="Mobile" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mobile'">
+                        <p style="color: red;" id="mobileError"></p>
+							</div>
+							<div class="col-md-12 form-group">
+								<button  value="submit" class="primary-btn">Register</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!--================End Login Box Area =================-->
+
+	<!-- start footer Area -->
+	<footer class="footer-area pt-5 pb-5" style="background-color: black;  border-radius: 20px 20px 0 0;">
+		<div class="container">
+			<div class="row  d-flex justify-content-between">
+				<div class="col-lg-3  col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6>About Us</h6>
+                        <p>
+                            Welcome to Techspot, your destination for sleek mobile devices that seamlessly 
+                            fuse cutting-edge technology with style. We are committed to offering you premium 
+                            smartphones and tablets that marry innovation, elegance, and performance.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4  col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6>Contact Us</h6>
+                        <p>Have a question or need assistance? Don't hesitate to reach out. We're here to help.</p>
+                        <div class="" id="mc_embed_signup">
+                            <p style="margin-bottom: 0px; cursor: pointer;"><span>Email : info@techspot.com</span></p>
+                            <p style="margin-top: 0px; cursor: pointer;"> <span >Phone : +49 116644553888/span></p>
     
-        <section class="pt-150 pb-150">
-            <div class="container">
-                <!-- <div class="row"> -->
-                    <!-- <div class="col-lg-12 m-auto"> -->
-                        <!-- <div class="row"> -->
-                            <!-- <div class="col-lg-1"></div> -->
-                            <div class="col-lg-6 m-auto">
-                                <div class="login_wrap widget-taber-content p-30 background-white border-radius-5">
-                                    <div class="padding_eight_all bg-white">
-                                        <div class="heading_s1">
-                                            <h3 class="mb-30">Create an Account</h3>
-                                        </div>
-                                        <p class="mb-50 font-sm">
-                                            Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our privacy policy
-                                        </p>
-                                        <form method="post" onsubmit="return validateForm()" action = "/signup" >
-                                            <div class="form-group">
-                                                <input type="text" required="" name="name" placeholder="Username">
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="text" required="" name="email" placeholder="Email">
-                                            </div>
-                                            <div class="form-group">
-                                                <input required="" type="number" name="phone" placeholder="phonenumber">
-                                            </div>
-                                            <div class="form-group">
-                                                <input required="" type="password" name="password" placeholder="Password">
-                                            </div>
-                                            <div class="form-group">
-                                                <input required="" type="password" name="cPassword" placeholder="Confirm password">
-                                            </div>
-                                            <div class="login_footer form-group">
-                                                <div class="chek-form">
-                                                    <div class="custome-checkbox">
-                                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox12" value="">
-                                                        <label class="form-check-label" for="exampleCheckbox12"><span>I agree to terms &amp; Policy.</span></label>
-                                                    </div>
-                                                </div>
-                                                <a href="page-privacy-policy.html"><i class="fi-rs-book-alt mr-5 text-muted"></i>Lean more</a>
-                                            </div>
-                                            <% if (locals.message && message.length> 0) { %>
-                                                <div id="alertMessage" class="alert alert-danger">
-                                                    <%= message %>
-                                                </div>
-                                                <% } %>
-                                                <div id="validatealert" class="alert alert-danger" style="display: none;">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Submit &amp; Register</button>
-                                            </div>
-                                        </form>
-                                        <div class="divider-text-center mt-15 mb-15">
-                                            <span> or</span>
-                                        </div>
-                                        <ul class="btn-login list_none text-center mb-15">
-                                            <li><a href="#" class="btn btn-facebook hover-up mb-lg-0 mb-sm-4">Login With Facebook</a></li>
-                                            <li><a href="#" class="btn btn-google hover-up">Login With Google</a></li>
-                                        </ul>
-                                        <div class="text-muted text-center">Already have an account? <a href="#">Sign in now</a></div>
-                                    </div>
-                                </div>
-                            </div>
-                        <!-- </div> -->
-                    <!-- </div> -->
-                <!-- </div> -->
-            </div>
-        </section>
-    <!-- </main> -->
+                        </div>
+                    </div>
+                </div>
+				<div class="col-lg-3 col-md-6 col-sm-6">
+					<div class="single-footer-widget">
+						<h6>Follow Us</h6>
+						<p>Stay updated with our latest arrivals, promotions, and news by following us on social media.</p>
+						<div class="footer-social d-flex align-items-center">
+							<a href="#"><i class="fa fa-instagram"></i></a>
+							<a href="#"><i class="fa fa-twitter"></i></a>
+							<a href="#"><i class="fa fa-facebook"></i></a>
+							<a href="#"><i class="fa fa-linkedin"></i></a>
+							<a href="#"><i class="fa fa-github"></i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer-bottom d-flex justify-content-center align-items-center flex-wrap">
+				<p class="footer-text m-0">
+					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+					Copyright &copy;
+					<script>document.write(new Date().getFullYear());</script> Techspot | All rights reserved
+					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+				</p>
+			</div>
+		</div>
+	</footer>
+	<!-- End footer Area -->
+	
+	<script>
+		document.getElementById('registerForm').addEventListener('submit',async(event)=>{
+			event.preventDefault();
 
-    <%- include("../partials/footer") %>
+			const isValid = validateForm();
 
-<script>
-    // Check if the alertElement.innerText element exists
-    const alertElement = document.getElementById('alertMessage');
-    const validatealertelement = document.getElementById("validatealert");
-    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if(isValid){
+				const formData ={
+				firstName:event.currentTarget.firstName.value,
+				lastName:event.currentTarget.lastName.value,
+				email:event.currentTarget.email.value,
+				password:event.currentTarget.password.value,
+				mobile:event.currentTarget.mobile.value
+			}
 
-    // to clear the error(from backend validation) after 5 seconds
-   if (alertElement) {
-    setTimeout(function () {
-      alertElement.style.display = 'none';
-   }, 5000);
-   }
+			const response = await fetch('/register',{
+				method:'POST',
+				headers:{
+					'Content-Type':'application/json'
+				},
+				body:JSON.stringify(formData)
+			});
 
-    function displayError(message) {
-    validatealertelement.textContent = message;
-    validatealertelement.style.display = 'block';
-   }
-   
+			const result = await response.json();
 
-   function validateForm() {
-    //Triming the vlaues before submitting the form
-    var nameInput = document.getElementsByName("name")[0];
-    var emailInput = document.getElementsByName("email")[0];
-    var phoneInput = document.getElementsByName("phone")[0];
-    var passwordInput = document.getElementsByName("password")[0];
-    var cPasswordInput = document.getElementsByName("cPassword")[0];
+				if(result.status === 'success'){
+					Toastify({
+						text: result.message,
+						className: "info",
+						style: {
+							background: "linear-gradient(to right, #082400, #96c93d)",
+						}
+						}).showToast();
+						setTimeout(()=>{
+							location.href = '/verifyotp'; 
+						}, 2000)
+				}else{
+					Toastify({
+						text: result.message,
+						className: "info",
+						style: {
+							background: "linear-gradient(to right, #240400, #ff4c00)",
+						}
+					}).showToast();
+				}
+			}
+			
+		})
+	</script>
 
-    nameInput.value = nameInput.value.trim();
-    emailInput.value = emailInput.value.trim();
-    phoneInput.value = phoneInput.value.trim();
-    passwordInput.value = cPasswordInput.value.trim();
-    cPasswordInput.value = cPasswordInput.value.trim();
-    
-    if (nameInput.value === "" || emailInput.value === "" || phoneInput.value === "" || passwordInput.value === "" || cPasswordInput.value === "") {
-    
-            displayError("Please fill in all fields.");
-            return false; // Prevent form submission
-        } 
-    if (nameInput.value.length < 4) {
-        displayError("Username must have at least 4 characters.");
-            return false; // Prevent form submission
-    }
-    if (!emailRegex.test(emailInput.value)) {
-            displayError("Please enter a valid email address.");
-            return false;
-        }   
+	<script src="/user-assets/js/vendor/jquery-2.2.4.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+	 crossorigin="anonymous"></script>
+	<script src="/user-assets/js/vendor/bootstrap.min.js"></script>
+	<script src="/user-assets/js/jquery.ajaxchimp.min.js"></script>
+	<script src="/user-assets/js/jquery.nice-select.min.js"></script>
+	<script src="/user-assets/js/jquery.sticky.js"></script>
+	<script src="/user-assets/js/nouislider.min.js"></script>
+	<script src="/user-assets/js/jquery.magnific-popup.min.js"></script>
+	<script src="/user-assets/js/owl.carousel.min.js"></script>
+	<!--gmaps Js-->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
+	<script src="/user-assets/js/gmaps.min.js"></script>
+	<script src="/user-assets/js/main.js"></script>
+   <script src="/js/registerValidation.js"></script>
+</body>
 
-    if (phoneInput.value.length < 10) {
-        displayError("Phone number should be minimum 10 characters");
-            return false; // Prevent form submission
-    }
-    if (passwordInput.value !== cPasswordInput.value) {
-        displayError("Passwords do not match.");
-            return false; // Prevent form submission
-        } 
-    if (!passwordRegex.test(passwordInput.value)) {
-        displayError("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
-            return false; // Prevent form submission
-        }
-        //additional validations can be added here
-    return true;
-   }
-
-   
-
-</script>
-
+</html>
