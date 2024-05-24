@@ -1,76 +1,73 @@
-const User = require('../models/userSchema') 
-const Category = require("../models/categorySchema");
-const Product = require('../models/productSchema')
+const Wishlist = require('../models/wishlistSchema');
+const CartCountHelper = require('../associates/cartItemsCount');
 
-const getWishlistPage = async(req, res) => {
+const loadWishlist = async(req,res)=>{
     try {
-        const userId = req.session.user
-        console.log(userId)
-        const findUser = await User.findOne({_id: userId})
-        console.log("inside getwishlist page", findUser.wishlist)
-        res.render("wishlist", {data: findUser.wishlist, user: userId})
-        } catch (error) {
-        console.log(error.message)
-    }
-}
-
-const addToWishlist = async (req, res) => {
-    try {
-        console.log("inside addtowishlist",req.session.user)
-        if(!req.session.user) {
-            console.log("User not found")
-            res.json({error: "User not found", status: false})
-        }
-        const productId = req.body.productId
-        const findProduct = await Product.findOne({_id: productId})
-        console.log(findProduct)
-
-        await User.updateOne(
-            {
-                _id: req.session.user,
-            },
-            {
-                $addToSet: {
-                    wishlist: {                         
-                                productId: productId,
-                                image: findProduct.productImage[0],
-                                productName: findProduct.productName,
-                                category: findProduct.category,
-                                salePrice: findProduct.salePrice,
-                                brand: findProduct.brand,
-                                units: findProduct.quantity
-                    }
-                }   
-            }          
-        )
-        .then(data => console.log("wishlist updated",data))
-
-        res.json({status: true})
+       const user_id = req.session.user._id;
+       let userWishlist = await Wishlist.findOne({userId:user_id}).populate('products.productId');
+       console.log("userwishlist",userWishlist)
+       if(!userWishlist){
+          userWishlist = new Wishlist({userId:user_id,products:[]})
+          await userWishlist.save()
+       }
+       console.log("userWishlist.products",userWishlist.products)
+       const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
+       res.render('wishlist',{userWishlist:userWishlist.products,cartItemsCount});
     } catch (error) {
-        console.log(error.message)
+       console.log(error.message);
     }
-}
+ }
 
-const deleteItemWishlist = async (req, res) => {
+ const addtoWishlist = async(req,res)=>{
     try {
-        const id = req.query.id
-        await User.updateOne(
-            {_id: req.session.user },
-            {
-                $pull: {
-                    wishlist: {productId: id}
-                }
-            }
-        )
-        .then((data)=> console.log(data))
-        res.redirect("/wishlist")
+       const user_id = req.session.user._id
+       const productId = req.body.productId;
+       // console.log(productId);
+       // console.log(user_id);
+       let userWishlist = await Wishlist.findOne({userId:user_id})
+ 
+       if(!userWishlist){
+          userWishlist = new Wishlist({userId:user_id,products:[]})
+          await userWishlist.save()
+       }
+       if(userWishlist){
+          const findProduct = userWishlist.products.findIndex(product=>product.productId.toString() === productId);
+          // console.log(findProduct)
+          if(findProduct === -1){
+             userWishlist.products.push({
+                productId:productId,
+                date:Date.now()
+             })
+             await userWishlist.save()
+             res.json({status:'success',message:'Added to Wishlist'});
+          }else{
+             res.json({status:'error',message:'Item Already exist in Wishlist'})
+          }
+       }  
     } catch (error) {
-        console.log(error.message)
+       console.log(error.message);
     }
-}
+ }
+
+ const removeFromWishlist = async(req,res)=>{
+    try {
+       const user_id = req.session.user._id;
+       const productId = req.query.productId;
+ 
+       const products = await Wishlist.findOneAndUpdate({userId:user_id},
+          {$pull:{
+             products:{productId:productId},
+          }},
+          {new:true});
+       res.json({status:'success',message:'Product Removed'})
+    } catch (error) {
+       res.json({status:'error',message:'Something went wrong'});
+       console.log(error.message);
+    }
+ }
 
 module.exports = {
-    getWishlistPage,
-    addToWishlist,
-    deleteItemWishlist
+    loadWishlist,
+    addtoWishlist,
+    removeFromWishlist
 }

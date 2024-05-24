@@ -11,6 +11,7 @@ const Coupon = require("../models/couponSchema");
 const Wallet = require('../models/walletSchema');
 const CartCountHelper = require('../associates/cartItemsCount');
 const { error } = require("pdf-lib");
+const RazorPayHelper = require("../associates/razorpayHelper")
 
 // pagenotfound
 const pageNotFound = async (req, res) => {
@@ -32,15 +33,17 @@ const pageNotFound = async (req, res) => {
 //   }
 // };
 
-//Loading the Home page
+// Loading the Home page
 const getHomePage = async (req, res) => {
   try {
     const today = new Date().toISOString();
+    console.log("req.session",req.session)
     const user = req.session.user;
     console.log("req.session.user inside get home page",user)
     //banner here
 
     const userData = await User.findOne({_id: user});
+    console.log("userdata", userData)
     console.log("userdata inside get home page", userData)
     const brandData = await Brand.find({ isBlocked: false });
     const productData = await Product.find({ isBlocked: false })
@@ -61,6 +64,7 @@ const getHomePage = async (req, res) => {
     console.log(error.message);
   }
 };
+
 
 //load login page
 // const getLoginPage = async (req, res) => {
@@ -704,11 +708,12 @@ const loadWallet = async(req,res)=>{
 // Recharge the wallet
 const rechargeWallet  = async(req,res)=>{
   try{
-     let {amount} = (req.body);
+     let { amount } = (req.body);
      amount = Number(amount);
      const orderId = ""+Date.now();
 
      RazorPayHelper.generateRazorPay(orderId,amount).then((response)=>{
+      console.log("response from razorpay generator", response)
         res.json({status:'RAZORPAY',response})
      })
      

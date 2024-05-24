@@ -1,6 +1,6 @@
 function editProfileValidate(){
    const firstName = document.getElementById('firstName').value;
-   // const lastName = document.getElementById('lastName').value;
+   const lastName = document.getElementById('lastName').value;
    const email = document.getElementById('userEmail').value;
    const mobile = document.getElementById('mobileNumber').value;
 
@@ -102,7 +102,7 @@ function validateName(name) {
 
  // Mobile validation helper function
 function validateMobile(mobile) {
-   const mobilePattern = /^[0-9]{10}$/;
+   const mobilePattern = /^[0-9]{10,}$/;
    return mobilePattern.test(mobile);
 }
 

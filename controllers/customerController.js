@@ -3,7 +3,7 @@ const User = require("../models/userSchema");
 const getCustomersInfo = async (req, res) => {
   try {
     const userData = await User.find({
-      isAdmin: "0",
+      is_admin : false,
     });
 
     res.render("customers", {
@@ -18,7 +18,7 @@ const getCustomerBlocked = async (req, res) => {
   try {
     let id = req.query.id;
     console.log(id);
-    await User.updateOne({ _id: id }, { $set: { isBlocked: true } });
+    await User.updateOne({ _id: id }, { $set: { is_blocked: true } });
     res.redirect("/admin/users");
 
   } catch (error) {
@@ -30,7 +30,7 @@ const getCustomerUnblocked = async (req, res) => {
   try {
     let id = req.query.id;
     console.log(id);
-    await User.updateOne({ _id: id }, { $set: { isBlocked: false } });
+    await User.updateOne({ _id: id }, { $set: { is_blocked: false } });
     res.redirect("/admin/users");
   } catch (error) {
     console.log(error.message);

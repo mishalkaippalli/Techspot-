@@ -61,8 +61,7 @@ Router.get('/delete-address', isLogged, userProfileController.deleteAddress)
 // ===============================cart management ==============================
 
 Router.get("/cart", isLogged, cartController.getCartPage)
-Router.post("/addToCart", isLogged, cartController.addToCart)
-// Router.post("/changeQuantity", isLogged, cartController.changeQuantity)
+Router.get("/addToCart", isLogged, cartController.addToCart)
 Router.post("/update-quantity", isLogged, cartController.updateQuantity)
 Router.get("/deleteItem", isLogged, cartController.deleteProduct)
 Router.get('/remove-from-cart', isLogged, cartController.removeFromCart);
@@ -81,6 +80,7 @@ Router.get('/confirmation', isLogged, orderController.loadConfirmation )
 Router.get('/list-orders',isLogged, orderController.listOrders)
 Router.get('/order-details', isLogged, orderController.orderDetails)
 Router.get('/cancel-order', isLogged, orderController.cancelOrder)
+Router.post('/return-order',isLogged, orderController.returnOrder)
 
 // -----------------------------------COUPON MANAGEMENT---------------------
 
@@ -89,14 +89,14 @@ Router.get('/apply-coupon',isLogged,couponController.applyCoupons);
 
 // -----------------------------------Wishlist---------------------
 
-Router.get("/wishlist", isLogged, wishlistController.getWishlistPage)
-Router.post("/addToWishlist",isLogged, wishlistController.addToWishlist)
-Router.get("/deleteWishlist", isLogged, wishlistController.deleteItemWishlist)
+Router.get("/wishlist", isLogged, wishlistController.loadWishlist)
+Router.post("/addToWishlist",isLogged, wishlistController.addtoWishlist)
+Router.get("/remove-from-wishlist", isLogged, wishlistController.removeFromWishlist)
 
 // --------------------------------------WALLET---------------------------
 
 Router.get('/view-wallet',isLogged ,userController.loadWallet);
-Router.get('/recharge-wallet', isLogged, userController.rechargeWallet)
+Router.post('/recharge-wallet', isLogged, userController.rechargeWallet)
 
 
 // --------------------------------------ONLINE PAYMENT---------------------------

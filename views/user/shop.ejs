@@ -1,8 +1,5 @@
 <%-include("../partials/header") %>
 
-
-
-
 <style>
 .pagination {
   display: flex;
@@ -58,8 +55,6 @@
                     </div>
                     <div class="sort-by-product-area">
                        
-                        
-
                         <div class="sort-by-product-wrap">
                             <div class="sort-by">
                                 <span><i class="fi-rs-apps-sort"></i>Sort by:</span>
@@ -231,22 +226,23 @@ function addToWishlist(productId){
             productId : productId
         },
         success : (response)=>{
-            if(response.status == true){
+            if(response.status == 'success'){
                 Swal.fire({
-                                title: 'Added to Wishlist!',
+                                title: response.message,
                                 text: 'Continue Shopping',
                                 icon: 'success',
                                 timer: 2000,
                                 showConfirmButton: false
                             })
-            }else if(response.status == false){
+            }else if(response.status == 'error'){
                 Swal.fire({
-                                title: 'You need to Login first',
+                                title: response.message,
                                 text: 'Continue Shopping',
                                 icon: 'warning',
                                 timer: 2000,
                                 showConfirmButton: false
-                            }).then(() => { window.location.href = '/login' });
+                            })
+                            // .then(() => { window.location.href = '/shop' });
             }
         }
     })

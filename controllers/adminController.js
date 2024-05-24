@@ -22,7 +22,7 @@ const verifyLogin = async (req, res) => {
     const { email, password } = req.body;
     console.log(email);
 
-    const findAdmin = await User.findOne({ email, isAdmin: "1" });
+    const findAdmin = await User.findOne({ email, is_admin: true });
 
     if (findAdmin) {
       const passwordMatch = await bcrypt.compare(password, findAdmin.password);
@@ -55,8 +55,15 @@ const adminDashboard = async (req, res) => {
 const loadSalesReport = async(req,res)=>{
   try{
      const orders = await Order.aggregate([{$match:{orderStatus:'Delivered'}},{$sort:{date:-1}}]);
-    
-     res.render('sales-report',{orders});
+     console.log("orders inside loadSales report", orders)
+
+     // Calculate totals
+     const totalSalesCount = orders.length;
+     const totalOrderAmount = orders.reduce((sum, order) => sum + order.totalAmount, 0);
+     const totalDiscountAmount = orders.reduce((sum, order) => sum + order.couponDiscount, 0);
+     const totalPaidAmount = orders.reduce((sum, order) => sum + order.actualTotalAmount, 0);
+
+     res.render('sales-report',{orders,totalSalesCount,totalOrderAmount,totalDiscountAmount,totalPaidAmount});
   }catch(error){
      console.log(error.message);
   }
@@ -213,61 +220,84 @@ const dateWiseSales = async(req,res)=>{
 }
 // Generate sales report in pdf
 const generateSalesPdf = async (req, res) => {
-  try {
-      const doc = new PDFDocument(); //fromPdfkit library
+   console.log("inside generate sales pdf")
+   try {
+      const doc = new PDFDocument();
       const filename = 'sales-report.pdf';
       const orders = req.body;
-
+  
       // Set content type to PDF
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
-
+  
       // Pipe the PDF kit to the response
       doc.pipe(res);
-
+  
       // Add content to the PDF
-      doc.fontSize(12);
-      doc.text('Sales Report', { align: 'center',fontSize: 16 });
+      doc.fontSize(16).text('Sales Report', { align: 'center' });
+  
       const margin = 10; // 1 inch margin
-
-      doc.moveTo(margin, margin) // Top-left corner (x, y)
-      .lineTo(600 - margin, margin) // Top-right corner (x, y)
-      .lineTo(600 - margin, 842 - margin) // Bottom-right corner (x, y)
-      .lineTo(margin, 842 - margin) // Bottom-left corner (x, y)
-      .lineTo(margin, margin) // Back to top-left to close the rectangle
-      .lineTo(600 - margin, margin) // Draw line across the bottom edge
-      .lineWidth(3)
-      .strokeColor('#000000')
-      .stroke();
-   
-     doc.moveDown();
-   
-
+  
+      // Draw the border
+      doc.moveTo(margin, margin)
+          .lineTo(600 - margin, margin)
+          .lineTo(600 - margin, 842 - margin)
+          .lineTo(margin, 842 - margin)
+          .lineTo(margin, margin)
+          .lineWidth(3)
+          .strokeColor('#000000')
+          .stroke();
+  
+      doc.moveDown();
+  
       // Define table headers
-      const headers = ['Order ID', 'Date', 'Total'];
+      const headers = ['Order ID', 'Date', 'Total', 'Discount', 'Paid'];
 
+       // Define column widths
+    const firstColumnWidth = 180;
+    const otherColumnsWidth = (600 - margin * 2 - firstColumnWidth) / (headers.length - 1); // Adjust remaining space
+
+  
       // Calculate position for headers
       let headerX = 20;
       let headerY = doc.y + 10;
-
+  
+      // Set font size for headers
+      doc.fontSize(12);
+  
       // Draw headers
-      headers.forEach(header => {
-          doc.text(header, headerX, headerY);
-          headerX += 220; // Adjust spacing as needed
-      });
-
+      headers.forEach((header, index) => {
+         const columnWidth = index === 0 ? firstColumnWidth : otherColumnsWidth;
+         doc.text(header, headerX, headerY, { width: columnWidth, align: 'center' });
+         headerX += columnWidth; // Adjust spacing based on column width
+     });
+  
       // Calculate position for data
-      let dataY = headerY + 25;
-
+      let dataY = headerY + 20;
+  
       // Draw data
       orders.forEach(order => {
-          doc.text(order.orderId, 20, dataY);
-          doc.text(order.date, 240, dataY);
-          console.log(order.totalAmount)
-          doc.text(`€ ${order.totalAmount}`, 460, dataY);
-          dataY += 25; // Adjust spacing as needed
+         let dataX = 20;
+         doc.text(order.orderId, dataX, dataY, { width: firstColumnWidth, align: 'center' });
+         dataX += firstColumnWidth;
+         doc.text(order.date, dataX, dataY, { width: otherColumnsWidth, align: 'center' });
+         dataX += otherColumnsWidth;
+         doc.text(`€ ${order.totalAmount}`, dataX, dataY, { width: otherColumnsWidth, align: 'center' });
+         dataX += otherColumnsWidth;
+         doc.text(`€ ${order.discountAmount}`, dataX, dataY, { width: otherColumnsWidth, align: 'center' });
+         dataX += otherColumnsWidth;
+         doc.text(`€ ${order.paidAmount}`, dataX, dataY, { width: otherColumnsWidth, align: 'center' });
+         dataX += otherColumnsWidth;
+         // doc.text(`€ ${order.totalAmount - order.discountAmount - order.paidAmount}`, dataX, dataY, { width: otherColumnsWidth, align: 'center' });
+         dataY += 25; // Adjust spacing as needed
+  
+          // Check if we need a new page
+          if (dataY > 800) { // Adjust based on the page size and margins
+              doc.addPage();
+              dataY = 20; // Reset dataY for the new page
+          }
       });
-
+  
       // Finalize the PDF
       doc.end();
   } catch (error) {

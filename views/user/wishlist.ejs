@@ -1,126 +1,377 @@
-<%- include("../partials/header") %>
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
 
-    <main class="main">
-        <div class="page-header breadcrumb-wrap">
-            <div class="container">
-                <div class="breadcrumb">
-                    <a href="index.html" rel="nofollow">Home</a>
-                    <span></span> Shop
-                    <span></span> Wishlist
+<head>
+   <!-- Mobile Specific Meta -->
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <!-- Favicon-->
+   <link rel="shortcut icon" href="/user-assets/imgs/theme/Techspotlogo.png">
+   <!-- Author Meta -->
+   <meta name="author" content="CodePixar">
+   <!-- Meta Description -->
+   <meta name="description" content="">
+   <!-- Meta Keyword -->
+   <meta name="keywords" content="">
+   <!-- meta character set -->
+   <meta charset="UTF-8">
+   <!-- Site Title -->
+   <title>Techspot</title>
+
+   <!--
+            CSS
+            ============================================= -->
+   <link rel="stylesheet" href="/user-assets/css/linearicons.css">
+   <link rel="stylesheet" href="/user-assets/css/owl.carousel.css">
+   <link rel="stylesheet" href="/user-assets/css/font-awesome.min.css">
+   <link rel="stylesheet" href="/user-assets/css/themify-icons.css">
+   <link rel="stylesheet" href="/user-assets/css/nice-select.css">
+   <link rel="stylesheet" href="/user-assets/css/nouislider.min.css">
+   <link rel="stylesheet" href="/user-assets/css/bootstrap.css">
+   <link rel="stylesheet" href="/user-assets/css/main.css">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+   
+</head>
+
+<body>
+
+   <!-- Start Header Area -->
+   <header class="header-area header-style-5">  
+    <div class="header-bottom sticky-bar sticky-white-bg">
+        <div class="container">
+            <div class="header-wrap header-space-between position-relative">
+                <div class="logo logo-width-1">
+                    <a href="index.html"><img src="/user-assets/imgs/theme/Techspotlogo.png" alt="logo"></a>
                 </div>
-            </div>
-        </div>
-        <section class="mt-50 mb-50">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table-responsive">
-                            <table class="table shopping-summery text-center">
-                                <thead>
-                                    <tr class="main-heading">
-                                        <th scope="col" colspan="2">Product</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">Stock Status</th>
-                                        <th scope="col">Action</th>
-                                        <th scope="col">Remove</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-
-                                    <% for (let i=0; i < data.length; i++) { %>
-
-                                        <tr>
-                                            <td class="image product-thumbnail"><img
-                                                    src="/uploads/product-images/<%= data[i].image %>" alt="#"></td>
-                                            <td class="product-des product-name">
-                                                <h5 class="product-name"><a href="shop-product-right.html">
-                                                        <%= data[i].productName %>
-                                                    </a></h5>
-                                                <p class="font-xs">
-                                                    <%= data[i].category %><br>
-                                                        <%= data[i].brand %>
-                                                </p>
-                                            </td>
-                                            <td class="price" data-title="Price"><span>€<%= data[i].salePrice %></span>
-                                            </td>
-                                            <td class="text-center" data-title="Stock">
-                                                <span class="color3 font-weight-bold">
-                                                    <% if (data[i].units> 0) { %>
-                                                        <p>In Stock</p>
-                                                        <% }else{ %>
-                                                            Out Of Stock
-                                                            <% } %>
-
-                                                </span>
-                                            </td>
-                                            <td class="text-right" data-title="Cart">
-                                                <button class="btn btn-success" onclick="addToCart('<%=data[i].productId%>')">Add to
-                                                    Cart</button>
-                                            </td>
-                                            <td class="action" data-title="Remove"><a href="/deleteWishlist?id=<%= data[i].productId %>"><i
-                                                        class="fi-rs-trash"></i></a></td>
-                                        </tr>
-
-                                        <% } %>
-
-
-                                </tbody>
-                            </table>
+              
+                <div class="main-menu main-menu-grow main-menu-padding-1 main-menu-lh-1 main-menu-mrg-1 hm3-menu-padding d-none d-lg-block hover-boder">
+                    <nav>
+                        <ul>   
+                            <li><a class="active" href="/">Home <!--<i class="fi-rs-angle-down"></i> --></a>
+                            </li>
+                            <li><a href="/shop">Shop </i></a>
+                            </li>
+                            <li><a href="/about">About</i></a>
+                            </li>
+                            <li><a href="/contact">Contact</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="header-action-right">
+                    <div class="header-action-2">
+                        <div class="header-action-icon-2">
+                            <a href="/wishlist">
+                                <img class="svgInject" alt="Evara" src="/user-assets/imgs/theme/icons/icon-heart.svg">
+                                <!-- <span class="pro-count blue">4</span> -->
+                            </a>
+                        </div>
+                        <div class="header-action-icon-2">
+                            <a class="mini-cart-icon" href="/cart">
+                                <img alt="Evara" src="/user-assets/imgs/theme/icons/icon-cart.svg">
+                                <!-- <span class="pro-count blue">2</span> -->
+                            </a>
+                        </div>
+                        <div class="header-action-icon-2">
+                            <% if (locals.userWishlist) { %>
+                                <!-- Displayed when the user is logged in -->
+                                <li class="dropdown nav-item">
+                                  <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false">
+                                    <!-- Uncomment the following line if you want to use an icon -->
+                                    <!-- <i class="fas fa-/user-circle"></i> -->
+                                    <img class="svgInject" alt="Evara" src="/user-assets/imgs/theme/icons/user-profile.svg" style="height: 25px; width: 25px; margin-top: 2px;">
+                                  </a>
+                                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                                    <a class="dropdown-item" href="/user-profile"><i class="material-icons md-perm_identity"></i> Profile</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i> Logout</a>
+                                  </div>
+                                </li>
+                              <% } else { %>
+                                <!-- Displayed when the user is not logged in -->
+                                <div class="single-mobile-header-info ml-25 pr-5">
+                                  <a href="/login">Sign Up</a>
+                                </div>
+                              <% } %>
+                              
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </div>
+</header>
+   <!-- End Header Area -->
+
+   <!-- Start Banner Area -->
+   <section class="">
+      <div class="container">
+         <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+            </div>
+         </div>
+      </div>
+   </section>
+   <section>
+      <div class="container">
+         <h1 class="text-center">WISHLIST</h1>
+      </div>
+   </section>
+   <!-- End Banner Area -->
+
+   <!--================Cart Area =================-->
+   <section class="cart_area">
+      <div class="container">
+
+         <div class="cart_inner row gx-5 d-flex justify-content-between ">
+            <% if (userWishlist.length) { %>
+               <% for( let i=0; i < userWishlist.length; i++ ) { %>
+                  <div class="col-md-6">
+                     <div class="card col-12 shadow mb-3 " style="position: relative;">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                           <div class="text-right">
+                              <a href="" class="removeFromWishlist"
+                                 data-productId="<%- userWishlist[i].productId._id %>"
+                                 style="text-decoration: none; color: black; font-size: 20px;"><i
+                                    class="bi bi-trash "></i></a>
+                           </div>
+                           <div>
+                              <div class="mb-3 col-12 d-flex justify-content-center">
+                                 <img style="object-fit: contain; height: 150px; width: 150px;"
+                                    src="/uploads/product-images/<%= userWishlist[i].productId.productImage[0] %>" alt="">
+                              </div>
+                              <p>Product Name : <%- userWishlist[i].productId.productName %></p>
+                              <p>Price : &#x20B9; <%- userWishlist[i].productId.salePrice %> </p>
+                              <% if (userWishlist[i].productId.quantity===0) { %>
+                                 <p class="text-danger">Out of Stock</p>
+                                 <% }else{ %>
+                                    <p class="text-success">In Stock</p>
+                                    <% } %>
+                           </div>
+                           <div class="d-flex justify-content-end">
+                              <a href="" data-productId="<%- userWishlist[i].productId._id %>"
+                                 class="btn btn-primary col-md-3 addToCart"> Add To Cart</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <% } %>
+                     <% }else{ %>
+                        <div class="col-md-12 d-flex justify-content-center">
+                           <div style="height: 200px; width: 300px;">
+                              <img src="/user-assets/img/elements/empty-wishlist.png"
+                                 style="object-fit: cover; height: 100%; width: 100%;" alt="">
+                           </div>
+                        </div>
+                        <% } %>
+         </div>
 
 
-    <script>
-        function addToCart(prodId) {
-            
-            var quantity = 1;
-            $.ajax({
-                url: `/addToCart?id=${prodId}`,
-                method: "post",
-                data: {
-                    quantity: quantity
-                },
-                success: (res) => {
-                    if (res.status === true) {
+      </div>
+   </section>
 
-                        Swal.fire({
-                            title: 'Added to Cart!',
-                            text: 'Continue Shopping',
-                            icon: 'success',
-                            timer: 2000,
-                            showConfirmButton: false
-                        })
-                    } else if (res.status === "Out of stock") {
-                        Swal.fire({
-                            title: 'Stock!!',
-                            text: "The product is out of stock",
-                            icon: 'error', // Corrected from 'fail' to 'error'
-                            timer: 2000,
-                        })
-                    } else {
-                        Swal.fire({
-                            title: 'You need to Login first',
-                            text: 'Continue Shopping',
-                            icon: 'warning',
-                            timer: 2000,
-                            showConfirmButton: false
-                        }).then(() => { window.location.href = '/login' });
-                    }
-                },
-                error: (err) => {
-                    console.error(err, "hello");
-                    alert("error occured")
-                }
-            });
-        }
-    </script>
+   <!--================End Cart Area =================-->
+
+   <!-- start footer Area -->
+   <footer class="footer-area pt-5 pb-5" style="background-color: black;  border-radius: 20px 20px 0 0;">
+      <div class="container">
+         <div class="row  d-flex justify-content-between">
+            <div class="col-lg-3  col-md-6 col-sm-6">
+               <div class="single-footer-widget">
+                  <h6>About Us</h6>
+                  <p>
+                    Welcome to Techspot, your destination for sleek mobile devices that seamlessly 
+                    fuse cutting-edge technology with style. We are committed to offering you premium 
+                    smartphones and tablets that marry innovation, elegance, and performance.
+
+                  </p>
+               </div>
+            </div>
+            <div class="col-lg-4  col-md-6 col-sm-6">
+               <div class="single-footer-widget">
+                  <h6>Contact Us</h6>
+                  <p>Have a question or need assistance? Don't hesitate to reach out. We're here to help.</p>
+                  <div class="" id="mc_embed_signup">
+                     <p style="margin-bottom: 0px; cursor: pointer;"><span>Email : info@techspot.com</span></p>
+                     <p style="margin-top: 0px; cursor: pointer;"> <span>Phone : +91 344985748844</span></p>
+
+                  </div>
+               </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+               <div class="single-footer-widget">
+                  <h6>Follow Us</h6>
+                  <p>Stay updated with our latest arrivals, promotions, and news by following us on social media.</p>
+                  <div class="footer-social d-flex align-items-center">
+                     <a href="#"><i class="fa fa-instagram"></i></a>
+                     <a href="#"><i class="fa fa-twitter"></i></a>
+                     <a href="#"><i class="fa fa-facebook"></i></a>
+                     <a href="#"><i class="fa fa-linkedin"></i></a>
+                     <a href="#"><i class="fa fa-github"></i></a>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="footer-bottom d-flex justify-content-center align-items-center flex-wrap">
+            <p class="footer-text m-0">
+               <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+               Copyright &copy;
+               <script>document.write(new Date().getFullYear());</script> Techspot | All rights reserved
+               <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            </p>
+         </div>
+      </div>
+   </footer>
+   <!-- End footer Area -->
 
 
 
+   <!-- Removing product from whishlist -->
+   <script>
+      // Removing the product from cart
+      const removeFromWishlistBtn = document.querySelectorAll('.removeFromWishlist');
+      removeFromWishlistBtn.forEach(btn => {
+         btn.addEventListener('click', async (event) => {
+            event.preventDefault();
 
-    <%- include("../partials/footer") %>
+            const productId = event.currentTarget.getAttribute('data-productId');
+            console.log(productId)
+            if (productId) {
+               const response = await Swal.fire({
+                  title: "Are you Sure ",
+                  text: "To Remove Product from Whishlist",
+                  icon: "question",
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#990f0f',
+                  confirmButtonText: 'Yes',
+                  cancelButtonText: 'No !'
+               });
+
+               if (response.isConfirmed) {
+                  const response = await fetch(`/remove-from-wishlist/?productId=${productId}`);
+                  const result = await response.json();
+
+                  if (result.status === 'success') {
+                     Swal.fire({
+                        icon: 'success',
+                        title: 'Item Removed',
+                        showConfirmButton: false,
+                        timer: 1000
+                     })
+                     setTimeout(() => {
+                        location.href = location.href
+                     }, 1500)
+                  }
+                  else if (result.status === 'sessionError') {
+                     Swal.fire({
+                        icon: 'info',
+                        title: result.message,
+                        showConfirmButton: false,
+                        timer: 1000
+                     })
+                     setTimeout(() => {
+                        location.href = '/login'
+                     }, 1500);
+                  } else {
+                     Swal.fire({
+                        icon: 'error',
+                        title: 'Something went wrong',
+                        showConfirmButton: false,
+                        timer: 1500
+                     })
+                  }
+               }
+            }
+
+         })
+      })
+   </script>
+
+   <!-- Adding to cart from the whishlist -->
+   <script>
+      const addToCartButtons = document.querySelectorAll('.addToCart');
+
+      addToCartButtons.forEach(button => {
+         button.addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            const productId = event.currentTarget.getAttribute('data-productId'); // Get data-id attribute
+            console.log(productId)
+            const response = await fetch(`/addToCart?id=${productId}`);
+            const result = await response.json();
+            if (result.status === 'success') {
+               Swal.fire({
+                  icon: 'success',
+                  title: 'Added to Cart',
+                  showConfirmButton: false,
+                  timer: 1500
+               })
+               document.getElementById('cartItemsCount').textContent = result.cartItemsCount;
+            } else if (result.status === 'sessionError') {
+               Swal.fire({
+                  icon: 'info',
+                  title: result.message,
+                  showConfirmButton: false,
+                  timer: 1000
+               })
+               setTimeout(() => {
+                  location.href = '/login'
+               }, 1500);
+            }
+            else {
+               Swal.fire({
+                  icon: 'error',
+                  title: result.message,
+                  showConfirmButton: false,
+                  timer: 1500
+               })
+            }
+         });
+      });
+
+   </script>
+
+
+   <!-- Vendor JS-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
+<script src="/user-assets/js/vendor/modernizr-3.6.0.min.js"></script>
+<script src="/user-assets/js/vendor/jquery-3.6.0.min.js"></script>
+<script src="/user-assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+<script src="/user-assets/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="/user-assets/js/plugins/slick.js"></script>
+<script src="/user-assets/js/plugins/jquery.syotimer.min.js"></script>
+<script src="/user-assets/js/plugins/wow.js"></script>
+<script src="/user-assets/js/plugins/jquery-ui.js"></script>
+<script src="/user-assets/js/plugins/perfect-scrollbar.js"></script>
+<script src="/user-assets/js/plugins/magnific-popup.js"></script>
+<script src="/user-assets/js/plugins/select2.min.js"></script>
+<script src="/user-assets/js/plugins/waypoints.js"></script>
+<script src="/user-assets/js/plugins/counterup.js"></script>
+<script src="/user-assets/js/plugins/jquery.countdown.min.js"></script>
+<script src="/user-assets/js/plugins/images-loaded.js"></script>
+<script src="/user-assets/js/plugins/isotope.js"></script>
+<script src="/user-assets/js/plugins/scrollup.js"></script>
+<script src="/user-assets/js/plugins/jquery.vticker-min.js"></script>
+<script src="/user-assets/js/plugins/jquery.theia.sticky.js"></script>
+<script src="/user-assets/js/plugins/jquery.elevatezoom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+crossorigin="anonymous"></script>
+<script src="/user-assets/js/main.js"></script>
+<script src="/user-assets/js/jquery.ajaxchimp.min.js"></script> -->
+<script src="/user-assets/js/jquery.nice-select.min.js"></script>
+   <script src="/user-assets/js/jquery.sticky.js"></script>
+   <script src="/user-assets/js/nouislider.min.js"></script>
+   <script src="/user-assets/js/jquery.magnific-popup.min.js"></script>
+   <script src="/user-assets/js/owl.carousel.min.js"></script>
+Template  JS
+<script src="/user-assets/js/main.js?v=3.4"></script>
+<script src="/user-assets/js/shop.js?v=3.4"></script>
+
+  gmaps Js
+ <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
+</body>
+
+</html>

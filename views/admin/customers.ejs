@@ -22,11 +22,11 @@
         <tbody>
             <% for(let i = 0; i < data.length; i++) { %>
                 <tr>
-                    <td><%= data[i].name %></td>
+                    <td><%= data[i].firstName %></td>
                     <td><%= data[i].email %></td>
-                    <td><%= data[i].phone %></td>
+                    <td><%= data[i].mobile %></td>
                     <td class="text-start">
-                        <% if (data[i].isBlocked===true) { %>
+                        <% if (data[i].is_blocked === true) { %>
                              <span class="badge rounded-pill alert-danger"
                              style="width: 60px;">Blocked</span>                                       
                         <%  } else { %>
@@ -35,7 +35,7 @@
                           <%  } %>
                     </td>
                     <td>
-                        <% if (data[i].isBlocked === false) { %>
+                        <% if (data[i].is_blocked === false) { %>
                             <button class="btn btn-danger">
                                 <a href="/admin/blockCustomer?id=<%= data[i]._id %>" class="text-white" style="text-decoration: none">Block</a>
                             </button>

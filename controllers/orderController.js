@@ -30,7 +30,7 @@ const base = "https://api-m.sandbox.paypal.com";
 //         if(req.query.isSingle == "true") {   
 //             const id = req.query.id
 //             const findProduct = await Product.find({id: id}).lean()
-//             const userId = req.session.user
+//             const userId = req.session.user._id
 //             const findUser = await User.findOne({_id: userId})
 //             const addressData = await Address.findOne({userId: userId})
 //             const coupons = await Coupon.find({isActive: true})
@@ -107,7 +107,7 @@ const base = "https://api-m.sandbox.paypal.com";
 //         console.log("req.body => ", req.body);
 //         // if(req.body.isSingle === "true"){
 //         //     const {totalPrice, addressId, payment, productId } = req.body
-//         //     const userId = req.session.user
+//         //     const userId = req.session.user._id
 //         //     console.log(req.session.grandTotal, "from session");
 //         //     const grandTotal = req.session.grandTotal
 //         //     console.log(req.body)
@@ -200,7 +200,7 @@ const base = "https://api-m.sandbox.paypal.com";
 
 //             //used coupon management to be added
 
-//             const userId = req.session.user
+//             const userId = req.session.user._id
 //             const findUser = await User.findOne({_id: userId})
 //             console.log("finduser",findUser)
 //             const productIds = findUser.cart.map(item => item.productId)
@@ -311,7 +311,7 @@ const base = "https://api-m.sandbox.paypal.com";
 
 const placeOrder = async(req,res)=>{
     try {
-       const user_id = req.session.user;
+       const user_id = req.session.user._id;
        // Finding the user
        const cart = await Cart.findOne({userId:user_id}).populate('products.productId');
  
@@ -454,7 +454,7 @@ const placeOrder = async(req,res)=>{
 //  Verify online payment
 const verifyOnlinePayment = async(req,res)=>{
 
-    const user_id = req.session.user;
+    const user_id = req.session.user._id;
     const data = req.body
     console.log(data)
     // console.log('Our orderId : ',req.body.order.receipt);
@@ -500,7 +500,7 @@ const verifyOnlinePayment = async(req,res)=>{
 
  const loadConfirmation = async(req,res)=>{
    try {
-      const user_id = req.session.user;
+      const user_id = req.session.user._id;
       const orderId = req.query.orderId
       
       const orderDetails = await Order.findById(orderId).populate('products.productId')
@@ -516,10 +516,13 @@ const verifyOnlinePayment = async(req,res)=>{
 // List orders in user-side
 const listOrders = async(req,res)=>{
    try {
-      const user_id = req.session.user;
+      console.log("req.session.user._id",req.session.user._id)
+      const user_id = req.session.user._id;
+      const userData = await User.findById(user_id)
+      console.log("userdata",userData)
       const userOrders = await Order.find({userId:user_id}).populate('products.productId');
       const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
-      res.render('list-orders',{userOrders,cartItemsCount});
+      res.render('list-orders',{userOrders,cartItemsCount,userData});
    } catch (error) {
       console.log(error.message);
    }
@@ -528,12 +531,15 @@ const listOrders = async(req,res)=>{
 // When user click into the details 
 const orderDetails = async(req,res)=>{
    try {
-      const user_id = req.session.user;
+      const user_id = req.session.user._id;
+      console.log("user_id",user_id)
+      const userData = await User.findById(user_id)
+      console.log("userdata",userData)
       const orderId = req.query.orderId;
       const orderDetails = await Order.findById(orderId).populate('products.productId').sort({date:1})
       // console.log(orderDetails)
       const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
-      res.render('order-details',{orderDetails,cartItemsCount});
+      res.render('order-details',{orderDetails,cartItemsCount,userData});
    } catch (error) {
       console.log(error.message);
    }
@@ -550,9 +556,9 @@ const cancelOrder = async(req,res)=>{
          ).populate('products.productId');
 
          if(orderDetails.paymentMethod !== 'COD'){
-            const userWallet = await Wallet.findOne({userId:req.session.user});
+            const userWallet = await Wallet.findOne({userId:req.session.user._id});
             if(!userWallet){
-               userWallet = new Wallet({userId:req.session.user});
+               userWallet = new Wallet({userId:req.session.user._id});
                await userWallet.save();
             }
                const amount = (1*orderDetails.actualTotalAmount)
@@ -573,6 +579,41 @@ const cancelOrder = async(req,res)=>{
    } catch (error) {
       res.json({status:'error',message:'Something went wrong'});
       console.log(error.message)
+   }
+}
+
+// Return Order
+const returnOrder = async(req,res)=>{
+   try {
+      const {reason, orderId, selectedItems} = req.body
+      console.log(reason);
+      console.log(orderId)
+      console.log(selectedItems);
+
+      const order = await Order.findById(orderId);
+      
+
+      for(let i = 0;i<selectedItems.length;i++){
+         // selected the particular Id
+         const productId = selectedItems[i];
+
+         const productIndex = order.products.findIndex((product)=>product.productId.toString() === productId);
+
+         if(productIndex !== -1){
+            order.products[productIndex].productStatus = 'Return Requested'
+         }
+      }
+
+      order.returnOrderStatus.status = 'requested';
+      order.returnOrderStatus.reason = reason;
+
+      await order.save();
+      
+      res.json({status:'success',message:'Request Send'});
+
+   } catch (error) {
+      res.json({status:'error',message:'Something went wrong'});
+      console.log(error.message);
    }
 }
 
@@ -867,5 +908,6 @@ module.exports = {
                    loadConfirmation,
                    listOrders,
                    orderDetails,
-                   cancelOrder
+                   cancelOrder,
+                   returnOrder
                   }

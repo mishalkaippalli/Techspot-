@@ -86,7 +86,7 @@
                             </a>
                         </div>
                         <div class="header-action-icon-2">
-                            <% if (locals.user) { %>
+                            <% if (locals.userWallet) { %>
                                 <!-- Displayed when the user is logged in -->
                                 <li class="dropdown nav-item">
                                   <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false">
@@ -95,7 +95,7 @@
                                     <img class="svgInject" alt="Evara" src="/user-assets/imgs/theme/icons/user-profile.svg" style="height: 25px; width: 25px; margin-top: 2px;">
                                   </a>
                                   <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                                    <a class="dropdown-item" href="/profile"><i class="material-icons md-perm_identity"></i> Profile</a>
+                                    <a class="dropdown-item" href="/user-profile"><i class="material-icons md-perm_identity"></i> Profile</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i> Logout</a>
                                   </div>
@@ -245,10 +245,10 @@
       })
       function razorpayPayment(order) {
          var options = {
-            "key": "rzp_test_JZgdglON5nofNC", // Enter the Key ID generated from the Dashboard
+            "key": "rzp_test_ueJVSvaD23rH3L", // Enter the Key ID generated from the Dashboard
             "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
             "currency": "INR",
-            "name": "Willink Watches", //your business name
+            "name": "Techspot", //your business name
             "description": "Test Transaction",
             "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
             "handler": function (response) {

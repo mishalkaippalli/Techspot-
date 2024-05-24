@@ -111,53 +111,71 @@
 <body>
 
    <!-- Start Header Area -->
-   <header class="header_area sticky-header">
-      <div class="main_menu">
-         <nav class="navbar navbar-expand-lg navbar-light main_box"
-            style="border-radius: 25px; background-color: #f1f0f0;">
-            <div class="container">
-               <!-- Brand and toggle get grouped for better mobile display -->
-               <a class="navbar-brand logo_h" href="/home">
-                  <div class="" style="height: 80px;">
-                     <img src="/assets/imgs/theme/willink-watches-logo (2).png"
-                        style="height: 80px; width: 100%; object-fit: cover;" alt="">
+   <header class="header-area header-style-5">  
+      <div class="header-bottom sticky-bar sticky-white-bg">
+          <div class="container">
+              <div class="header-wrap header-space-between position-relative">
+                  <div class="logo logo-width-1">
+                      <a href="index.html"><img src="/user-assets/imgs/theme/Techspotlogo.png" alt="logo"></a>
                   </div>
-               </a>
-               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                  aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-               </button>
-               <!-- Collect the nav links, forms, and other content for toggling -->
-               <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
-                  <ul class="nav navbar-nav d-flex align-items-center  menu_nav ml-auto">
-                     <li class="nav-item active"><a href="/home" class="profile-icon nav-link"><span
-                              style="font-size: 22px; width: 30px; height: 30px; color: rgb(0, 0, 0);"
-                              class="bi bi-house"></span></a></li>
-                     <li class="nav-item"><a href="/show-all-products" class="profile-icon nav-link"><span
-                              style="font-size: 22px; width: 30px; height: 30px; color: black;"
-                              class="bi bi-shop"></span></a></li>
-                     <li class="nav-item"><a href="/user-profile" class="profile-icon nav-link"><span
-                              style="font-size: 22px; width: 30px; height: 30px; color: rgb(219, 134, 7);"
-                              class="bi bi-person"></span></a></li>
-                     <li class="nav-item"><a href="/cart" class="profile-icon nav-link"><span
-                              style="font-size: 20px; width: 30px; height: 30px; color: black;"
-                              class="bi bi-cart"></span>
-                           <span id="cartItemsCount"
-                              class="badge badge-danger position-absolute top-0 start-50 translate-middle"><%-
-                                 cartItemsCount %></span>
-                        </a></li>
-                     <li class="nav-item"><a href="/wishlist" class="profile-icon nav-link"><span
-                              style="font-size: 20px; width: 30px; height: 30px; color:  rgb(1, 1, 1); margin-right: 48px;"
-                              class="bi bi-heart"></span></a></li>
-                  </ul>
-               </div>
-            </div>
-         </nav>
+                
+                  <div class="main-menu main-menu-grow main-menu-padding-1 main-menu-lh-1 main-menu-mrg-1 hm3-menu-padding d-none d-lg-block hover-boder">
+                      <nav>
+                          <ul>   
+                              <li><a class="active" href="/">Home <!--<i class="fi-rs-angle-down"></i> --></a>
+                              </li>
+                              <li><a href="/shop">Shop </i></a>
+                              </li>
+                              <li><a href="/about">About</i></a>
+                              </li>
+                              <li><a href="/contact">Contact</a>
+                              </li>
+                          </ul>
+                      </nav>
+                  </div>
+                  <div class="header-action-right">
+                      <div class="header-action-2">
+                          <div class="header-action-icon-2">
+                              <a href="/wishlist">
+                                  <img class="svgInject" alt="Evara" src="/user-assets/imgs/theme/icons/icon-heart.svg">
+                                  <!-- <span class="pro-count blue">4</span> -->
+                              </a>
+                          </div>
+                          <div class="header-action-icon-2">
+                              <a class="mini-cart-icon" href="/cart">
+                                  <img alt="Evara" src="/user-assets/imgs/theme/icons/icon-cart.svg">
+                                  <!-- <span class="pro-count blue">2</span> -->
+                              </a>
+                          </div>
+                          <div class="header-action-icon-2">
+                              <% if (locals.userData) { %>
+                                  <!-- Displayed when the user is logged in -->
+                                  <li class="dropdown nav-item">
+                                    <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false">
+                                      <!-- Uncomment the following line if you want to use an icon -->
+                                      <!-- <i class="fas fa-/user-circle"></i> -->
+                                      <img class="svgInject" alt="Evara" src="/user-assets/imgs/theme/icons/user-profile.svg" style="height: 25px; width: 25px; margin-top: 2px;">
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                                      <a class="dropdown-item" href="/user-profile"><i class="material-icons md-perm_identity"></i> Profile</a>
+                                      <div class="dropdown-divider"></div>
+                                      <a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i> Logout</a>
+                                    </div>
+                                  </li>
+                                <% } else { %>
+                                  <!-- Displayed when the user is not logged in -->
+                                  <div class="single-mobile-header-info ml-25 pr-5">
+                                    <a href="/login">Sign Up</a>
+                                  </div>
+                                <% } %>
+                                
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
       </div>
-
-   </header>
+  </header>
    <!-- End Header Area -->
 
    <!-- Start Banner Area -->

@@ -163,8 +163,8 @@ const getCartPage = async(req,res)=>{
 const addToCart = async(req,res)=>{
     try {
        const proId = req.query.id;
-       // console.log(proId)
-       let cart = await Cart.findOne({userId:req.session.user}); // Find the user
+       console.log("inside add to cart",proId)
+       let cart = await Cart.findOne({userId:req.session.user._id}); // Find the user
        // console.log(cart);
  
        if(!cart){
@@ -240,65 +240,65 @@ const removeFromCart = async(req,res)=>{
    }
 }
 
-const changeQuantity = async(req, res) => {
-    try {
-        const id = req.body.productId
-        const user = req.session.user
-        const count = req.body.count
+// const changeQuantity = async(req, res) => {
+//     try {
+//         const id = req.body.productId
+//         const user = req.session.user
+//         const count = req.body.count
 
-        const findUser = await User.findOne({_id: user})
+//         const findUser = await User.findOne({_id: user})
 
-        const findProduct = await Product.findOne({_id: id})
+//         const findProduct = await Product.findOne({_id: id})
 
-        if(findUser){
-            const productExistinCart = findUser.cart.find(item => item.productId === id)
+//         if(findUser){
+//             const productExistinCart = findUser.cart.find(item => item.productId === id)
 
-            let newQuantity
-            if(productExistinCart){
-                console.log(count);
-                if(count == 1){
-                    newQuantity = productExistinCart.quantity + 1
-                } else if (count == -1) {
-                    newQuantity = productExistinCart.quantity - 1
-                } else {
-                    return res.status(400).json({status: false, error: "Invalid count"})
-                }
-            } else {
-                console.log("product does not exist in cart")
-            }
+//             let newQuantity
+//             if(productExistinCart){
+//                 console.log(count);
+//                 if(count == 1){
+//                     newQuantity = productExistinCart.quantity + 1
+//                 } else if (count == -1) {
+//                     newQuantity = productExistinCart.quantity - 1
+//                 } else {
+//                     return res.status(400).json({status: false, error: "Invalid count"})
+//                 }
+//             } else {
+//                 console.log("product does not exist in cart")
+//             }
 
-            console.log(newQuantity, 'this id new quantity');
-            if(newQuantity > 0 && newQuantity <= findProduct.quantity){
-                let quantityUpdated = await User.updateOne(
-                    {_id: user, "cart.productId": id},
-                    {
-                        $set: {
-                            "cart.$.quantity": newQuantity
-                        }
-                    }
-                )
-                const totalAmount = findProduct.salePrice
+//             console.log(newQuantity, 'this id new quantity');
+//             if(newQuantity > 0 && newQuantity <= findProduct.quantity){
+//                 let quantityUpdated = await User.updateOne(
+//                     {_id: user, "cart.productId": id},
+//                     {
+//                         $set: {
+//                             "cart.$.quantity": newQuantity
+//                         }
+//                     }
+//                 )
+//                 const totalAmount = findProduct.salePrice
                 
-                if(quantityUpdated){
-                    res.json({status: true, quantityInput: newQuantity, count:count, totalAmount: totalAmount})
-                } else {
-                    res.json({status:false, error: 'cart quantity is less'})
-                }
-            } else {
-                res.json({status: false, error: 'out of stock'})
-            }
-        }
-    } catch (error) {
-        console.log(error.message)
-        return res.status(500).json({status: false, error: "server error"});
-    }
-}
+//                 if(quantityUpdated){
+//                     res.json({status: true, quantityInput: newQuantity, count:count, totalAmount: totalAmount})
+//                 } else {
+//                     res.json({status:false, error: 'cart quantity is less'})
+//                 }
+//             } else {
+//                 res.json({status: false, error: 'out of stock'})
+//             }
+//         }
+//     } catch (error) {
+//         console.log(error.message)
+//         return res.status(500).json({status: false, error: "server error"});
+//     }
+// }
 
 const updateQuantity = async (req, res) => {
     try {
         console.log("inside update quantity req.body is ",req.body)
-       // const findCart = await Cart.findOne({userId:userId});
-       const userId = new mongoose.Types.ObjectId(req.session.user);
+      //  const findCart = await Cart.findOne({userId:userId});
+       const userId = new mongoose.Types.ObjectId(req.session.user._id);
        const productId = new mongoose.Types.ObjectId(req.body.proId) ;
        const count = req.body.count;
        const currentValue = req.body.currentValue;
@@ -406,7 +406,6 @@ const loadCheckOut = async(req,res)=>{
 module.exports = {
                 getCartPage,
                 addToCart,
-                changeQuantity,
                 deleteProduct,
                 updateQuantity,
                 removeFromCart,

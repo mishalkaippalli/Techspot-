@@ -30,8 +30,8 @@ const CartCountHelper = require('../associates/cartItemsCount');
 // User Profile
 const userProfile = async(req,res)=>{
   try {
-     const user_id = req.session.user;
-     // console.log(user_id);
+     const user_id = req.session.user._id;
+     console.log(user_id);
      const userData = await User.findById(user_id);
      console.log("inside controller userprofile", userData)
      const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
@@ -92,14 +92,14 @@ const editUserDetails = async (req, res) => {
 
 const editProfile = async(req,res)=>{
    try {
-      const {firstName,email,mobile,userId} = req.body;
+      const {firstName,lastName,email,mobile,userId} = req.body;
       const usersData = await User.find();
 
      // Find other Users and find is the email already exist or not
 
       const anotherUser = usersData.filter(user=>user._id.toString() !== userId);
       const emailExists = anotherUser.filter(user=>user.email === email);
-      const mobileExist = anotherUser.filter(user=>user.phone.toString() === mobile);
+      const mobileExist = anotherUser.filter(user=>user.mobile.toString() === mobile);
       
       if(emailExists.length && mobileExist.length){
          res.json({status:'error',message:'Email and Mobile Number Already Exists'});
@@ -110,12 +110,12 @@ const editProfile = async(req,res)=>{
       }else{
          const user = await User.findByIdAndUpdate(userId,
             {$set:{
-               name:firstName,
+               firstName:firstName,
+               lastName:lastName,
                email:email,
-               phone:mobile
+               mobile:mobile
             }},
             {new:true});
-            console.log("user updated data is", user)
          res.json({status:'success',message:'Profile Edited'});
       }
    } catch (error) {
@@ -138,7 +138,9 @@ const editProfile = async(req,res)=>{
 //load manage address
 const loadManageAddress = async(req,res)=>{
   try {
-     const user_id = req.session.user;
+   const user_id = req.session.user._id;
+     console.log(user_id);
+     const userData = await User.findById(user_id);
      let userAddress = await Address.findOne({userId:user_id});
 
      if(!userAddress){
@@ -147,7 +149,7 @@ const loadManageAddress = async(req,res)=>{
      }
      // console.log(userAddress)
      const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
-     res.render('manage-address',{address:userAddress.address,cartItemsCount});
+     res.render('manage-address',{address:userAddress.address,cartItemsCount,userData});
   } catch (error) {
      console.log(error.message);
   }

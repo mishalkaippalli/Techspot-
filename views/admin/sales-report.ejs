@@ -45,8 +45,16 @@
                     </div>
 
                 </header>
+                <!-- <div class="total-sales">
+                    < if (orders.length) { %>
+                        <p>Total Sales Count: <= orders.length %></p>
+                    <} else { %>
+                        <p>No sales available</p>
+                    < } %>
+                </div> -->
                 <!-- Contents of our table -->
                 <div class="card-body" id="orderList">
+                    
                     <div class="table-responsive">
                         <table class="table table-hover" id="salesTable">
                             <thead>
@@ -54,6 +62,8 @@
                                     <th>OrderId</th>
                                     <th>Date</th>
                                     <th>Total Amount</th>
+                                    <th>Discount</th>
+                                    <th>Paid Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -67,6 +77,8 @@
                                                 </a>
                                             </td>
                                             <td><%- new Date(orders[i].date).toLocaleDateString('en-GB') %></td>
+                                            <td>&#x20B9; <%- orders[i].totalAmount %></td>
+                                            <td>&#x20B9; <%- orders[i].couponDiscount %></td>
                                             <td>&#x20B9; <%- orders[i].actualTotalAmount %></td>
 
                                         </tr>
@@ -74,6 +86,12 @@
                                             <% } %>
                             </tbody>
                         </table> <!-- table-responsive.// -->
+                    </div>
+                    <div class="totals">
+                        <p>Total Sales Count: <%= totalSalesCount %></p>
+                        <p>Total Order Amount: &#x20B9; <%= totalOrderAmount %></p>
+                        <p>Total Discount Amount: &#x20B9; <%= totalDiscountAmount %></p>
+                        <p>Total Paid Amount: &#x20B9; <%= totalPaidAmount %></p>
                     </div>
                 </div>
             </div>
@@ -118,6 +136,12 @@
 
                     const orderListHTML = `
                         <div class="card-body">
+                            <div class="total-sales">
+                              ${orders.length > 0 ? 
+                               `<p>Total Sales Count: ${orders.length}</p>` : 
+                                 '<p>No sales available</p>'
+                                  }
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-hover" id="salesTable">
                                     <thead>
@@ -125,6 +149,8 @@
                                             <th>OrderId</th>
                                             <th>Date</th>
                                             <th>Total Amount</th>
+                                            <th>Discount</th>
+                                            <th>Paid Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -137,6 +163,8 @@
                                                         </div>
                                                     </td>
                                                     <td>${new Date(order.date).toLocaleDateString('en-GB')}</td>
+                                                    <td>₹${order.totalAmount}</td>
+                                                    <td>₹${order.couponDiscount}</td>
                                                     <td>₹${order.actualTotalAmount}</td>
                                                 </tr>
                                             `).join('') :
@@ -181,6 +209,12 @@
 
                 const orderListHTML = `
                         <div class="card-body">
+                            <div class="total-sales">
+                              ${orders.length > 0 ? 
+                               `<p>Total Sales Count: ${orders.length}</p>` : 
+                                 '<p>No sales available</p>'
+                                  }
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-hover" id="salesTable">
                                     <thead>
@@ -188,6 +222,8 @@
                                             <th>OrderId</th>
                                             <th>Date</th>
                                             <th>Total Amount</th>
+                                            <th>Discount</th>
+                                            <th>Paid Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -200,6 +236,8 @@
                                                         </div>
                                                     </td>
                                                     <td>${new Date(order.date).toLocaleDateString('en-GB')}</td>
+                                                    <td>₹${order.totalAmount}</td>
+                                                    <td>₹${order.couponDiscount}</td>
                                                     <td>₹${order.actualTotalAmount}</td>
                                                 </tr>
                                             `).join('') :
@@ -258,7 +296,7 @@
             const salesTable = document.getElementById('salesTable');
 
             // Get the table body
-            const tableBody = salesTable.querySelector('tbody');
+            const tableBody = salesTable.querySelector('tbody')
 
             const salesData = []
             // Iterate through rows in the table
@@ -267,16 +305,21 @@
                 const orderId = row.cells[0].textContent.trim();
                 const date = row.cells[1].textContent;
                 let totalAmount = row.cells[2].textContent.trim();
-                alert(totalAmount)
-                totalAmount = parseFloat(totalAmount.replace(/[^0-9.]/g, ''));//to remove euro button and convert string to floatingpoint
-                alert(totalAmount)
+                let discountAmount = row.cells[3].textContent.trim();
+                let paidAmount = row.cells[4].textContent.trim();
+                // // alert(totalAmount)
+                totalAmount = parseFloat(totalAmount.replace(/[^0-9.]/g, ''));
+                discountAmount = parseFloat(discountAmount.replace(/[^0-9.]/g, ''));//to remove euro button and convert string to floatingpoint
+                paidAmount = parseFloat(paidAmount.replace(/[^0-9.]/g, ''));
+                // alert(totalAmount)
                 
                 const orderData = {
                     orderId: orderId,
                     date: date,
-                    totalAmount: totalAmount
+                    totalAmount: totalAmount,
+                    discountAmount: discountAmount,
+                    paidAmount: paidAmount
                 }
-
                 salesData.push(orderData);
             }
 
@@ -287,7 +330,7 @@
                     headers: {
                         "Content-Type": 'application/json'
                     },
-                    body: JSON.stringify(salesData)
+                    body: JSON.stringify(salesData,totalSalesCount,totalOrderAmount,totalDiscountAmount,totalPaidAmount)
                 })
 
                 if (response.ok) {

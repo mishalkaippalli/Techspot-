@@ -35,7 +35,7 @@ const isLogged = async (req, res, next) => {
 
 const isAdmin = (req, res, next) => {
     if(req.session.admin){
-        User.findOne({isAdmin : "1"})
+        User.findOne({is_admin : true})
         .then((data) => {
             if(data) {
               next();
