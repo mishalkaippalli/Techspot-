@@ -37,9 +37,10 @@ const pageNotFound = async (req, res) => {
 const getHomePage = async (req, res) => {
   try {
     const today = new Date().toISOString();
-    console.log("req.session",req.session)
+    console.log("inside get home page , req.session is",req.session)
     const user = req.session.user;
     console.log("req.session.user inside get home page",user)
+    console.log("req.session.user._id",req.session.user._id)
     //banner here
 
     const userData = await User.findOne({_id: user});
@@ -228,6 +229,40 @@ const insertUser = async(req,res)=>{
         console.error(error);
      res.json({status:'error',message:'All Feilds are required'})
   }
+}
+
+////---------------googler auth=----------------
+
+const googleAuth = async (req,res)=>{
+
+  try {
+      console.log('Google authentication successful.');
+       console.log('User:', req.user);
+      const findUser = await User.findOne({ email: req.user.email });
+      if (findUser) {
+          req.session.user = findUser._id
+           
+      }else{
+              const user = req.user
+              const saveUserData = new User({
+              firstName: user.given_name,
+              lastName: user.family_name,
+              email: user.email,
+              password:user.sub,
+              isGoogle:true
+          });
+
+          await saveUserData.save();
+          console.log("Saveuserdata is", saveUserData)
+          req.session.user = saveUserData   
+      }
+    
+      res.redirect('/')
+      
+  } catch (error) {
+      console.log('errro hapened in the google login route ',error);
+  }
+
 }
 
 
@@ -729,6 +764,7 @@ module.exports = {
   loadVerifiyOTP,
   resendOtp,
   verifyotp,
+  googleAuth,
   pageNotFound,
   verifyUser,
   getHomePage,

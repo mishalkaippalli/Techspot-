@@ -311,10 +311,12 @@ const base = "https://api-m.sandbox.paypal.com";
 
 const placeOrder = async(req,res)=>{
     try {
+      console.log(":inside place order")
        const user_id = req.session.user._id;
+       console.log("use_id", user_id)
        // Finding the user
        const cart = await Cart.findOne({userId:user_id}).populate('products.productId');
- 
+       console.log(cart)
        const {totalAmount,paymentMethod,couponDiscount,actualAmount,addressId,couponId} = req.body;
        // console.log(totalAmount)
        // console.log(paymentMethod)
@@ -327,6 +329,7 @@ const placeOrder = async(req,res)=>{
        if(couponId){
           const usedCoupons = await userUsedCoupons.findOne({userId:user_id});
           if(!usedCoupons){
+            console.log("inside !usedCoupons")
              usedCoupons = new userUsedCoupons({
                 userId:user_id,
                 userCoupons:[{couponId:couponId}]

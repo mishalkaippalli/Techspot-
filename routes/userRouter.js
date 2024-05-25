@@ -1,5 +1,6 @@
 const express = require("express");
 const Router = express();
+const passport = require('passport')
 
 Router.set("view engine", "ejs");
 Router.set("views", "./views/user");
@@ -14,6 +15,7 @@ const orderController = require("../controllers/orderController")
 const wishlistController = require("../controllers/wishlistController")
 const paypalController = require("../controllers/paypalController")
 const couponController = require("../controllers/couponController.js")
+require('../config/passport')
 
 // ===============================User Actions ==============================
 
@@ -27,6 +29,10 @@ Router.post("/resendOtp", userController.resendOtp);
 Router.get("/verifyotp", userController.loadVerifiyOTP);
 Router.post("/verifyotp", userController.verifyotp);
 Router.get("/logout",isLogged, userController.getLogoutUser)
+
+//--------------------------------google sign up ---------------------
+Router.get('/googleLog',passport.authenticate('google',{scope:['profile','email']}))
+Router.get('/google/callback',passport.authenticate('google',{failureRedirect:'/failed' }),userController.googleAuth)
 
 // ===============================Product based routes ==============================
 

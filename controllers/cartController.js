@@ -391,7 +391,7 @@ const loadCheckOut = async(req,res)=>{
 
       // Taking the available coupons for user with this price range
       const availableCoupons = coupons.filter((coupons)=> coupons.minOrderAmount < grandTotal  );
-      console.log(availableCoupons)
+      // console.log(availableCoupons)
       
 
       const address = userAddress.address;

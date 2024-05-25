@@ -21,7 +21,6 @@ var userSchema = new Mongoose.Schema({
  },
  mobile:{
     type:Number,
-    required:true,
  },
  is_admin:{
     type:Boolean,
@@ -30,6 +29,10 @@ var userSchema = new Mongoose.Schema({
  is_blocked:{
     type:Boolean,
     default:false
+ },
+ isGoogle:{
+   type: Boolean,
+   default:false
  }
 });
 
