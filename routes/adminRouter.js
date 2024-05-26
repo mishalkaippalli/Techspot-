@@ -20,6 +20,7 @@ Router.get("/login", adminController.getLoginPage);
 Router.post("/login", adminController.verifyLogin);
 Router.get("/dashboard",isAdmin, adminController.adminDashboard);
 Router.get("/",isAdmin, adminController.adminDashboard);
+Router.get("/logout", isAdmin, adminController.getLogout)
 
 //customer managemement
 Router.get("/users",isAdmin, customerController.getCustomersInfo);

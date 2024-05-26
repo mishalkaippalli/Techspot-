@@ -500,6 +500,7 @@ const getShopPage = async (req, res) => {
 
 const getLogoutUser = async (req, res) =>{
   try {
+    console.log("inside getlogout  user")
     req.session.destroy((err) =>{
       if(err) console.log(err.message)
       

@@ -32,49 +32,109 @@
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-                <img src="/admin-assets/imgs/theme/Techspotlogo.png" class="logo" alt="Willink Dashboard">
+                <img src="/admin-assets/imgs/theme/Techspotlogo.png" class="Techspotlogo" alt="Techspot Admin">
             </a>
             <div>
-                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
-                </button>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
             </div>
         </div>
         <nav>
             <ul class="menu-aside">
-                <li class="menu-item">
+                <li class="menu-item active">
                     <a class="menu-link" href="/admin/dashboard"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-products-list.html"> <i
-                            class="icon material-icons md-shopping_bag"></i>
-                        <span class="text">Lists</span>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/products"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
                     </a>
-                    <div class="submenu">
-                        <a href="/admin/list-products">Product List</a>
-                        <a href="/admin/list-users">Users List</a>
-                        <a href="/admin/list-categories">Category List</a>
-                        <a href="/admin/list-coupons">Coupons List</a>
-                        <a href="/admin/list-banners">Banner List</a>
-                    </div>
                 </li>
-                <li class="menu-item active">
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/categories"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Categories</span>
+                    </a>
+                </li>
+                <li class="menu-item ">
                     <a class="menu-link" href="/admin/list-orders"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
                     </a>
                 </li>
                 <li class="menu-item ">
-                    <a class="menu-link" href="/admin/sales-report"> <i class="icon material-icons md-description"></i>
-                        <span class="text">Sales Report</span>
+                    <a class="menu-link" href="/admin/users"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Customers / Users</span>
+                    </a>
+                    <!-- <div class="submenu">
+                        <a href="page-sellers-cards.html">Sellers cards</a>
+                        <a href="page-sellers-list.html">Sellers list</a>
+                        <a href="page-seller-detail.html">Seller profile</a>
+                    </div> -->
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/addproducts"> <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Add product</span>
+                    </a>
+                    <!-- <div class="submenu">
+                        <a href="page-form-product-1.html">Add product 1</a>
+                        <a href="page-form-product-2.html">Add product 2</a>
+                        <a href="page-form-product-3.html">Add product 3</a>
+                        <a href="page-form-product-4.html">Add product 4</a>
+                    </div> -->
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/list-coupons"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Coupon</span>
                     </a>
                 </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/sales-report"> <i class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Sales Report</span>
+                    </a>
+                    <!-- <div class="submenu">
+                        <a href="page-transactions-1.html">Transaction 1</a>
+                        <a href="page-transactions-2.html">Transaction 2</a>
+                        <a href="page-transactions-details.html">Transaction Details</a>
+                    </div> -->
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="#"> <i class="icon material-icons md-person"></i>
+                        <span class="text">Account</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-account-login.html">User login</a>
+                        <a href="page-account-register.html">User registration</a>
+                        <a href="page-error-404.html">Error 404</a>
+                    </div>
+                </li>
+                <!-- <li class="menu-item">
+                    <a class="menu-link" href="page-reviews.html"> <i class="icon material-icons md-comment"></i>
+                        <span class="text">Reviews</span>
+                    </a>
+                </li> -->
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/brands"> <i class="icon material-icons md-stars"></i>
+                        <span class="text">Brands</span> </a>
+                </li>
+                <!-- <li class="menu-item">
+                    <a class="menu-link" disabled href="#"> <i class="icon material-icons md-pie_chart"></i>
+                        <span class="text">Statistics</span>
+                    </a>
+                </li> -->
             </ul>
             <hr>
             <ul class="menu-aside">
+                <li class="menu-item ">
+                    <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
+                        <span class="text">Settings</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-settings-1.html">Setting sample 1</a>
+                        <a href="page-settings-2.html">Setting sample 2</a>
+                    </div>
+                </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-exit_to_app"></i>
-                        <span class="text"> Logout </span>
+                    <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text"> Starter page </span>
                     </a>
                 </li>
             </ul>

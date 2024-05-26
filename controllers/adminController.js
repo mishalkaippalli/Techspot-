@@ -17,6 +17,8 @@ const getLoginPage = async (req, res) => {
   }
 };
 
+
+
 const verifyLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -50,6 +52,16 @@ const adminDashboard = async (req, res) => {
     console.log(error.message);
   }
 };
+
+const getLogout = async (req, res) => {
+   try {
+      console.log("inside admin logout")
+       req.session.admin = null
+       res.redirect("/admin/login")
+   } catch (error) {
+       console.log(error.message);
+   }
+}
 
 
 const loadSalesReport = async(req,res)=>{
@@ -349,5 +361,6 @@ module.exports = {
                     loadSalesReport,
                     filterSales,
                     dateWiseSales,
-                    generateSalesPdf
+                    generateSalesPdf,
+                    getLogout
                   };
