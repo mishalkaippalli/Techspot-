@@ -233,6 +233,11 @@
 
     <!--================Checkout Area =================-->
     <!-- modal -->
+     
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCouponModal">
+        Coupons
+    </button>
+    
 
     <div class="" id="addCouponModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -498,6 +503,7 @@
     </footer>
 
     <!-- Applying Coupon -->
+   
     <script>
         document.getElementById('applyCouponBtn').addEventListener('click', async (event) => {
             event.preventDefault();
@@ -641,6 +647,8 @@
 
     <!-- Full Razorpay Payment code -->
     <script>
+       document.getElementById('addCouponModal').style.display = 'block';
+
         document.getElementById('placeOrder').addEventListener('click', async (event) => {
             event.preventDefault();
             // Taking address id 
@@ -857,7 +865,7 @@ Template  JS
   gmaps Js
  <!--gmaps Js-->
  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
- <script src="/user-assets/js/gmaps.min.js"></script>
+ <!-- <script src="/user-assets/js/gmaps.min.js"></script> -->
  <script src="/user-assets/js/main.js"></script>
  <script src="/js/addressValidate.js"></script>
 </body>

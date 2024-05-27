@@ -305,12 +305,12 @@
             <div class="card col-md-3 mb-2">
                <div class="card-body  d-flex flex-column align-items-center">
                   <h3 class="card-title">Management</h3>
-                  <a href="" class="btn btn-outline-dark mb-3" data-toggle="modal" data-target="#myModal">Edit
+                  <a href="" class="btn btn-outline-dark mb-3" data-bs-toggle="modal" data-bs-target="#myModal">Edit
                      Profile</a>
                   <a href="/manage-address" class="btn btn-outline-dark mb-3">Manage Address</a>
                   <a href="/list-orders" class="btn btn-outline-dark mb-3">Orders</a>
-                  <a href="/change-password" class="btn btn-outline-dark mb-3" data-toggle="modal"
-                     data-target="#changePasswordModal">Change Password</a>
+                  <a href="/change-password" class="btn btn-outline-dark mb-3" data-bs-toggle="modal"
+                     data-bs-target="#changePasswordModal">Change Password</a>
                   <a href="/view-wallet" class="btn btn-outline-dark mb-3">View Wallet</a>
                   <hr>
                   <a href="" id="userLogoutbtn" class="btn btn-outline-danger mb-3">Log Out</a>
@@ -401,6 +401,7 @@
          if (isValid) {
             const formData = {
                firstName: event.currentTarget.firstName.value,
+               lastName: event.currentTarget.lastName.value,
                email: event.currentTarget.userEmail.value,
                mobile: event.currentTarget.mobileNumber.value,
                userId: event.currentTarget.userId.value
@@ -569,7 +570,7 @@
 <script src="/user-assets/js/main.js"></script>
 
 <!-- gmaps JS -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script> -->
 <script src="/user-assets/js/gmaps.min.js"></script>
 
 <!-- Additional JS -->

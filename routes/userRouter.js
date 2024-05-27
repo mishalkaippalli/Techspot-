@@ -49,6 +49,7 @@ Router.post("/sortProducts", userController.getSortProducts)
 Router.get('/user-profile', isLogged, userProfileController.userProfile)
 Router.post("/editUserDetails", isLogged, userProfileController.editUserDetails)
 Router.post("/edit-profile", isLogged,userProfileController.editProfile)
+Router.post("/change-password", isLogged, userProfileController.changePassword)
 // Router.get("/addAddress", isLogged, userProfileController.getAddressAddPage )
 // Router.post("/addAddress", isLogged, userProfileController.postAddress )
 

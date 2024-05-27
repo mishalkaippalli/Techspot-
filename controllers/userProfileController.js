@@ -9,6 +9,7 @@ const address = require("../models/addressSchema")
 const Wallet = require('../models/walletSchema');
 const mongodb = require("mongodb")
 const CartCountHelper = require('../associates/cartItemsCount');
+const pass = require("../associates/securePass")
 
 // const getUserProfile = async(req, res)=>{
 
@@ -54,6 +55,31 @@ const editUserDetails = async (req, res) => {
   }
 }
 
+// Change user password
+
+const changePassword = async(req,res)=>{
+   try {
+       const {currentPassword , newPassword} = req.body
+       console.log('User current password :',currentPassword);
+       console.log('User new Password',newPassword);
+
+       const user_id = req.session.user._id;
+       const user = await User.findById(user_id)
+      
+       const isMatch = await pass.checkPassword(currentPassword,user.password);
+       if(isMatch){
+         const hashedPass = await pass.securePassword(newPassword);
+         user.password = hashedPass;
+         await user.save();
+         res.json({status:'success',message:'Password changed'});
+       }else{
+         res.json({status:'error',message:'Current Password is Incorrect'});
+       }
+   } catch (error) {
+      console.log(error.message);
+   }
+}
+
 // const editProfile = async(req,res)=>{
 //   try {
 //      const {firstName,lastName,email,mobile,userId} = req.body;
@@ -92,14 +118,17 @@ const editUserDetails = async (req, res) => {
 
 const editProfile = async(req,res)=>{
    try {
+      console.log("inside edit profie")
       const {firstName,lastName,email,mobile,userId} = req.body;
+      console.log(req.body)
       const usersData = await User.find();
+      console.log("edit profile user data is", usersData)
 
      // Find other Users and find is the email already exist or not
 
       const anotherUser = usersData.filter(user=>user._id.toString() !== userId);
       const emailExists = anotherUser.filter(user=>user.email === email);
-      const mobileExist = anotherUser.filter(user=>user.mobile.toString() === mobile);
+      const mobileExist = anotherUser.filter(user=>user.mobile === mobile);
       
       if(emailExists.length && mobileExist.length){
          res.json({status:'error',message:'Email and Mobile Number Already Exists'});
@@ -413,6 +442,7 @@ module.exports = {
                   userProfile,
                   editUserDetails,
                   editProfile,
+                  changePassword,
                   loadManageAddress,
                   addingAddress,
                   loadEditAddress,

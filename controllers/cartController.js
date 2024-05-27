@@ -12,7 +12,7 @@ const CartCountHelper = require('../associates/cartItemsCount');
 const getCartPage = async(req,res)=>{
     try {
 
-       const user_id = req.session.user
+       const user_id = req.session.user._id
        let cart = await Cart.findOne({userId:user_id}).populate('products.productId');
 
        if(!cart){
@@ -33,7 +33,7 @@ const getCartPage = async(req,res)=>{
           const cartItemsCount = await CartCountHelper.findCartItemsCountFromCart(cart);
           //       res.render("cart", {user, quantity, data, grandTotal})
  
-          res.render('carttrial',{products:userProducts,cartTotal,cartItemsCount});
+          res.render('carttrial',{products:userProducts,cartTotal,cartItemsCount,user_id});
  
     } catch (error) {
        console.log(error.message);
@@ -165,14 +165,14 @@ const addToCart = async(req,res)=>{
        const proId = req.query.id;
        console.log("inside add to cart",proId)
        let cart = await Cart.findOne({userId:req.session.user._id}); // Find the user
-       // console.log(cart);
+       console.log(cart);
  
        if(!cart){
-          let newCart = new Cart({userId:req.session.user,products:[]});
+          let newCart = new Cart({userId:req.session.user._id,products:[]});
           await newCart.save();
           cart = newCart;
        }
-       // console.log(cart);
+       console.log(cart);
        const product = await Product.findById(proId).lean();
        console.log("products inside addtocart ", product)
        if(product.quantity === 0){
