@@ -385,6 +385,7 @@ const loadCheckOut = async(req,res)=>{
       const coupons = await Coupon.find({isActive:true});
       const cart = await Cart.findOne({userId:user_id}).populate('products.productId'); // Taking the product details
       const cartDetails = cart.products;
+      console.log("cart details",cartDetails);
       const grandTotal = cart.products.reduce((total,product)=>{
          return total + product.total;
       },0);
@@ -397,7 +398,7 @@ const loadCheckOut = async(req,res)=>{
       const address = userAddress.address;
 
       const cartItemsCount = await CartCountHelper.findCartItemsCountFromCart(cart)
-      res.render('checkoutwilys',{address,cartDetails,grandTotal,coupons:availableCoupons,userWallet,cartItemsCount,user_id});
+      res.render('checkout',{address,cartDetails,grandTotal,coupons:availableCoupons,userWallet,cartItemsCount,user_id});
    } catch (error) {
       console.log(error.message)
    }
