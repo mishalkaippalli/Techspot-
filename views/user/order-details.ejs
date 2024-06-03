@@ -248,13 +248,13 @@
 
 			<!-- Return reason modal -->
             <!-- class modal removed -->
-			<div id="returnModal" class="">
+			<div id="returnModal" class="modal">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<!-- Modal Header -->
 						<div class="modal-header">
 							<h5 class="modal-title">Return Items</h5>
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<button type="button" class="close" data-bs-dismiss="modal">&times;</button>
 						</div>
 
 						<!-- Modal Body -->
@@ -288,7 +288,7 @@
 
 						<!-- Modal Footer -->
 						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 							<a href="" class="btn btn-primary" id="reasonSubmit">Submit Reason</a>
 						</div>
 					</div>
@@ -310,7 +310,7 @@
 										<h1 style="color: #bd1010;">Return Option Expired</h1>
 									<% } else { %>
 										<a href="" class="btn btn-info  col-md-5 mx-md-auto mx-0 mb-2 mb-md-0"
-													data-toggle="modal" data-target="#returnModal">Return Items</a>
+													data-bs-toggle="modal" data-bs-target="#returnModal">Return Items</a>
 										<% } } %>
 														<% } %>
 															<% }else if (orderDetails.orderStatus==='Returned' ) {%>

@@ -434,38 +434,30 @@
                                 </tbody>
                             </table>
                     
-                            <table class="payment_table">
-                                <thead>
-                                    <tr>
-                                        <th>Select</th>
-                                        <th>Payment Method</th>
-                                        <th>Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="payment_radio">
-                                            <input type="radio" id="COD" name="payment-method" checked>
-                                        </td>
-                                        <td><label for="COD">Cash on Delivery</label></td>
-                                        <td>If you choose cash on delivery, you only pay after it reaches your destination.</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="payment_radio">
-                                            <input type="radio" id="WALLET" name="payment-method">
-                                        </td>
-                                        <td><label for="WALLET">Wallet</label></td>
-                                        <td>Your wallet amount is: &#x20B9; <span class="text-success"><%- userWallet.walletAmount %></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="payment_radio">
-                                            <input type="radio" id="RAZORPAY" name="payment-method">
-                                        </td>
-                                        <td><label for="RAZORPAY">Razorpay</label></td>
-                                        <td>Easy to manage.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="payment_item">
+                                <div class="payment_radio">
+                                    <input type="radio" id="COD" name="payment-method" checked>
+                                    <label for="f-option5">Cash on Delivery</label>
+                                    <div class="check"></div>
+                                </div>
+                                <p>If you take the cash on delivery, you only pay after it reached in your destination
+                                </p>
+                                <div class="payment_radio">
+                                    <input type="radio" id="WALLET" name="payment-method">
+                                    <label for="f-option5">Wallet</label>
+                                    <div class="check"></div>
+                                </div>
+                                <p> You wallet amount is : &#x20B9; <span class="text-success"><%-
+                                            userWallet.walletAmount %></span>
+                                </p>
+                                <div class="payment_radio">
+                                    <input type="radio" id="RAZORPAY" name="payment-method">
+                                    <label for="f-option5">Razorpay</label>
+                                    <div class="check"></div>
+                                </div>
+                                <p> More easy to manage
+                                </p>
+                            </div>
                             
                             <br>
                             <a class="primary-btn" id="placeOrder" data-addressCount="<%- address.length %>" href="">Place order</a>
@@ -692,6 +684,7 @@
                 }
             }
             const total = Number('<%- grandTotal %> ')
+             alert(total)
             const actualAmount = parseFloat(document.getElementById('cartTotal').innerHTML.replace(/[^\d.]/g, ''))
             const walletAmount = Number("<%- userWallet.walletAmount %>")
             const paymentMethod = document.querySelector('input[name="payment-method"]:checked').id;
@@ -708,7 +701,13 @@
                     icon: 'error',
                     title: 'No Items'
                 })
-            } else if (paymentMethod === 'WALLET' && walletAmount < actualAmount) {
+            } else if(paymentMethod === 'COD' && total > 1000 ) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cash on delivery is not allowed above 1000 Rupees'
+                })
+            } 
+            else if (paymentMethod === 'WALLET' && walletAmount < actualAmount) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Insufficient Balance in wallet'

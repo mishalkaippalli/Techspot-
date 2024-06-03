@@ -365,7 +365,14 @@ const deleteProduct = async (req, res) => {
 const loadCheckOut = async(req,res)=>{
    try {
       const user_id = req.session.user;
+      console.log("Req.session", req.session)
+      console.log("user_id",user_id)
       let userAddress = await Address.findOne({userId:user_id}); // Find the user
+      console.log(userAddress)
+
+      // let userAddress2 = await Address.findOne({userId:req.session.user._id}); // Find the user
+      // console.log("userAddress2", userAddress2)
+
       let userWallet = await Wallet.findOne({userId:user_id});
 
       // If user have no wallet then we create one 
@@ -398,7 +405,7 @@ const loadCheckOut = async(req,res)=>{
       const address = userAddress.address;
 
       const cartItemsCount = await CartCountHelper.findCartItemsCountFromCart(cart)
-      res.render('checkout',{address,cartDetails,grandTotal,coupons:availableCoupons,userWallet,cartItemsCount,user_id});
+      res.render('checkouttrywilys',{address,cartDetails,grandTotal,coupons:availableCoupons,userWallet,cartItemsCount,user_id});
    } catch (error) {
       console.log(error.message)
    }

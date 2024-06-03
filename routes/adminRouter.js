@@ -71,13 +71,12 @@ Router.post("/addProductOffer", isAdmin, productController.addProductOffer)
 Router.post("/removeProductOffer", isAdmin, productController.removeProductOffer)
 
 // //Order Management
-// Router.get("/orderList", isAdmin, orderController.getOrderListPageAdmin)
 Router.get('/list-orders',isAdmin,orderController.loadOrdersPage)
-// Router.get("/orderDetailsAdmin", isAdmin, orderController.getOrderDetailsPageAdmin)
 Router.get("/order-details",isAdmin, orderController.adminOrderDetails)
 Router.post("/change-status", isAdmin, orderController.changeStatus)
 
 //Coupon Management
+
 // To load the list of coupons
 Router.get("/list-coupons", isAdmin, couponController.listCoupons)
 

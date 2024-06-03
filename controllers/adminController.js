@@ -17,8 +17,6 @@ const getLoginPage = async (req, res) => {
   }
 };
 
-
-
 const verifyLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -120,7 +118,9 @@ const filterSales = async(req,res)=>{
             },
             {$project:{
                date:1,
-               actualTotalAmount:1
+               totalAmount: 1,
+               couponDiscount: 1,
+               actualTotalAmount:1,
             }},
             {$sort:{date:-1}}
          ]);
@@ -146,6 +146,8 @@ const filterSales = async(req,res)=>{
             }},
             {$project:{
                date:1,
+               totalAmount: 1,
+               couponDiscount: 1,
                actualTotalAmount:1
             }},
             {$sort:{date:-1}}
@@ -169,6 +171,8 @@ const filterSales = async(req,res)=>{
           }},
           {$project:{
              date:1,
+             totalAmount: 1,
+             couponDiscount: 1,
              actualTotalAmount:1
           }},
           {$sort:{date:-1}}
@@ -190,6 +194,8 @@ const filterSales = async(req,res)=>{
             }},
             {$project:{
                date:1,
+               totalAmount: 1,
+               couponDiscount: 1,
                actualTotalAmount:1
             }},
             {$sort:{date:-1}}
@@ -221,6 +227,8 @@ const dateWiseSales = async(req,res)=>{
         }},
         {$project:{
            date:1,
+           totalAmount: 1,
+           couponDiscount: 1,
            actualTotalAmount:1
         }},
         {$sort:{date:-1}}

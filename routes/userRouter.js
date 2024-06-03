@@ -76,18 +76,15 @@ Router.get("/checkout", isLogged, cartController.loadCheckOut)
 
 //-----------------------------------------ORDER MANAGEMENT---------------------------
 
-// Router.get("/checkout", isLogged, orderController.getCheckoutPage)
-// Router.post("/orderPlaced", isLogged, orderController.orderPlaced)
+
 Router.post('/place-order',isLogged, orderController.placeOrder)
 Router.post('/verify-payment',isLogged, orderController.verifyOnlinePayment)
-// Router.get("/orderDetails", isLogged, orderController.getOrderDetailsPage)
-// Router.get("/cancelOrder", isLogged, orderController.cancelOrder)
-// Router.get("/return", isLogged, orderController.returnOrder)
 Router.get('/confirmation', isLogged, orderController.loadConfirmation )
 Router.get('/list-orders',isLogged, orderController.listOrders)
 Router.get('/order-details', isLogged, orderController.orderDetails)
 Router.get('/cancel-order', isLogged, orderController.cancelOrder)
 Router.post('/return-order',isLogged, orderController.returnOrder)
+Router.get('/invoice', isLogged, orderController.invoice)
 
 // -----------------------------------COUPON MANAGEMENT---------------------
 
