@@ -769,9 +769,11 @@
         })
 
         function razorpayPayment(order) {
+            const orderId = order.receipt
+            alert(orderId)
 
             var options = {
-                "key": "rzp_test_JZgdglON5nofNC", // Enter the Key ID generated from the Dashboard
+                "key": "rzp_test_ueJVSvaD23rH3L", // Enter the Key ID generated from the Dashboard
                 "amount": order.actualTotalAmout, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
                 "currency": "INR",
                 "name": "Techsopt", //your business name
@@ -792,10 +794,23 @@
                 },
 
             };
-            console.log(options);
+            console.log("options",options);
             var razorpay = new Razorpay(options);
             razorpay.open();
-        }
+
+          razorpay.on('payment.failed', function (response){
+          console.log(response)
+        //   alert(response.error.code);
+        //   alert(response.error.description);
+        //   alert(response.error.source);
+        //   alert(response.error.step);
+        //   alert(response.error.reason);
+        //   alert(response.error.metadata.order_id);
+        //   alert(response.error.metadata.payment_id);
+
+          paymentPending(orderId)
+          });
+     }
 
         async function verifyPayment(payment, order) {
             const response = await fetch('/verify-payment', {
@@ -837,6 +852,33 @@
                 })
             }
         }
+
+        async function paymentPending(orderId) {
+
+            alert(orderId);
+            // const orderId = paymenterror.error.metadata.order_id
+            const response = await fetch('/payment-pending', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({orderId}),
+            })
+
+            const result = await response.json();
+
+            if (result.status === 'ordersuccesspaymentpending') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Payment Pending Order Succesful',
+                    showConfirmButton: true,
+                    timer: 1500
+                })
+                setTimeout(() => {
+                    location.href = `/confirmation/?orderId=${result.placedOrderId}`
+                }, 1500);
+        }
+    }
 
 
     </script>

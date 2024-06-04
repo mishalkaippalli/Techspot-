@@ -34,7 +34,7 @@ const verifyOnlinePayment = async(details)=>{
    return new Promise((resolve,reject)=>{
       let hmac = Crypto.createHmac('sha256',process.env.RAZORPAY_SECRET_ID);
       // Merging the two id's that come from the client side
-      // console.log('Razorpay order Id : ',details.payment.razorpay_order_id);
+      console.log('Razorpay order Id : ',details.payment.razorpay_order_id);
       // console.log('Razorpay Payment Id : ',details.payment.razorpay_payment_id);
       hmac.update(details.payment.razorpay_order_id+'|'+details.payment.razorpay_payment_id);
       // Converted to string format
@@ -56,11 +56,14 @@ const updatePaymentStatus = (orderId,paymentStatus)=>{
    return new Promise(async(resolve,reject)=>{
       try {
          if(paymentStatus){
+            console.log("inside if paymentstatus in updatepaymentstatus", paymentStatus)
+            console.log("order id", new Object(orderId));
             const orderUpdate = await Order.findByIdAndUpdate({_id:new Object(orderId)},{$set:{orderStatus:'Placed'}})
             .then(()=>{
                resolve();
             });
          }else{
+            console.log("inside else ir no payment statues i failed")
             const orderUpdate = await Order.findByIdAndUpdate({_id:new Object(orderId)},{$set:{orderStatus:'Failed'}})
             .then(()=>{
                resolve()

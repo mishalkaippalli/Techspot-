@@ -154,6 +154,7 @@ const placeOrder = async(req,res)=>{
              
           })
           if(cart){
+            console.log("inside if cart in palceorder")
              cart.products = [];
              await cart.save();
           }
@@ -227,6 +228,23 @@ const verifyOnlinePayment = async(req,res)=>{
       res.render('confirmation',{orderDetails,cartItemsCount});
    } catch (error) {
       console.log(error.message);
+   }
+}
+
+//pendingg payment still order to be placed
+const paymentPending = async(req, res)=>{
+   try {
+      // console.log("inside payment pending", req.body)
+      let orderId = req.body.orderId
+      orderId = new Object(orderId)
+      if(orderId){
+         console.log("order id inside payment pending", orderId)
+         const orderUpdate = await Order.findByIdAndUpdate({_id: orderId },{$set:{orderStatus:'payment pending'}})
+         .then(()=>{
+            return res.json({status:'ordersuccesspaymentpending'})
+         })}
+   } catch (error) {
+      console.log(error.message)
    }
 }
 
@@ -700,5 +718,6 @@ module.exports = {
                    orderDetails,
                    cancelOrder,
                    returnOrder,
-                   invoice
+                   invoice,
+                   paymentPending
                   }

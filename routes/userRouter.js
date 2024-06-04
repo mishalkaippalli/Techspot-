@@ -73,6 +73,7 @@ Router.post("/update-quantity", isLogged, cartController.updateQuantity)
 Router.get("/deleteItem", isLogged, cartController.deleteProduct)
 Router.get('/remove-from-cart', isLogged, cartController.removeFromCart);
 Router.get("/checkout", isLogged, cartController.loadCheckOut)
+Router.get('/order-failed', isLogged, cartController.loadOrderFailed)
 
 //-----------------------------------------ORDER MANAGEMENT---------------------------
 
@@ -85,6 +86,7 @@ Router.get('/order-details', isLogged, orderController.orderDetails)
 Router.get('/cancel-order', isLogged, orderController.cancelOrder)
 Router.post('/return-order',isLogged, orderController.returnOrder)
 Router.get('/invoice', isLogged, orderController.invoice)
+Router.post('/payment-pending', isLogged, orderController.paymentPending)
 
 // -----------------------------------COUPON MANAGEMENT---------------------
 

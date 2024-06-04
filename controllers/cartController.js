@@ -411,11 +411,24 @@ const loadCheckOut = async(req,res)=>{
    }
 }
 
+const loadOrderFailed = async(req,res)=>{
+   try {
+      const orderId = req.query.orderId;
+
+      const orderDetails = await Order.findById(orderId);
+      console.log("inside loadorderfailed", orderDetails)
+      res.render('order-failed',{orderDetails});
+   } catch (error) {
+      console.log(error.message)
+   }
+}
+
 module.exports = {
                 getCartPage,
                 addToCart,
                 deleteProduct,
                 updateQuantity,
                 removeFromCart,
-                loadCheckOut
+                loadCheckOut,
+                loadOrderFailed
                  }
