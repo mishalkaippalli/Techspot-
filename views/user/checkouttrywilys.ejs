@@ -307,7 +307,7 @@
                                             <p class="card-text">Mobile Number : <%- address[i].mobile %></p>
                                             <p class="card-text">Address : <%- address[i].homeAddress %></p>
                                             <p class="card-text">City : <%- address[i].city %></p>
-                                            <p class="card-text">Street : <%- address[i].street %></p>
+                                            <p class="card-text">state : <%- address[i].state %></p>
                                             <p class="card-text">Postal Code : <%- address[i].postalCode %></p>
                                         </div>
                                     </div>
@@ -367,8 +367,8 @@
                                 <p id="cityError"></p>
                             </div>
                             <div class="col-md-12 form-group ">
-                                <input type="text" class="form-control" id="street" name="street" placeholder="Street">
-                                <p id="streetError"></p>
+                                <input type="text" class="form-control" id="state" name="state" placeholder="state">
+                                <p id="stateError"></p>
                             </div>
 
                             <div class="col-md-12 form-group">
@@ -604,7 +604,7 @@
                     mobile: event.currentTarget.mobileNumber.value,
                     homeAddress: event.currentTarget.address.value,
                     city: event.currentTarget.city.value,
-                    street: event.currentTarget.street.value,
+                    state: event.currentTarget.state.value,
                     postalCode: event.currentTarget.pcode.value
                 }
 
@@ -866,7 +866,7 @@
             })
 
             const result = await response.json();
-
+            alert(result)
             if (result.status === 'ordersuccesspaymentpending') {
                 Swal.fire({
                     icon: 'success',
@@ -877,9 +877,15 @@
                 setTimeout(() => {
                     location.href = `/confirmation/?orderId=${result.placedOrderId}`
                 }, 1500);
+            } else if (result.status === 'order not found') {
+                Swal.fire({
+                    icon: 'failure',
+                    title: 'Order not found',
+                    showConfirmButton: true,
+                    timer: 1500
+                })
+           }
         }
-    }
-
 
     </script>
 

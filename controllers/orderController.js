@@ -17,6 +17,7 @@ const app = express()
 const fetch = require("node-fetch");
 require("dotenv/config");
 const path = require("path");
+const mongoose = require('mongoose');
 
 const paypal = require('@paypal/checkout-server-sdk')
 // const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PORT} = process.env;
@@ -235,14 +236,28 @@ const verifyOnlinePayment = async(req,res)=>{
 const paymentPending = async(req, res)=>{
    try {
       // console.log("inside payment pending", req.body)
-      let orderId = req.body.orderId
-      orderId = new Object(orderId)
-      if(orderId){
-         console.log("order id inside payment pending", orderId)
-         const orderUpdate = await Order.findByIdAndUpdate({_id: orderId },{$set:{orderStatus:'payment pending'}})
-         .then(()=>{
-            return res.json({status:'ordersuccesspaymentpending'})
-         })}
+      let orderId = req.body.orderId  
+      console.log("orderId", orderId)
+
+      if (!mongoose.Types.ObjectId.isValid(orderId)) {
+         throw new Error('Invalid Order ID');
+     }
+
+      const orderObjectId = new mongoose.Types.ObjectId(orderId);
+      console.log("order id", orderObjectId)
+
+         const orderUpdate = await Order.findByIdAndUpdate({_id: orderObjectId },
+            {$set:{orderStatus:'payment pending'}},
+            { new: true }
+         )
+         console.log("order update",orderUpdate);
+         if (!orderUpdate) {
+            return res.json({ status: 'order not found' });
+        }
+
+        return res.json({ status: 'ordersuccesspaymentpending' });
+
+
    } catch (error) {
       console.log(error.message)
    }

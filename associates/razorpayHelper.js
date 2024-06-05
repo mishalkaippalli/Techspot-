@@ -58,13 +58,13 @@ const updatePaymentStatus = (orderId,paymentStatus)=>{
          if(paymentStatus){
             console.log("inside if paymentstatus in updatepaymentstatus", paymentStatus)
             console.log("order id", new Object(orderId));
-            const orderUpdate = await Order.findByIdAndUpdate({_id:new Object(orderId)},{$set:{orderStatus:'Placed'}})
+            const orderUpdate = await Order.findByIdAndUpdate({_id:new Object(orderId)},{$set:{orderStatus:'Placed'}},{ new: true })
             .then(()=>{
                resolve();
             });
          }else{
             console.log("inside else ir no payment statues i failed")
-            const orderUpdate = await Order.findByIdAndUpdate({_id:new Object(orderId)},{$set:{orderStatus:'Failed'}})
+            const orderUpdate = await Order.findByIdAndUpdate({_id:new Object(orderId)},{$set:{orderStatus:'Failed'}},{ new: true })
             .then(()=>{
                resolve()
             });
