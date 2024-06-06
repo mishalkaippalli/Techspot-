@@ -217,22 +217,7 @@ const verifyOnlinePayment = async(req,res)=>{
     
  }
 
- const loadConfirmation = async(req,res)=>{
-   try {
-      const user_id = req.session.user._id;
-      const orderId = req.query.orderId
-      
-      const orderDetails = await Order.findById(orderId).populate('products.productId')
-
-      const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
-      console.log(orderDetails.products)
-      res.render('confirmation',{orderDetails,cartItemsCount});
-   } catch (error) {
-      console.log(error.message);
-   }
-}
-
-//pendingg payment still order to be placed
+ //pendingg payment still order to be placed
 const paymentPending = async(req, res)=>{
    try {
       // console.log("inside payment pending", req.body)
@@ -255,13 +240,44 @@ const paymentPending = async(req, res)=>{
             return res.json({ status: 'order not found' });
         }
 
-        return res.json({ status: 'ordersuccesspaymentpending' });
+        return res.json({ status: 'ordersuccesspaymentpending',orderId });
 
 
    } catch (error) {
       console.log(error.message)
    }
 }
+
+const continuePayment = async(req, res) => {
+   try {
+      const user_id = req.session.user._id;
+      const orderId = req.query.orderid
+      const orderDetails = await Order.findById(orderId);
+      console.log("order details inside continue payment ", orderDetails);
+      res.render('doPendingPayment',{orderDetails})
+   } catch (error) {
+      console.log("error inside continue payment", error.message, user_id);
+   }
+  
+
+}
+
+ const loadConfirmation = async(req,res)=>{
+   try {
+      const user_id = req.session.user._id;
+      const orderId = req.query.orderId
+      
+      const orderDetails = await Order.findById(orderId).populate('products.productId')
+
+      const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
+      console.log(orderDetails.products)
+      res.render('confirmation',{orderDetails,cartItemsCount});
+   } catch (error) {
+      console.log(error.message);
+   }
+}
+
+
 
 // List orders in user-side
 const listOrders = async(req,res)=>{
@@ -734,5 +750,6 @@ module.exports = {
                    cancelOrder,
                    returnOrder,
                    invoice,
-                   paymentPending
+                   paymentPending,
+                   continuePayment
                   }

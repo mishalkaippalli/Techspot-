@@ -297,6 +297,11 @@
 			<!-- End modal structure -->
 
 			<!-- Buttons of requested -->
+           <% if(orderDetails.orderStatus === 'payment pending') { %>
+			<div class="row mt-2 justify-content-center">
+				<a href="/continue-payment?orderid=<%- orderDetails._id %> " class="btn btn-secondary col-md-4">Continue payment</a>
+			</div>
+		    <% } %>
 			<div class="container mt-5">
 				<div class="row justify-content-center">
 					<% if (orderDetails.orderStatus==='Delivered' ) { %>

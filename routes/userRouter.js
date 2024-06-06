@@ -87,6 +87,7 @@ Router.get('/cancel-order', isLogged, orderController.cancelOrder)
 Router.post('/return-order',isLogged, orderController.returnOrder)
 Router.get('/invoice', isLogged, orderController.invoice)
 Router.post('/payment-pending', isLogged, orderController.paymentPending)
+Router.get('/continue-payment', isLogged, orderController.continuePayment)
 
 // -----------------------------------COUPON MANAGEMENT---------------------
 
