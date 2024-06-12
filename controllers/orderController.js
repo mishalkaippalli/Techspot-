@@ -254,9 +254,9 @@ const continuePayment = async(req, res) => {
       const orderId = req.query.orderid
       const orderDetails = await Order.findById(orderId);
       console.log("order details inside continue payment ", orderDetails);
-      res.render('doPendingPayment',{orderDetails})
+      res.render('doPendingPayment',{orderDetails, user_id})
    } catch (error) {
-      console.log("error inside continue payment", error.message, user_id);
+      console.log("error inside continue payment", error.message);
    }
   
 

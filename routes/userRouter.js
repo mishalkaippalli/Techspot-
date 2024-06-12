@@ -44,18 +44,11 @@ Router.get("/filterPrice", userController.filterByPrice)
 Router.post("/sortProducts", userController.getSortProducts)
 
 // ===============================user Profile ==============================
-
-// Router.get("/profile", isLogged, userProfileController.getUserProfile );
 Router.get('/user-profile', isLogged, userProfileController.userProfile)
 Router.post("/editUserDetails", isLogged, userProfileController.editUserDetails)
 Router.post("/edit-profile", isLogged,userProfileController.editProfile)
 Router.post("/change-password", isLogged, userProfileController.changePassword)
-// Router.get("/addAddress", isLogged, userProfileController.getAddressAddPage )
-// Router.post("/addAddress", isLogged, userProfileController.postAddress )
 
-// Router.get("/editAddress", isLogged, userProfileController.getEditAddress)
-// Router.post("/editAddress", isLogged, userProfileController.postEditAddress)
-// Router.get("/deleteAddress", isLogged, userProfileController.getDeleteAddress)
 
 // ===============================Address management ==============================
 Router.get('/manage-address',isLogged,userProfileController.loadManageAddress);
@@ -91,7 +84,6 @@ Router.get('/continue-payment', isLogged, orderController.continuePayment)
 
 // -----------------------------------COUPON MANAGEMENT---------------------
 
-// Router.post("/applyCoupon", isLogged, couponController.applyCoupon)
 Router.get('/apply-coupon',isLogged,couponController.applyCoupons);
 
 // -----------------------------------Wishlist---------------------

@@ -567,7 +567,7 @@
         function validateCouponField() {
             let isValid = true;
             const couponFeild = document.getElementById('couponCode').value;
-            alert(couponFeild+"couponcode")
+            // alert(couponFeild+"couponcode")
             if (couponFeild.trim() === '') {
                 document.getElementById('couponCodeError').textContent = 'Please Apply Coupon Code'
                 document.getElementById('couponCode').style.borderColor = 'red'
@@ -684,7 +684,7 @@
                 }
             }
             const total = Number('<%- grandTotal %> ')
-             alert(total)
+            //  alert(total)
             const actualAmount = parseFloat(document.getElementById('cartTotal').innerHTML.replace(/[^\d.]/g, ''))
             const walletAmount = Number("<%- userWallet.walletAmount %>")
             const paymentMethod = document.querySelector('input[name="payment-method"]:checked').id;

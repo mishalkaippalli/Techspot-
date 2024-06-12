@@ -105,6 +105,20 @@
          /* Label text color */
          margin-bottom: 10px;
       }
+      body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      }
+       main {
+      flex: 1;
+      }
+      .footer {
+      background-color: black;
+      border-radius: 20px 20px 0 0;
+      padding: 150px 0;
+      text-align: center;
+      }
    </style>
 </head>
 
@@ -177,7 +191,7 @@
       </div>
   </header>
    <!-- End Header Area -->
-
+<main>
    <!-- Start Banner Area -->
    <section class="">
       <div class="container">
@@ -271,10 +285,11 @@
                <a class="btn btn-dark" href="/user-profile">Go Back</a>
             </div>
          </div>
+         <br>
       </div>
    </section>
    <!--================End Checkout Area =================-->
-
+</main>
    <!-- start footer Area -->
    <footer class="footer-area pt-5 pb-5" style="background-color: black;  border-radius: 20px 20px 0 0;">
       <div class="container">
@@ -319,7 +334,7 @@
             <p class="footer-text m-0">
                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                Copyright &copy;
-               <script>document.write(new Date().getFullYear());</script> Willink Watches | All rights reserved
+               <script>document.write(new Date().getFullYear());</script> Techspot | All rights reserved
                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
             </p>
          </div>

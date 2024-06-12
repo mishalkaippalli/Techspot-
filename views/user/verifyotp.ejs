@@ -32,6 +32,41 @@
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </head>
 
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+		margin: 0;
+    }
+	main {
+    display: flex;
+    flex: 1;
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    }
+
+     .login_box_area {
+            padding: 40px 0;
+            width: 100%; /* Ensure it takes full width */
+        }
+		.login_form_inner {
+            max-width: 400px; /* Limit the width of the form */
+            margin: auto; /* Center the form within its container */
+            padding: 20px; /* Add some padding */
+            background: #f1f1f1; /* Add background color for better visibility */
+            border-radius: 10px; /* Add rounded corners */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+        }
+   
+    .footer {
+        background-color: black;
+        border-radius: 20px 20px 0 0;
+        padding: 20px 0;
+        text-align: center;
+    }
+</style>
+
 <body>
 
 	<!-- Start Header Area -->
@@ -80,18 +115,19 @@
 	</section>
 	<section>
       <div class="container">
-         <h1 class="text-center">OTP VERIFICATION</h1>
+		<BR>
+         <h1 class="text-center">ONE TIME PASSWORD VERIFICATION</h1>
       </div>
    </section>
 	<!-- End Banner Area -->
-
+	<main>
 	<!--================Login Box Area =================-->
 	<section class="login_box_area section_gap">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="login_form_inner" style="padding-top: 0px;">
-						<h3>Verify the OTP</h3>
+						<h3>Verify your OTP</h3><br>
 						<form class="row login_form" action="" method="post" id="otpForm" novalidate="novalidate">
 							<div class="col-md-12 form-group">
 								<input type="text" class="form-control" id="otp" name="otp" placeholder="Enter your otp" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
@@ -107,7 +143,7 @@
 		</div>
 	</section>
 	<!--================End Login Box Area =================-->
-
+</main>
 	<!-- start footer Area -->
 	<footer class="footer-area pt-5 pb-5" style="background-color: black;  border-radius: 20px 20px 0 0;">
 		<div class="container">

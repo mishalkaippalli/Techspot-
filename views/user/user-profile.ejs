@@ -96,6 +96,27 @@
       .modal-body .form-group {
          margin-bottom: 15px;
       }
+
+      body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      }
+
+      main {
+      flex: 1;
+      }
+
+      .footer {
+      background-color: black;
+      border-radius: 20px 20px 0 0;
+      padding: 20px 0;
+      text-align: center;
+      }
+      .fixed-size-btn {
+       width: 200px; /* Set your desired width */
+       height: 50px; /* Set your desired height */
+      }
    </style>
 </head>
 
@@ -168,7 +189,7 @@
       </div>
   </header>
    <!-- End Header Area -->
-
+<main>
    <!-- Edit profile Modal -->
    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
       aria-hidden="true">
@@ -290,7 +311,7 @@
    <!-- Main Pages -->
    <section class="pb-5">
       <div class="container">
-         <h1 class="text-center">USER PROFILE</h1>
+         <br><h2 class="text-center">USER PROFILE</h2><br>
          <!-- Add this line -->
          <div class="row justify-content-center ">
             <div class="card col-md-8 mr-2 mb-2 d-flex align-items-center">
@@ -303,24 +324,24 @@
                </div>
             </div>
             <div class="card col-md-3 mb-2">
-               <div class="card-body  d-flex flex-column align-items-center">
+               <div class="card-body d-flex flex-column align-items-center">
                   <h3 class="card-title">Management</h3>
-                  <a href="" class="btn btn-outline-dark mb-3" data-bs-toggle="modal" data-bs-target="#myModal">Edit
-                     Profile</a>
-                  <a href="/manage-address" class="btn btn-outline-dark mb-3">Manage Address</a>
-                  <a href="/list-orders" class="btn btn-outline-dark mb-3">Orders</a>
-                  <a href="/change-password" class="btn btn-outline-dark mb-3" data-bs-toggle="modal"
-                     data-bs-target="#changePasswordModal">Change Password</a>
-                  <a href="/view-wallet" class="btn btn-outline-dark mb-3">View Wallet</a>
+                  <a href="" class="btn btn-outline-dark mb-3 fixed-size-btn" data-bs-toggle="modal" data-bs-target="#myModal">Edit Profile</a>
+                  <a href="/manage-address" class="btn btn-outline-dark mb-3 fixed-size-btn">Manage Address</a>
+                  <a href="/list-orders" class="btn btn-outline-dark mb-3 fixed-size-btn">Orders</a>
+                  <a href="/change-password" class="btn btn-outline-dark mb-3 fixed-size-btn" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Change Password</a>
+                  <a href="/view-wallet" class="btn btn-outline-dark mb-3 fixed-size-btn">View Wallet</a>
                   <hr>
-                  <a href="" id="userLogoutbtn" class="btn btn-outline-danger mb-3">Log Out</a>
+                  <a href="" id="userLogoutbtn" class="btn btn-outline-danger mb-3 fixed-size-btn">Log Out</a>
                </div>
             </div>
+            
 
          </div>
       </div>
 
    </section>
+</main>
    <footer class="footer-area pt-5 pb-5" style="background-color: black;  border-radius: 20px 20px 0 0;">
 		<div class="container">
 			<div class="row  d-flex justify-content-between">
@@ -416,7 +437,7 @@
             })
 
             const result = await response.json();
-            alert(result)
+            // alert(result)
             if (result.status === 'success') {
                Swal.fire({
                   title: result.message,

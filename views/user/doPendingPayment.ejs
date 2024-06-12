@@ -229,8 +229,11 @@
         </div>
     </section>
     <!-- End Banner Area -->
+    <div id="orderDetails" orderDetails="<%=orderDetails%>"></div>
 
-    <a class="primary-btn" id="placeOrder"  href="">Continue Payment</a>
+    
+
+    <a class="primary-btn" id="continuePayment"  href="">Continue Payment</a>
 
     <!-- start footer Area -->
     <footer class="footer-area pt-5 pb-5" style="background-color: black;  border-radius: 20px 20px 0 0;">
@@ -292,114 +295,119 @@
 
     <!-- Full Razorpay Payment code -->
     <script>
-        document.getElementById('placeOrder').addEventListener('click', async (event) => {
+
+      
+
+          
+        document.getElementById('continuePayment').addEventListener('click', async (event) => {
             event.preventDefault();
             // Taking address id 
-            const radioButtons = document.getElementsByName('address-option');
-            let selectedRadioButtonId = null;
-            for (const radioButton of radioButtons) {
-                if (radioButton.checked) {
-                    selectedRadioButtonId = radioButton.id;
-                    break;
-                }
-            }
-            const total = Number('<%- grandTotal %> ')
-            const actualAmount = parseFloat(document.getElementById('cartTotal').innerHTML.replace(/[^\d.]/g, ''))
-            const walletAmount = Number("<%- userWallet.walletAmount %>")
-            const paymentMethod = document.querySelector('input[name="payment-method"]:checked').id;
-            // console.log(payment)
-            // console.log(total)
+            // const orderDetails =  JSON.stringify(orderDetails);
 
-            if (!selectedRadioButtonId) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Address Needed',
-                })
-            } else if(paymentMethod === 'COD' && total > 1000 ) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Cash on delivery is not allowed above 1000 Rupees'
-                })
-            }   else if (total === 0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'No Items'
-                })
-            } else if (paymentMethod === 'WALLET' && walletAmount < actualAmount) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Insufficient Balance in wallet'
-                })
-            } else {
+            // alert(orderDetails);
 
-                const couponDiscount = parseFloat(document.getElementById('discount').innerHTML.replace(/[^\d.]/g, ''));
-                const couponId = document.getElementById('couponId').value;
+            let orderData = document.getElementById('orderDetails').orderDetails;
+            alert(orderData);
 
-                const data = {
-                    totalAmount: total,
-                    paymentMethod: paymentMethod,
-                    couponDiscount: couponDiscount,
-                    actualAmount: actualAmount,
-                    addressId: selectedRadioButtonId,
-                    couponId: couponId
-                }
+            // const radioButtons = document.getElementsByName('address-option');
+            // let selectedRadioButtonId = null;
+            // for (const radioButton of radioButtons) {
+            //     if (radioButton.checked) {
+            //         selectedRadioButtonId = radioButton.id;
+            //         break;
+            //     }
+            // }
 
-                const response = await fetch('/place-order', {
-                    method: 'post',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                })
+            // if (!selectedRadioButtonId) {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Address Needed',
+            //     })
+            // } else if(paymentMethod === 'COD' && total > 1000 ) {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Cash on delivery is not allowed above 1000 Rupees'
+            //     })
+            // }   else if (total === 0) {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'No Items'
+            //     })
+            // } else if (paymentMethod === 'WALLET' && walletAmount < actualAmount) {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Insufficient Balance in wallet'
+            //     })
+            // } else {
 
-                const result = await response.json()
+            //     const couponDiscount = parseFloat(document.getElementById('discount').innerHTML.replace(/[^\d.]/g, ''));
+            //     const couponId = document.getElementById('couponId').value;
 
-                if (result.status === 'COD') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Order Placed',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    setTimeout(() => {
-                        location.href = `/confirmation/?orderId=${result.placedOrderId}`
-                    }, 1500);
+            //     const data = {
+            //         totalAmount: total,
+            //         paymentMethod: paymentMethod,
+            //         couponDiscount: couponDiscount,
+            //         actualAmount: actualAmount,
+            //         addressId: selectedRadioButtonId,
+            //         couponId: couponId
+            //     }
 
-                } else if (result.status === 'WALLET') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Order Placed',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    setTimeout(() => {
-                        location.href = `/confirmation/?orderId=${result.placedOrderId}`
-                    }, 1500);
-                }
-                // ===RAZORPAY===
-                else if (result.status === 'RAZORPAY') {
+            //     const response = await fetch('/place-order', {
+            //         method: 'post',
+            //         headers: {
+            //             'Content-Type': 'application/json'
+            //         },
+            //         body: JSON.stringify(data)
+            //     })
 
-                    razorpayPayment(result.response);
+            //     const result = await response.json()
 
-                } else if (result.status === 'sessionError') {
-                    Swal.fire({
-                        icon: 'info',
-                        title: result.message,
-                        showConfirmButton: false,
-                        timer: 1000
-                    })
-                    setTimeout(() => {
-                        location.href = '/login'
-                    }, 1500);
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: result.message,
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-            }
+            //     if (result.status === 'COD') {
+            //         Swal.fire({
+            //             icon: 'success',
+            //             title: 'Order Placed',
+            //             showConfirmButton: false,
+            //             timer: 1500
+            //         })
+            //         setTimeout(() => {
+            //             location.href = `/confirmation/?orderId=${result.placedOrderId}`
+            //         }, 1500);
+
+            //     } else if (result.status === 'WALLET') {
+            //         Swal.fire({
+            //             icon: 'success',
+            //             title: 'Order Placed',
+            //             showConfirmButton: false,
+            //             timer: 1500
+            //         })
+            //         setTimeout(() => {
+            //             location.href = `/confirmation/?orderId=${result.placedOrderId}`
+            //         }, 1500);
+            //     }
+            //     // ===RAZORPAY===
+            //     else if (result.status === 'RAZORPAY') {
+
+            //         razorpayPayment(result.response);
+
+            //     } else if (result.status === 'sessionError') {
+            //         Swal.fire({
+            //             icon: 'info',
+            //             title: result.message,
+            //             showConfirmButton: false,
+            //             timer: 1000
+            //         })
+            //         setTimeout(() => {
+            //             location.href = '/login'
+            //         }, 1500);
+            //     } else {
+            //         Swal.fire({
+            //             icon: 'error',
+            //             title: result.message,
+            //             showConfirmButton: false,
+            //             timer: 1500
+            //         })
+            //     }
+            // }
         })
 
         function razorpayPayment(order) {

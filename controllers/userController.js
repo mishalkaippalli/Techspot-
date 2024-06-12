@@ -22,16 +22,6 @@ const pageNotFound = async (req, res) => {
   }
 };
 
-// Generate hashed password
-// const securePassword = async (password) => {
-//   try {
-//     const passwordHash = await bcrypt.hash(password, 10);
-//     console.log("hashed password", passwordHash)
-//     return passwordHash;
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
 
 // Loading the Home page
 const getHomePage = async (req, res) => {
@@ -49,36 +39,22 @@ const getHomePage = async (req, res) => {
     const brandData = await Brand.find({ isBlocked: false });
     const productData = await Product.find({ isBlocked: false })
       .sort({ _id: -1 })
-      .limit(4);
+      .limit(12);
        
       // console.log("inside gethomePage productdata is", productData)
     if (user) {
-      res.render("home", {
+      res.render("hometrial", {
         user: userData,
         data: brandData,
         products: productData,
       });
     } else {
-      res.render("home", { products: productData, data: brandData });
+      res.render("hometrial", { products: productData, data: brandData });
     }
   } catch (error) {
     console.log(error.message);
   }
 };
-
-
-//load login page
-// const getLoginPage = async (req, res) => {
-//   try {
-//     if (!req.session.user) {
-//       res.render("login");
-//     } else {
-//       res.redirect("/");
-//     }
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
 
 // Rendering the login page for user
 
@@ -112,62 +88,6 @@ function generateOtp() {
   }
   return otp;
 }
-
-//User registration
-// const signupUser = async (req, res) => {
-//   try {
-//     console.log("req.body", req.body)
-//     const { email } = req.body;
-//     const findUser = await User.findOne({ email });
-    
-//     if (req.body.password === req.body.cPassword) {
-//       if (!findUser) {
-//         var otp = generateOtp();
-//         console.log("heyo am the otp", otp);
-//         // const newUser = await User.create(req.body);
-//         // console.log(newUser);
-//         const transporter = nodemailer.createTransport({
-//           service: "gmail",
-//           host: "smtp.gmail.com",
-//           port: 587,
-//           secure: false,
-//           requireTLS: true,
-//           auth: {
-//             user: process.env.EMAIL_USER,
-//             pass: process.env.EMAIL_PASSWORD,
-//           },
-//         });
-
-//         const info = await transporter.sendMail({
-//           from: process.env.EMAIL_USER,
-//           to: email,
-//           subject: "Verfiy your Account",
-//           text: `Your OTP is ${otp}`,
-//           html: `<b> <h4> Your OTP ${otp}</h4> <br> <a href="">Click here</a></b>`,
-//         });
-
-//         if (info) {
-//           req.session.userOtp = otp;
-//           req.session.userData = req.body;
-//           res.render("verify-otp", { email });
-//           console.log("Email sent", info.messageId);
-//         } else {
-//           res.json("email error");
-//         }
-//       } else {
-//         console.log("User already exist");
-//         res.render("signup", {
-//           message: "User with this email already exists",
-//         });
-//       }
-//     } else {
-//       console.log("the confirm password does not match");
-//       res.render("signup", { message: "the confirm password does not match" });
-//     }
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
 
 const insertUser = async(req,res)=>{
    const email = req.body.email
@@ -265,16 +185,6 @@ const googleAuth = async (req,res)=>{
 
 }
 
-
-// //render the OTP verification page
-// const getOtpPage = async (req, res) => {
-//   try {
-//     res.render("verify-otp");
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
-
 // when the user click in register button it will gives a page for entering the otp
 
 const loadVerifiyOTP = async(req,res)=>{
@@ -325,42 +235,6 @@ const resendOtp = async (req, res) => {
   }
 };
 
-// Verify otp from email with generated otp and save the user data to db
-
-// const verifyOtp = async (req, res) => {
-//   try {
-//     console.log("Iam inside verify OTP");
-//     //get otp from the body
-//     const { otp } = req.body;
-//     console.log("Iam otp inside verifyotp", otp);
-//     console.log(
-//       "Iam req.session.userOtp inside verifyotp",
-//       req.session.userOtp,
-//     );
-//     if (otp === req.session.userOtp) {
-//       const user = req.session.userData;
-//       console.log(user);
-//       const passwordHash = await securePassword(user.password);
-
-//       const saveUserData = new User({
-//         name: user.name,
-//         email: user.email,
-//         phone: user.phone,
-//         password: passwordHash,
-//       });
-
-//       await saveUserData.save();
-
-//       req.session.user = saveUserData._id;
-//       res.json({ status: true });
-//     } else {
-//       console.log("otp not matching");
-//       res.json({ status: false });
-//     }
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
 
 // After the user enter the otp we check the otp is correct or not
 
@@ -401,41 +275,6 @@ const verifyotp = async(req,res)=>{
      res.json({status:'error',message:'Please verify your otp'});
   }
 }
-
-// const userLogin = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-//     const findUser = await User.findOne({ isAdmin: "0", email: email });
-
-//     console.log("IAm inside userLogin");
-
-//     if (findUser) {
-//       const isUserNotBlocked = findUser.isBlocked === false;
-
-//       if (isUserNotBlocked) {
-//         const passwordmatch = await bcrypt.compare(password, findUser.password);
-//         if (passwordmatch) {
-//           req.session.user = findUser._id;
-//           console.log("loggedin, user details from session", req.session.user);
-//           console.log("Logged in");
-//           res.redirect("/");
-//         } else {
-//           console.log("Password is not matching");
-//           res.render("login", { message: "password is not matching" });
-//         }
-//       } else {
-//         console.log("User is blocked by admin");
-//         res.render("login", { message: "User is blocked by admin" });
-//       }
-//     } else {
-//       console.log("User not found");
-//       res.render("login", { message: "User is not found" });
-//     }
-//   } catch (error) {
-//     console.log(error.message);
-//     res.render("login", { message: "Login failed" });
-//   }
-// };
 
 // When the user enter the email and password through login page. To check it exists or not
 // input is "email","password"
@@ -541,34 +380,13 @@ const getProductDetailPage = async (req, res) => {
   }
 };
 
-// Load Single Product
-// const getProductDetailPagetry = async(req,res)=>{
-//   try {
-//      const id = req.query.id;
-//      console.log(id)
-//      const productData = await Product.findById(id).populate('category');
-//      console.log("inside getproductdetail page", productData)
-//      if(productData){
-//         if(req.session && req.session.user){
-//            // Finding the total amount in the cart
-//            const cartItemsCount = await CartCountHelper.findCartItemsCount(req.session.user);
-//            res.render('productDetailstrialwillys',{product:productData,cartItemsCount});
-
-//         }else{
-//            res.render('productDetailstrialwillys',{product:productData});
-//         }
-//      }
-//   } catch (error) {
-//      console.log(error.message)
-//   }
-// }
-
-
 const filterProduct = async(req, res) => {
    try {
     const user = req.session.user;
     const category = req.query.category;
+    console.log("category inside filter product" ,category)
     const brand = req.query.brand;
+    console.log("brand inside filter product" ,brand)
     const brands = await Brand.find({});
     const findCategory = category ? await Category.findOne({_id: category}) : null;
     console.log("inside filterproduct findcategory is", findCategory)
@@ -578,16 +396,17 @@ const filterProduct = async(req, res) => {
       isBlocked: false,
     };
     if(findCategory) {
-      query.id = findCategory._id;
-      console.log("query id", query.id)
+      query.category = findCategory._id;
+      console.log("query id", query._id)
+  
     }
    
-
     if(findBrand){
       query.brand = findBrand.brandName
+      console.log("query brand", query.brand)
     }
-
-    const findProducts = await Product.find({category: query.id});
+    console.log("query",query)
+    const findProducts = await Product.find(query);
     const categories = await Category.find({isListed: true})
 
     let itemsPerPage = 6;
@@ -605,7 +424,7 @@ const filterProduct = async(req, res) => {
       totalPages,
       currentPage,
       selectedCategory: category || null,
-      selctedBrand: brand || null,
+      selectedBrand: brand || null,
     });
 
    } catch (error) {
@@ -629,11 +448,11 @@ const filterByPrice = async(req, res) => {
       ]
     })
 
-    let itemsPerPage = 6;
+    let itemsPerPage = 9;
     let currentPage = parseInt(req.query.page) || 1;
     let startIndex = (currentPage - 1) * itemsPerPage;
     let endIndex = startIndex + itemsPerPage;
-    let totalPages = Math.ceil(findProducts.length / 6);
+    let totalPages = Math.ceil(findProducts.length / 9);
     const currentProduct = findProducts.slice(startIndex, endIndex);
 
     res.render("shop", {

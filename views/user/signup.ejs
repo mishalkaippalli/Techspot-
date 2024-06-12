@@ -33,9 +33,23 @@
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
    <style>
-	.login_box_area {
-		padding: 40px 0;
-	}		
+	body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+    main {
+        flex: 1;
+    }
+    .login_box_area {
+        padding: 40px 0;
+    }
+    .footer {
+        background-color: black;
+        border-radius: 20px 20px 0 0;
+        padding: 20px 0;
+        text-align: center;
+    }
 </style>
 
 </head>
@@ -68,7 +82,7 @@
         </div>
     </header>
 	<!-- End Header Area -->
-
+<main>
 	<!-- Start Banner Area -->
 	<section class="">
 		<div class="container">
@@ -94,15 +108,15 @@
 					<div class="login_box_img">
 						<img style="height: 700px; object-fit: cover;" class="img-fluid" src="/user-assets/img/register.jpg" alt="">
 						<div class="hover">
-							<h4>Already a member?</h4>
-							<p>Go and Explore our new products and enjoy</p>
+							<h4>Already a member ?</h4><br>
+							<h5> Explore our new products and enjoy</h5><br>
 							<a class="primary-btn" href="/login">Login</a>
 						</div>
 					</div>
 				</div>
 				<div class="col-lg-6">
 					<div class="login_form_inner">
-						<h3>Create An Account</h3>
+						<h3>Create An Account</h3><br>
 						<form  class="row login_form" action="" method="post" id="registerForm" >
 							<div class="col-md-12 form-group">
 								<input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'First Name'">
@@ -134,7 +148,7 @@
 		</div>
 	</section>
 	<!--================End Login Box Area =================-->
-
+</main>
 	<!-- start footer Area -->
 	<footer class="footer-area pt-5 pb-5" style="background-color: black;  border-radius: 20px 20px 0 0;">
 		<div class="container">

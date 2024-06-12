@@ -72,55 +72,6 @@ const changeCouponStatus= async(req, res) => {
   }
 }
 
-
-// const applyCoupon = async(req, res) => {
-//   try {
-//     const userId = req.session.user
-//     console.log("Iam inside apply coupon in couponController, req.body is",req.body)
-//     const selectedCoupon = await Coupon.findOne({couponCode: req.body.coupon})
-//     console.log(selectedCoupon)
-//     const totalAmount = req.body.total;
-//     console.log("totalAmount", totalAmount);
-//     if(!selectedCoupon) {
-//       console.log("no coupon");
-//       res.json({noCoupon: true})
-//     } else if(selectedCoupon.userId.includes(userId)) {
-//       console.log('already used');
-//       res.json({used: true})
-//     } else {
-//       console.log("coupon exists");
-//       // await Coupon.updateOne(
-//       //   {couponCode: req.body.coupon},
-//       //   {
-//       //     $addToSet: {
-//       //       userId: userId
-//       //     }
-//       //   }
-//       // );
-            
-//       const maxAmount = selectedCoupon.maxDiscountAmount;
-//       let discountValue = parseInt((selectedCoupon.discountPercentage/100)*totalAmount).toFixed(2);
-//       let actualValue;
-
-//       if(discountValue > maxAmount) {
-//         actualValue = totalAmount - maxAmount;
-//         discountValue = maxAmount
-//       } else {
-//         actualValue = totalAmount - discountValue
-//       }
-
-//       console.log(actualValue);
-//       // const gt = parseInt(req.body.total) - parseInt(selectedCoupon.offerPrice);
-//       // console.log("grandtotal gt in applycoupon inside usercontroller", gt)
-//       // res.json({gt: gt, offerPrice: parseInt(selectedCoupon.offerPrice)})
-
-//       res.json({status:'success',message:'Coupon Added',discountValue,actualValue,couponId:selectedCoupon._id});
-//     }
-//   } catch (error) {
-//     console.log(error.message)
-//   }
-// }
-
 const applyCoupons = async(req,res)=>{
   try {
      const user_id = req.session.user;

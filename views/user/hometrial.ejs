@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Techspot</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/user-assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="/user-assets/css/main.css?v=3.4">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+</head>
+
+<style>
+    .home-slider {
+        overflow: hidden;
+    }
+
+    .swiper-container {
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .swiper-wrapper {
+        display: flex;
+    }
+
+    .swiper-slide {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .product-cart-wrap {
+        width: 100%;
+        height: 450px;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+
+    .product-img-action-wrap {
+        height: calc(100% - 60px);
+        position: relative;
+    }
+
+    .product-img {
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .product-content-wrap h2 {
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .product-price {
+        position: relative;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    main {
+        flex: 1;
+    }
+
+    .footer {
+        background-color: black;
+        border-radius: 20px 20px 0 0;
+        padding: 20px 0;
+        text-align: center;
+    }
+</style>
+
+<body>
+    <header class="header-area header-style-5">
+        <div class="header-bottom sticky-bar sticky-white-bg">
+            <div class="container">
+                <div class="header-wrap header-space-between position-relative">
+                    <div class="logo logo-width-1">
+                        <a href="index.html"><img src="/user-assets/imgs/theme/Techspotlogo.png" alt="logo"></a>
+                    </div>
+                    <div class="header-right">
+                        <div class="search-style-1">
+                            <form action="/search">
+                                <input type="text" id="filterItem" name="search" class="form-control" placeholder="Search for items...">
+                            </form>
+                        </div>
+                        <div class="main-menu main-menu-grow main-menu-padding-1 main-menu-lh-1 main-menu-mrg-1 hm3-menu-padding d-none d-lg-block hover-boder">
+                            <nav>
+                                <ul>
+                                    <li><a class="active" href="/">Home</a></li>
+                                    <li><a href="/shop">Shop</a></li>
+                                    <li><a href="/about">About</a></li>
+                                    <li><a href="/contact">Contact</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="header-action-right">
+                            <div class="header-action-2">
+                                <div class="header-action-icon-2">
+                                    <a href="/wishlist">
+                                        <img class="svgInject" alt="Evara" src="/user-assets/imgs/theme/icons/icon-heart.svg">
+                                    </a>
+                                </div>
+                                
+                                <div class="header-action-icon-2">
+                                    <a class="mini-cart-icon" href="/cart">
+                                        <img alt="Evara" src="/user-assets/imgs/theme/icons/icon-cart.svg">
+                                    </a>
+                                </div>
+                                
+                                <div class="header-action-icon-2">
+                                    <% if (locals.user) { %>
+                                        <li class="dropdown nav-item">
+                                            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false">
+                                                <img class="svgInject" alt="Evara" src="/user-assets/imgs/theme/icons/user-profile.svg" style="height: 25px; width: 25px; margin-top: 2px;">
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                                                <a class="dropdown-item" href="/user-profile"><i class="material-icons md-perm_identity"></i> Profile</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i> Logout</a>
+                                            </div>
+                                        </li>
+                                    <% } else { %>
+                                        <div class="single-mobile-header-info ml-25 pr-5">
+                                            <a href="/login">Sign Up</a>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </header>
+
+    <main>
+        <section class="product-tabs section-padding position-relative wow fadeIn animated">
+            <div class="bg-square"></div>
+            <div class="container">
+                <div class="tab-content wow fadeIn animated" id="myTabContent">
+                    <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
+                        <div class="row product-grid-4">
+                            <% for (let i = 0; i < products.length; i++) { %>
+                                <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                                    <div class="product-cart-wrap mb-30">
+                                        <div class="product-img-action-wrap">
+                                            <div class="product-img product-img-zoom">
+                                                <a href="/productDetails?id=<%= products[i]._id %>">
+                                                    <img class="default-img" src="/uploads/product-images/<%= products[i].productImage[0] %>" alt="">
+                                                </a>
+                                            </div>
+                    
+                                            <div class="product-action-1">
+  
+                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" href="javascript:void(0);" onclick="addToWishlist('<%= products[i]._id %>')"><i class="fi-rs-heart"></i></a>
+        
+                                            </div>
+                                        </div>
+                                        <div class="product-content-wrap">
+                                            <div class="product-brand">
+                                                <a href="products-grid-right.html"><%= products[i].brand %></a>
+                                            </div>
+                                            <h2><a href="products-product-right.html"><%= products[i].productName %></a></h2>
+                                            <div class="product-price">
+                                                <% if (products[i].salePrice) { %>
+                                                    <span>₹<%= products[i].salePrice.toLocaleString('en-IN') %></span>
+                                                    <span class="old-price">₹<%= products[i].regularPrice.toLocaleString('en-IN') %></span>
+                                                <% } else { %>
+                                                    <span class="product-price">₹<%= products[i].regularPrice.toLocaleString('en-IN') %></span>
+                                                <% } %>
+                                            </div>
+                                            <!-- <div class="product-action-1 show">
+                                                <a aria-label="Add To Cart" class="action-btn hover-up" href="products-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
+                                            </div> -->
+                                            <div class="product-action-1 show">
+                                                <a aria-label="Add To Cart" class="action-btn hover-up" href="javascript:void(0);"onclick="addToCart('<%= products[i]._id %>')"><i class="fas fa-shopping-cart"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer footer-area pt-5 pb-5" style="background-color: black; border-radius: 20px 20px 0 0;">
+        <div class="container">
+            <div class="row d-flex justify-content-between">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6>About Us</h6>
+                        <p>
+                            Welcome to Techspot, your destination for sleek mobile devices that seamlessly
+                            fuse cutting-edge technology with style. We are committed to offering you premium
+                            smartphones and tablets that marry innovation, elegance, and performance.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6>Contact Us</h6>
+                        <p>Have a question or need assistance? Reach out to us through the following channels:</p>
+                        <ul>
+                            <li>Email: support@techspot.com</li>
+                            <li>Phone: +123 456 7890</li>
+                            <li>Address: 123 Techspot Street, Kochi Kerala</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h6>Follow Us</h6>
+                        <p>Stay connected and updated with the latest news and promotions:</p>
+                        <div class="footer-social">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+    function addToWishlist(productId){
+        $.ajax({
+            url : "/addToWishlist",
+            method : "post",
+            data : {
+                productId : productId
+            },
+            success : (response)=>{
+                if(response.status == 'success'){
+                    Swal.fire({
+                                    title: response.message,
+                                    text: 'Continue Shopping',
+                                    icon: 'success',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                })
+                }else if(response.status == 'error'){
+                    Swal.fire({
+                                    title: response.message,
+                                    text: 'Continue Shopping',
+                                    icon: 'warning',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                })
+                                // .then(() => { window.location.href = '/shop' });
+                }
+            }
+        })
+        return false;
+    }
+
+    async function addToCart(productId){
+
+console.log(productId)
+const response = await fetch(`/addToCart?id=${productId}`);
+const result = await response.json();
+if (result.status === 'success') {
+   Swal.fire({
+      icon: 'success',
+      title: 'Added to Cart',
+      showConfirmButton: false,
+      timer: 1500
+   })
+   document.getElementById('cartItemsCount').textContent = result.cartItemsCount;
+} else if (result.status === 'sessionError') {
+   Swal.fire({
+      icon: 'info',
+      title: result.message,
+      showConfirmButton: false,
+      timer: 1000
+   })
+   setTimeout(() => {
+      location.href = '/login'
+   }, 1500);
+}
+else {
+   Swal.fire({
+      icon: 'error',
+      title: result.message,
+      showConfirmButton: false,
+      timer: 1500
+   })
+}
+}
+
+    </script>
+    <script>
+        var swiper = new Swiper(".home-slider", {
+            loop: true,
+            speed: 600,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+    </script>
+</body>
+
+<!-- Vendor JS-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
+<script src="/user-assets/js/vendor/modernizr-3.6.0.min.js"></script>
+<script src="/user-assets/js/vendor/jquery-3.6.0.min.js"></script>
+<script src="/user-assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+<script src="/user-assets/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="/user-assets/js/plugins/slick.js"></script>
+<script src="/user-assets/js/plugins/jquery.syotimer.min.js"></script>
+<script src="/user-assets/js/plugins/wow.js"></script>
+<script src="/user-assets/js/plugins/jquery-ui.js"></script>
+<script src="/user-assets/js/plugins/perfect-scrollbar.js"></script>
+<script src="/user-assets/js/plugins/magnific-popup.js"></script>
+<script src="/user-assets/js/plugins/select2.min.js"></script>
+<script src="/user-assets/js/plugins/waypoints.js"></script>
+<script src="/user-assets/js/plugins/counterup.js"></script>
+<script src="/user-assets/js/plugins/jquery.countdown.min.js"></script>
+<script src="/user-assets/js/plugins/images-loaded.js"></script>
+<script src="/user-assets/js/plugins/isotope.js"></script>
+<script src="/user-assets/js/plugins/scrollup.js"></script>
+<script src="/user-assets/js/plugins/jquery.vticker-min.js"></script>
+<script src="/user-assets/js/plugins/jquery.theia.sticky.js"></script>
+<script src="/user-assets/js/plugins/jquery.elevatezoom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+crossorigin="anonymous"></script>
+<script src="/user-assets/js/jquery.ajaxchimp.min.js"></script>
+<script src="/user-assets/js/jquery.nice-select.min.js"></script>
+   <script src="/user-assets/js/jquery.sticky.js"></script>
+   <script src="/user-assets/js/nouislider.min.js"></script>
+   <script src="/user-assets/js/jquery.magnific-popup.min.js"></script>
+   <script src="/user-assets/js/owl.carousel.min.js"></script>
+   
+<script src="/user-assets/js/main.js?v=3.4"></script>
+<script src="/user-assets/js/shop.js?v=3.4"></script>
+
+
+
+  <script src="/user-assets/js/main.js"></script>
+  <script src="/js/editProfileValidation.js"></script>
+  <script src="/js/changePasswordValidate.js"></script>
+
+</html>

@@ -9,7 +9,7 @@ const loadWishlist = async(req,res)=>{
        if(!userWishlist){
           userWishlist = new Wishlist({userId:user_id,products:[]})
           await userWishlist.save()
-       }
+       }`1`
        console.log("userWishlist.products",userWishlist.products)
        const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
        res.render('wishlist',{userWishlist:userWishlist.products,cartItemsCount});
