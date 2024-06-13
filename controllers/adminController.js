@@ -43,12 +43,102 @@ const verifyLogin = async (req, res) => {
   }
 };
 
-const adminDashboard = async (req, res) => {
-  try {
-    res.render("dashboard");
-  } catch (error) {
-    console.log(error.message);
-  }
+// Taking the whole data count
+async function oCount() {
+   try {
+      const orders = await Order.find();
+
+      const count ={
+         Delivered:0,
+         Placed:0,
+         Returned:0,
+         Cancelled:0,
+         Pending:0,
+      }
+
+      orders.forEach((order)=>{
+         if(order.orderStatus === 'Delivered'){
+            count.Delivered++;
+         }else if(order.orderStatus === 'Placed'){
+            count.Placed++;
+         }else if(order.orderStatus === 'Returned'){
+            count.Returned++;
+         }else if(order.orderStatus === 'Cancelled'){
+            count.Cancelled++;
+         }else{
+            count.Pending++
+         }
+      })
+      return count;
+   } catch (error) {
+      console.log(error.message);
+   }
+}
+
+const loadDashboard = async (req, res) => {
+   try {
+
+      const orders = await Order.find();
+      // console.log(orders)
+      // Finding how many orders we have
+      const ordersCount = orders.length;
+      const ordCount = await oCount();
+      console.log("order count inside the loadDashboard", ordCount);
+      
+      
+      // Finding the total revenue
+
+      const totalRevenue = orders.reduce((acc, order) => {
+         return acc += order.products.reduce((acc, product) => {
+             if (product.productStatus !== 'Returned') {
+                 return acc += product.total;
+             }
+             return acc;
+         }, 0);
+     }, 0);
+     
+
+      console.log(totalRevenue);
+
+      // Sending the product Details
+      const products = await Product.find().populate('category')
+      console.log(products)
+      const productsCount = products.length;
+      let category = new Set(products
+         .filter(product => product.category && product.category.name)  // Filter out products without a valid category or category name
+         .map(product => product.category.name)  // Map to category names
+     )
+      console.log(category);
+
+      const categoryCount = Array.from(category).length;
+      
+      // Find how many items sell in each products========
+
+      function categoryCounter(products){
+   
+         const categoryCounts = {};
+       
+         products.forEach((product) => {
+             const categoryName = product.category.name;
+             if (categoryCounts[categoryName]) {
+                 categoryCounts[categoryName]++;
+             } else {
+                 categoryCounts[categoryName] = 1;
+             }
+         });
+         return categoryCounts
+       }
+      
+       const cCount = categoryCounter(products);
+      //  console.log(cCount)
+      // console.log('All products :' ,products.length);
+      // console.log('All Categories :' ,categoryCount);
+
+
+      res.render('dashboard',{ordersCount,totalRevenue,productsCount,categoryCount,ordCount,cCount});
+   } catch (error) {
+      console.log(error.message);
+   }
 };
 
 const getLogout = async (req, res) => {
@@ -364,7 +454,7 @@ const downloadExcel = async (req, res) => {
 module.exports = { 
                     getLoginPage, 
                     verifyLogin, 
-                    adminDashboard,
+                    loadDashboard,
                     downloadExcel,
                     loadSalesReport,
                     filterSales,

@@ -18,8 +18,8 @@ const {isAdmin, isLogged} = require("../authenticaiton/auth.js")
 //admin actions
 Router.get("/login", adminController.getLoginPage);
 Router.post("/login", adminController.verifyLogin);
-Router.get("/dashboard",isAdmin, adminController.adminDashboard);
-Router.get("/",isAdmin, adminController.adminDashboard);
+Router.get("/dashboard",isAdmin, adminController.loadDashboard);
+Router.get("/",isAdmin, adminController.loadDashboard);
 Router.get("/logout", isAdmin, adminController.getLogout)
 
 //customer managemement
