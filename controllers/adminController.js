@@ -133,9 +133,95 @@ const loadDashboard = async (req, res) => {
       //  console.log(cCount)
       // console.log('All products :' ,products.length);
       // console.log('All Categories :' ,categoryCount);
+      
+      const bestSellingProduct = await Order.aggregate([
+         {$unwind: "$products"},
+         {$group : {
+           _id: "$products.productId",
+           totalQuantity: {$sum: "$products.quantity"},
+         }
+        },
+        {
+         $lookup: {
+           from: "products", 
+           localField: "_id",
+           foreignField: "_id",
+           as: "productDetails"
+         }
+       },
+       {
+         $unwind: "$productDetails"
+       },
+       {
+         $project: {
+           _id: 1,
+           totalQuantity: 1,
+           "productDetails.productName": 1 // Include other fields as needed
+         }
+       },
+        {$sort: {totalQuantity: -1}},
+        {$limit: 10}
+      ])
+      console.log("bestselling products", bestSellingProduct)
+
+      const bestSellingCategory = await Order.aggregate([
+         { $unwind: "$products" },
+         {
+           $lookup: {
+             from: "products", // Assuming there's a collection named "products"
+             localField: "products.productId",
+             foreignField: "_id",
+             as: "productDetails"
+           }
+         },
+         { $unwind: "$productDetails" },
+         {
+           $lookup: {
+             from: "categories", // Assuming there's a collection named "categories"
+             localField: "productDetails.category",
+             foreignField: "_id",
+             as: "categoryDetails"
+           }
+         },
+         { $unwind: "$categoryDetails" },
+         {
+           $group: {
+             _id: "$productDetails.category",
+             categoryName: { $first: "$categoryDetails.name" }, // Include category name
+             totalQuantity: { $sum: "$product.quantity" }
+           }
+         },
+         { $sort: { totalQuantity: -1 } },
+         { $limit: 10 } // Only getting the top-selling category
+       ]);
+       console.log("best selling category",bestSellingCategory)
 
 
-      res.render('dashboard',{ordersCount,totalRevenue,productsCount,categoryCount,ordCount,cCount});
+       const bestSellingBrand = await Order.aggregate([
+         { $unwind: "$products" },
+         {
+           $lookup: {
+             from: "products", // Assuming there's a collection named "products"
+             localField: "products.productId",
+             foreignField: "_id",
+             as: "productDetails"
+           }
+         },
+         { $unwind: "$productDetails" },
+         {
+           $group: {
+             _id: "$productDetails.brand", // Grouping by brand
+             totalQuantity: { $sum: "$product.quantity" }
+           }
+         },
+         { $sort: { totalQuantity: -1 } },
+         { $limit: 10 } // Only getting the top-selling brand
+       ]);
+
+       console.log("best selling brand",bestSellingBrand )
+
+      res.render('dashboard',{ordersCount,totalRevenue,productsCount,categoryCount,
+                               ordCount, cCount, bestSellingProduct, bestSellingCategory, bestSellingBrand });
    } catch (error) {
       console.log(error.message);
    }

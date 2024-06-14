@@ -216,6 +216,141 @@
             </div>
 
         </section> <!-- content-main end// -->
+
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title" style="background-color: rgb(239, 135, 135);">10 Best Selling Products </h2>
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="card mb-4">
+                        <div class="card-body" style="background-color: rgb(252, 209, 209);">
+                            <div class="table-responsive" >
+                                <table class="table table-hover" >
+                                    <thead style="background-color: rgb(237, 97, 97);">
+                                        <tr>
+                                            <th>NO</th>
+                                            <th>Product Name</th>
+                                            <th>Quantity</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if (bestSellingProduct.length > 0) { %>
+                                            <% for (let i = 0; i < bestSellingProduct.length; i++) { %>
+                                                <tr>
+                                                    <td><%= i+1 %></td>
+                                                    <td><%= bestSellingProduct[i].productDetails.productName %></td>
+                                                    <td><%= bestSellingProduct[i].totalQuantity %></td>
+                                                    
+                                                </tr>
+                                            <% } %> 
+                                        <% } else { %>
+                                            <tr>
+                                                <td colspan="3">No items found in Orders</td>
+                                            </tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title" style="background-color: rgb(192, 254, 186);">Best Selling Brand </h2>
+            
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card mb-4">
+                <div class="card-body" style="background-color: rgb(180, 243, 175);">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead style="background-color: rgb(113, 238, 101);">
+                                <tr>
+                                    <th>NO</th>
+                                    <th>Brand Name</th>
+                                    <th>Quantity</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (bestSellingBrand.length > 0) { %>
+                                    <% for (let i = 0; i < bestSellingBrand.length; i++) { %>
+                                        <tr>
+                                            <td><%= i+1 %></td>
+                                            <td><%= bestSellingBrand[i]._id %></td>
+                                            <td><%= bestSellingBrand[i].totalQuantity %></td>
+                                            
+                                        </tr>
+                                    <% } %> 
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="3">No items found in Orders</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title" style="background-color: rgb(197, 193, 249);">Best Selling Category </h2>
+            
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card mb-4">
+                <div class="card-body" style="background-color: rgb(186, 183, 240);">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead style="background-color: rgb(113, 104, 241);">
+                                <tr>
+                                    <th>NO</th>
+                                    <th>Category Name</th>
+                                    <th>Quantity</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (bestSellingCategory.length > 0) { %>
+                                    <% for (let i = 0; i < bestSellingCategory.length; i++) { %>
+                                        <tr>
+                                            <td><%= i+1 %></td>
+                                            <td><%= bestSellingCategory[i].categoryName %></td>
+                                            <td><%= bestSellingCategory[i].totalQuantity %></td>
+                                            
+                                        </tr>
+                                    <% } %> 
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="3">No items found in Orders</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <input type="hidden" id="categoryNames" data-names='<= JSON.stringify(categoryName) %>'> -->
+</div>
+</section>
+
+
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
