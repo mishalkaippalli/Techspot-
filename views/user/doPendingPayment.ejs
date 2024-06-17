@@ -297,6 +297,8 @@
     <script>
 
       
+        let orderData =  orderDetails;
+        console.log(orderData)
 
           
         document.getElementById('continuePayment').addEventListener('click', async (event) => {
@@ -305,9 +307,8 @@
             // const orderDetails =  JSON.stringify(orderDetails);
 
             // alert(orderDetails);
-
-            let orderData = document.getElementById('orderDetails').orderDetails;
-            alert(orderData);
+            console.log(orderData)
+            pendingrazorpayPayment(orderData)
 
             // const radioButtons = document.getElementsByName('address-option');
             // let selectedRadioButtonId = null;
@@ -409,6 +410,16 @@
             //     }
             // }
         })
+
+        async function pendingrazorpayPayment(orderData) {
+            const response = await fetch('/pending-razorpay-payment', {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                })
+        }        
 
         function razorpayPayment(order) {
             const orderId = order.receipt
@@ -545,7 +556,6 @@
     <script src="/user-assets/js/jquery.magnific-popup.min.js"></script>
     <script src="/user-assets/js/owl.carousel.min.js"></script>
     <!--gmaps Js-->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
     <script src="/user-assets/js/gmaps.min.js"></script>
     <script src="/user-assets/js/main.js"></script>
     <script src="/js/addressValidate.js"></script>

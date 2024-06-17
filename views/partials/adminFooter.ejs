@@ -16,6 +16,21 @@
   </footer>
 </div> -->
 </main>
+
+<script>
+  // Get the current URL path
+  var path = window.location.pathname;
+
+  // Select all menu items
+  var menuItems = document.querySelectorAll('.menu-item a');
+
+  // Loop through each menu item and add 'active' class if href matches the path
+  menuItems.forEach(function(menuItem) {
+      if (menuItem.getAttribute('href') === path) {
+          menuItem.parentElement.classList.add('active');
+      }
+  });
+</script>
 <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
 <script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
 <script src="/admin-assets/js/vendors/select2.min.js"></script>

@@ -33,7 +33,7 @@ const getCartPage = async(req,res)=>{
           const cartItemsCount = await CartCountHelper.findCartItemsCountFromCart(cart);
           //       res.render("cart", {user, quantity, data, grandTotal})
  
-          res.render('carttrial',{products:userProducts,cartTotal,cartItemsCount,user_id});
+          res.render('cart',{products:userProducts,cartTotal,cartItemsCount,user_id});
  
     } catch (error) {
        console.log(error.message);
@@ -232,7 +232,7 @@ const loadCheckOut = async(req,res)=>{
       const address = userAddress.address;
 
       const cartItemsCount = await CartCountHelper.findCartItemsCountFromCart(cart)
-      res.render('checkouttrywilys',{address,cartDetails,grandTotal,coupons:availableCoupons,userWallet,cartItemsCount,user_id});
+      res.render('checkout',{address,cartDetails,grandTotal,coupons:availableCoupons,userWallet,cartItemsCount,user_id});
    } catch (error) {
       console.log(error.message)
    }

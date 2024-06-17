@@ -43,13 +43,13 @@ const getHomePage = async (req, res) => {
        
       // console.log("inside gethomePage productdata is", productData)
     if (user) {
-      res.render("hometrial", {
+      res.render("home", {
         user: userData,
         data: brandData,
         products: productData,
       });
     } else {
-      res.render("hometrial", { products: productData, data: brandData });
+      res.render("home", { products: productData, data: brandData });
     }
   } catch (error) {
     console.log(error.message);
@@ -504,6 +504,60 @@ const getSortProducts = async (req, res) => {
   }
 }
 
+const filterAndSearchProducts = async (req, res) => {
+  try {
+    const user = req.session.user;
+    const category = req.query.category || null;
+    const brand = req.query.brand || null;
+    const search = req.query.search || '';
+    const itemsPerPage = 6;
+    const currentPage = parseInt(req.query.page) || 1;
+    const startIndex = (currentPage - 1) * itemsPerPage;
+
+    const brands = await Brand.find({});
+    const categories = await Category.find({ isListed: true });
+
+    const query = { isBlocked: false };
+
+    if (category) {
+      const findCategory = await Category.findOne({ _id: category });
+      if (findCategory) {
+        query.category = findCategory._id;
+      }
+    }
+
+    if (brand) {
+      const findBrand = await Brand.findOne({ _id: brand });
+      if (findBrand) {
+        query.brand = findBrand.brandName;
+      }
+    }
+
+    if (search) {
+      query.productName = { $regex: `.*${search}.*`, $options: "i" };
+    }
+
+    const findProducts = await Product.find(query).lean();
+    const totalPages = Math.ceil(findProducts.length / itemsPerPage);
+    const currentProduct = findProducts.slice(startIndex, startIndex + itemsPerPage);
+
+    res.render("shop", {
+      user: user,
+      product: currentProduct,
+      category: categories,
+      brand: brands,
+      totalPages,
+      currentPage,
+      search,
+      selectedCategory: category,
+      selectedBrand: brand
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Internal server error");
+  }
+};
+
 const searchProducts = async(req, res) => {
   try {
       const user = req.session.user
@@ -534,7 +588,8 @@ const searchProducts = async(req, res) => {
           category: categories,
           brand: brands,
           totalPages,
-          currentPage
+          currentPage,
+          search
         })
     } catch (error) {
     console.log(error.message)
@@ -596,5 +651,6 @@ module.exports = {
   getSortProducts,
   searchProducts,
   loadWallet,
-  rechargeWallet
+  rechargeWallet,
+  filterAndSearchProducts
 };

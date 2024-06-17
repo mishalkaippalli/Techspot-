@@ -298,10 +298,22 @@
 
 			<!-- Buttons of requested -->
            <% if(orderDetails.orderStatus === 'payment pending') { %>
-			<div class="row mt-2 justify-content-center">
-				<a href="/continue-payment?orderid=<%- orderDetails._id %> " class="btn btn-secondary col-md-4">Continue payment</a>
-			</div>
-		    <% } %>
+			<!-- <div class="row mt-2 justify-content-center">
+				<a href="/continue-payment?orderid=<- orderDetails._id %> " class="btn btn-secondary col-md-4">Continue payment</a>
+			</div> -->
+			<!-- <div class="row mt-2 justify-content-center">
+				<a href="" data-orderId="<- orderDetails._id %>"
+				   class="btn btn-secondary col-md-3 continuePayment"> Continue payment</a>
+			 </div> -->
+
+              <div>
+				 <div class="row mt-2 justify-content-center"> 
+			    <a href="" id="continuePaymentButton"
+				data-orderId="<%- orderDetails._id %>"
+				class="btn btn-secondary  col-md-5 mx-md-auto mx-0">Continue your pending payment</a>
+			  </div>
+			<% } %>
+
 			<div class="container mt-5">
 				<div class="row justify-content-center">
 					<% if (orderDetails.orderStatus==='Delivered' ) { %>
@@ -392,6 +404,8 @@
 
 
 	<!-- Order Cancellation  -->
+
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 	<script>
 		document.getElementById('cancelButton').addEventListener('click', async (event) => {
 			event.preventDefault()
@@ -529,6 +543,166 @@
 			return isValid;
 		}
 	</script>
+   
+	<script>
+		document.getElementById('continuePaymentButton').addEventListener('click', async (event) => {
+			event.preventDefault()
+
+				const orderId = event.target.getAttribute('data-orderId')
+
+				const response = await fetch(`/continue-payment/?orderId=${orderId}`)
+				const result = await response.json();
+				   
+				   
+				   
+				 if (result.status === 'RAZORPAY') {
+
+                    razorpayPayment(result.response);
+
+                    } else if (result.status === 'sessionError') {
+                      Swal.fire({
+	                  icon: 'info',
+	                  title: result.message,
+	                  showConfirmButton: false,
+	                  timer: 1000
+                    })
+                    setTimeout(() => {
+	                 location.href = '/login'
+                     }, 1500);
+                       } else {
+                   Swal.fire({
+	                 icon: 'error',
+	                 title: result.message,
+	                 showConfirmButton: false,
+	                 timer: 1500
+                  })
+                 }
+		})
+
+		function razorpayPayment(order) {
+            const orderId = order.receipt
+            // alert(orderId)
+
+            var options = {
+                "key": "rzp_test_ueJVSvaD23rH3L", // Enter the Key ID generated from the Dashboard
+                "amount": order.actualTotalAmout, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                "currency": "INR",
+                "name": "Techsopt", //your business name
+                "description": "Test Transaction",
+                "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                "handler": function (response) {
+
+                    verifyPayment(response, order)
+
+                },
+                "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+                    "name": "Gaurav Kumar", //your customer's name
+                    "email": "gaurav.kumar@example.com",
+                    "contact": "9000090000" //Provide the customer's phone number for better conversion rates 
+                },
+                "notes": {
+                    "address": "Razorpay Corporate Office"
+                },
+
+            };
+            console.log("options",options);
+            var razorpay = new Razorpay(options);
+            razorpay.open();
+
+          razorpay.on('payment.failed', function (response){
+          console.log(response)
+        //   alert(response.error.code);
+        //   alert(response.error.description);
+        //   alert(response.error.source);
+        //   alert(response.error.step);
+        //   alert(response.error.reason);
+        //   alert(response.error.metadata.order_id);
+        //   alert(response.error.metadata.payment_id);
+
+          paymentPending(orderId)
+          razorpay.close();
+          });
+       }
+
+        async function verifyPayment(payment, order) {
+            const response = await fetch('/verify-payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ payment, order }),
+            })
+
+            const result = await response.json();
+
+            if (result.status === 'paymentSuccess') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Payment Successfull',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                setTimeout(() => {
+                    location.href = `/confirmation/?orderId=${result.placedOrderId}`
+                }, 1500);
+            } else if (result.status === 'paymentFailed') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Payment Failed',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                setTimeout(() => {
+                    location.href = `/order-failed/?orderId=${result.placedOrderId}`
+                }, 1500);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Some thing went wrong',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+        }
+
+		async function paymentPending(orderId) {
+
+            alert(orderId);
+             // const orderId = paymenterror.error.metadata.order_id
+             const response = await fetch('/payment-pending', {
+	          method: 'POST',
+	           headers: {
+		         'Content-Type': 'application/json'
+	           },
+	         body: JSON.stringify({orderId}),
+             })
+
+            const result = await response.json();
+
+
+
+           if (result.status === 'ordersuccesspaymentpending') {
+	         Swal.fire({
+		      icon: 'success',
+		      title: 'Payment Pending Order Succesful',
+		      showConfirmButton: true,
+		      timer: 1500
+	          })
+	         setTimeout(() => {
+		      location.href = `/confirmation/?orderId=${result.orderId}`
+	          }, 3000);
+             } else if (result.status === 'order not found') {
+	        Swal.fire({
+		    icon: 'failure',
+		    title: 'Order not found',
+		    showConfirmButton: true,
+		    timer: 1500
+	        })
+            }
+           }
+
+	</script>
+
 
 
 	<!-- Vendor JS -->

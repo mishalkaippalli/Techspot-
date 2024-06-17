@@ -40,7 +40,7 @@
         </div>
         <nav>
             <ul class="menu-aside">
-                <li class="menu-item active">
+                <li class="menu-item">
                     <a class="menu-link" href="/admin/dashboard"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
@@ -153,7 +153,6 @@
             <div class="content-header">
                 <div>
                     <h2 class="content-title card-title">Order List </h2>
-                    <p>Lorem ipsum dolor sit amet.</p>
                 </div>
             </div>
             <div class="row">
@@ -258,6 +257,17 @@
     </main>
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+      var path = window.location.pathname;
+
+     var menuItems = document.querySelectorAll('.menu-item a');
+
+        menuItems.forEach(function(menuItem) {
+            if (menuItem.getAttribute('href') === path) {
+          menuItem.parentElement.classList.add('active');
+          }
+         });
+    </script>
     <script>
         $(document).ready(function () {
             $('#example').DataTable({

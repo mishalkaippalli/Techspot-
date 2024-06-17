@@ -56,7 +56,7 @@ const listCoupons = async (req, res) => {
 
 const changeCouponStatus= async(req, res) => {
   try {
-    const couponId = req.query.couponId;
+    const couponCode = req.query.couponCode;
     const updateCouponStatus = await Coupon.findById(couponId);
 
     if(updateCouponStatus.isActive === true){
@@ -120,11 +120,58 @@ const applyCoupons = async(req,res)=>{
   }
 }
 
+const removeCoupons = async (req, res) => {
+   try {
+     const user_id = req.session.user;
+     const couponId = req.query.couponId.trim();
+     const originalTotalAmount = parseFloat(req.query.originalTotalAmount); // Original total amount before applying any coupon
+      
+
+     const appliedCoupon = await Coupon.findById(couponId);
+     if (!appliedCoupon) {
+       return res.json({ status: 'error', message: 'Invalid Coupon Id' });
+     }
+     console.log("inside removecoupon appliedCoupon",appliedCoupon)
+ 
+     let userUsedCoupons = await UsedCoupon.findOne({ userId: user_id });
+     if (!userUsedCoupons) {
+       return res.json({ status: 'error', message: 'No coupons applied by this user' });
+     }
+ 
+   //   const couponIndex = userUsedCoupons.userCoupons.findIndex((coupon) => coupon.couponId.toString() === appliedCoupon._id.toString());
+   //   if (couponIndex === -1) {
+   //     return res.json({ status: 'error', message: 'Coupon not found in user\'s applied coupons' });
+   //   }
+ 
+     // Calculate the discount value that was applied using this coupon
+   //   const maxAmount = appliedCoupon.maxDiscountAmount;
+   //   let discountValue = parseFloat((appliedCoupon.discountPercentage / 100) * originalTotalAmount).toFixed(2);
+   //   if (discountValue > maxAmount) {
+   //     discountValue = maxAmount;
+   //   }
+ 
+     // Remove the coupon from user's used coupons list
+   //   userUsedCoupons.userCoupons.splice(couponIndex, 1);
+   //   await userUsedCoupons.save();
+ 
+     // Recalculate the actual total amount without the coupon discount
+   //   const newTotalAmount = parseFloat(originalTotalAmount) + parseFloat(discountValue);
+   //   console.log(newTotalAmount)
+ 
+     res.json({ status: 'success', message: 'Coupon removed successfully', originalTotalAmount });
+   } catch (error) {
+     console.log(error.message);
+     res.status(500).json({ status: 'error', message: 'Server error' });
+   }
+ };
+ 
+
 
 module.exports = {
                    listCoupons,
                    loadAddCoupons,
                    addCoupons,
                    changeCouponStatus,
-                   applyCoupons
+                   applyCoupons,
+                   removeCoupons
                   }

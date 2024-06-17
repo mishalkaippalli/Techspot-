@@ -251,15 +251,38 @@ const paymentPending = async(req, res)=>{
 const continuePayment = async(req, res) => {
    try {
       const user_id = req.session.user._id;
-      const orderId = req.query.orderid
+      const orderId = req.query.orderId
       const orderDetails = await Order.findById(orderId);
       console.log("order details inside continue payment ", orderDetails);
-      res.render('doPendingPayment',{orderDetails, user_id})
+
+      const totalAmount = orderDetails.actualTotalAmount;
+
+      console.log("inside continue payment razorpay",orderId, totalAmount)
+
+      // Calling razorpay 
+          RazorPayHelper.generateRazorPay(orderId,totalAmount).then((response)=>{
+            console.log("response form razorpay created data response", response)
+             res.json({status:'RAZORPAY',response})
+             
+          })
+      // res.render('doPendingPayment',{orderDetails, user_id})
    } catch (error) {
       console.log("error inside continue payment", error.message);
    }
-  
+}
 
+const razorpaypaymentContinue = async(req, res) => {
+   const {address} = req.body
+   console.log(address)
+            console.log("inside razorpaypayment continue, req .body is ", req.body)
+          const orderId = req.body.orderdetails._id;
+          const totalAmount = req.body.orderdetails.totalAmount;
+          console.log("inside razorpay",orderId, totalAmount)
+          // Calling razorpay 
+          RazorPayHelper.generateRazorPay(orderId,totalAmount).then((response)=>{
+            console.log("response form razorpay created data response", response)
+             res.json({status:'RAZORPAY',response})
+})
 }
 
  const loadConfirmation = async(req,res)=>{
@@ -751,5 +774,6 @@ module.exports = {
                    returnOrder,
                    invoice,
                    paymentPending,
-                   continuePayment
+                   continuePayment,
+                   razorpaypaymentContinue
                   }

@@ -31,6 +31,7 @@ Router.post("/verifyotp", userController.verifyotp);
 Router.get("/logout",isLogged, userController.getLogoutUser)
 
 //--------------------------------google sign up ---------------------
+
 Router.get('/googleLog',passport.authenticate('google',{scope:['profile','email']}))
 Router.get('/google/callback',passport.authenticate('google',{failureRedirect:'/failed' }),userController.googleAuth)
 
@@ -41,9 +42,11 @@ Router.get("/productDetails", userController.getProductDetailPage);
 Router.get("/search", userController.searchProducts)
 Router.get("/filter", userController.filterProduct)
 Router.get("/filterPrice", userController.filterByPrice)
+Router.get("/filterAndSearchProducts",userController.filterAndSearchProducts)
 Router.post("/sortProducts", userController.getSortProducts)
 
 // ===============================user Profile ==============================
+
 Router.get('/user-profile', isLogged, userProfileController.userProfile)
 Router.post("/editUserDetails", isLogged, userProfileController.editUserDetails)
 Router.post("/edit-profile", isLogged,userProfileController.editProfile)
@@ -51,6 +54,7 @@ Router.post("/change-password", isLogged, userProfileController.changePassword)
 
 
 // ===============================Address management ==============================
+
 Router.get('/manage-address',isLogged,userProfileController.loadManageAddress);
 Router.post('/add-address',isLogged, userProfileController.addingAddress)
 Router.get('/edit-address',isLogged, userProfileController.loadEditAddress);
@@ -70,7 +74,6 @@ Router.get('/order-failed', isLogged, cartController.loadOrderFailed)
 
 //-----------------------------------------ORDER MANAGEMENT---------------------------
 
-
 Router.post('/place-order',isLogged, orderController.placeOrder)
 Router.post('/verify-payment',isLogged, orderController.verifyOnlinePayment)
 Router.get('/confirmation', isLogged, orderController.loadConfirmation )
@@ -81,10 +84,12 @@ Router.post('/return-order',isLogged, orderController.returnOrder)
 Router.get('/invoice', isLogged, orderController.invoice)
 Router.post('/payment-pending', isLogged, orderController.paymentPending)
 Router.get('/continue-payment', isLogged, orderController.continuePayment)
+Router.post('/pending-razorpay-payment', isLogged, orderController.razorpaypaymentContinue)
 
 // -----------------------------------COUPON MANAGEMENT---------------------
 
 Router.get('/apply-coupon',isLogged,couponController.applyCoupons);
+Router.get('/removecoupon',isLogged, couponController.removeCoupons)
 
 // -----------------------------------Wishlist---------------------
 

@@ -83,17 +83,18 @@
                     <div class="logo logo-width-1">
                         <a href="index.html"><img src="/user-assets/imgs/theme/Techspotlogo.png" alt="logo"></a>
                     </div>
-                    <div class="header-right ">
-                        <div class="search-style-1 ">
-                            <form action="/search">
-                                <input type="text" id="filterItem" name="search" class="form-control" placeholder="Search for items...">
+                    <div class="header-right">
+                        <div class="search-style-1">
+                            <form action="/search" method="get">
+                                <input type="text" id="filterItem" name="search" class="form-control" placeholder="Search for items..." value="<%= typeof search !== 'undefined' ? search : '' %>">
                             </form>
                         </div>
+                    
                   
                     <div class="main-menu main-menu-grow main-menu-padding-1 main-menu-lh-1 main-menu-mrg-1 hm3-menu-padding d-none d-lg-block hover-boder">
                         <nav>
                             <ul>   
-                                <li><a class="active" href="/">Home <!--<i class="fi-rs-angle-down"></i> --></a>
+                                <li><a  href="/">Home <!--<i class="fi-rs-angle-down"></i> --></a>
                                 </li>
                                 <li><a href="/shop">Shop </i></a>
                                 </li>
@@ -519,6 +520,21 @@ function handleSortChange(selectedOption){
 
     
 </script>
+
+<script>
+    // Get the current URL path
+    var path = window.location.pathname;
+  
+    // Select all menu items
+    var menuItems = document.querySelectorAll('.menu-item a');
+  
+    // Loop through each menu item and add 'active' class if href matches the path
+    menuItems.forEach(function(menuItem) {
+        if (menuItem.getAttribute('href') === path) {
+            menuItem.parentElement.classList.add('active');
+        }
+    });
+  </script>
 
 
 <!-- Vendor JS-->

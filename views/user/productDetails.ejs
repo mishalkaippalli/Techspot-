@@ -62,7 +62,9 @@
                                 </h2>
                                 <div class="product-detail-rating">
                                     <div class="pro-details-brand">
-                                        <span> Brands: <%= data.brand %></span>
+                                        <h4 class="title-detail">
+                                            Brand: <%= data.brand  %>
+                                        </h4>
                                     </div>
 
                                 </div>
@@ -73,13 +75,7 @@
                                     </p>
                                 </div>
                                 <div class="clearfix product-price-cover">
-                                    <!-- <div class="product-price primary-color float-left">
-                                        <ins><span class="text-brand">€= data.salePrice.toLocaleString('en-IN') %>
-                                                    </span></ins>
-                                        <ins><span class="old-price font-md ml-15">€=
-                                                    data.regularPrice.toLocaleString('en-IN') %></span></ins>
-                                         <
-                                    <!-- </div> -->
+                                  
                                     <div class="product-price primary-color float-left">
                                         <% if (data.salePrice) { %>
                                             <ins><span class="text-brand">€<%= data.salePrice.toLocaleString('en-IN') %></span></ins>
@@ -87,13 +83,7 @@
                                         <% } else { %>
                                             <ins><span class="text-brand">€<%= data.regularPrice.toLocaleString('en-IN') %></span></ins>
                                         <% } %>
-                                        <!-- <span class="save-price  font-md color3 ml-15">
-                                              if (!totalOffer) { %>
-                                                    No Offers
-                                              }else{ %>
-                                                = totalOffer %>% Offer
-                                                  } %>
-                                        </span>  -->
+                                
                                     </div>
                                 </div>
                                 <div class="product_sort_info font-xs mb-30">
@@ -135,102 +125,12 @@
                         </div>
                     </div>
                 </div>
-                    <div class="row">
-                        <div class="col-lg-10 m-auto entry-main-content">
-                            <h2 class="section-title style-1 mb-30">Description</h2>
-                            <div class="description mb-50">
-                                <p>Unleash the power of technology with our state-of-the-art smartphone series, designed
-                                    to elevate your user experience to new heights. Crafted with precision and
-                                    innovation, these smartphone seamlessly blend style and functionality to meet the
-                                    demands of modern user.</p>
-                                <p>Equipped with the latest processors and advanced hardware, our smartphone deliver
-                                    lightning-fast performance for all your user needs. Whether you're working
-                                    on complex tasks, streaming content, or multitasking, these smartphone ensure
-                                    smooth and efficient operations.
-                                </p>
-                                <hr class="wp-block-separator is-style-dots">
-                                <ul class="product-more-infor mt-30">
-                                    <li><span>OperatingSystem</span> Powered by the latest Android/IOS processors</li>
-                                    <li><span>RAM</span> High-capacity RAM for seamless multitasking</li>
-                                    <li><span>Storage</span> Fast  storage for quick data access</li>
-                                    <li><span>Display</span> Cutting-edge display for immersive visuals</li>
-                                    <li><span>Battery Life</span> Extended battery life for uninterrupted usage</li>
-                                </ul>
-                                <hr class="wp-block-separator is-style-dots">
+    
 
-                            </div>
-
-
-<!-- 
-                            <div class="row mt-60">
-                                <div class="col-12">
-                                    <h3 class="section-title style-1 mb-30">Related products</h3>
-                                </div>
-                                <div class="col-12">
-                                    <div class="row related-products">
-                                        <div class="col-lg-3 col-md-4 col-12 col-sm-6">
-                                            <div class="product-cart-wrap small hover-up">
-                                                <div class="product-img-action-wrap">
-                                                    <div class="product-img product-img-zoom">
-                                                        <a href="shop-product-right.html" tabindex="0">
-                                                            <img class="default-img"
-                                                                src="/user-assets/imgs/shop/product-2-1.jpg" alt="">
-                                                            <img class="hover-img"
-                                                                src="/user-assets/imgs/shop/product-2-2.jpg" alt="">
-                                                        </a>
-                                                    </div>
-                                                    <div class="product-action-1">
-                                                        <a aria-label="Quick view" class="action-btn small hover-up"
-                                                            data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-search"></i></a>
-                                                        <a aria-label="Add To Wishlist"
-                                                            class="action-btn small hover-up"
-                                                            href="shop-wishlist.html" tabindex="0"><i
-                                                                class="fi-rs-heart"></i></a>
-                                                        <a aria-label="Compare" class="action-btn small hover-up"
-                                                            href="shop-compare.html" tabindex="0"><i
-                                                                class="fi-rs-shuffle"></i></a>
-                                                    </div>
-                                                    <div
-                                                        class="product-badges product-badges-position product-badges-mrg">
-                                                        <span class="hot">Hot</span>
-                                                    </div>
-                                                </div>
-                                                <div class="product-content-wrap">
-                                                    <h2><a href="shop-product-right.html" tabindex="0">Ulstra Bass
-                                                            Headphone</a></h2>
-                                                    <div class="rating-result" title="90%">
-                                                        <span>
-                                                        </span>
-                                                    </div>
-                                                    <div class="product-price">
-                                                        <span>$238.85 </span>
-                                                        <span class="old-price">$245.8</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-
-                                    </div>
-                                </div>
-                            </div> -->
-
-
-                            <!-- <div class="banner-img banner-big wow fadeIn f-none animated mt-50">
-                    <img class="border-radius-10" src="assets/imgs/banner/banner-4.png" alt="">
-                    <div class="banner-text">
-                        <h4 class="mb-15 mt-40">Repair Services</h4>
-                        <h2 class="fw-600 mb-20">We're an Apple <br>Authorised Service Provider</h2>
-                    </div>
-                </div> -->
-
-
-
-                        </div>
-                    </div>
-                </div>
-            </div>
+           </div>
+                      
+         </div>
+    </div>
 </section>
 
 <%- include("../partials/footer") %>
