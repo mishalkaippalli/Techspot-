@@ -39,10 +39,11 @@ Router.get('/google/callback',passport.authenticate('google',{failureRedirect:'/
 
 Router.get("/shop", isLogged, userController.getShopPage);
 Router.get("/productDetails", userController.getProductDetailPage);
-Router.get("/search", userController.searchProducts)
-Router.get("/filter", userController.filterProduct)
+// Router.get("/search", userController.searchProducts)
+// Router.get("/filter", userController.filterProduct)
+Router.get("/searchAndFilterProducts",isLogged, userController.searchAndFilterProducts)
 Router.get("/filterPrice", userController.filterByPrice)
-Router.get("/filterAndSearchProducts",userController.filterAndSearchProducts)
+Router.get("/shop",userController.searchAndFilterProducts)
 Router.post("/sortProducts", userController.getSortProducts)
 
 // ===============================user Profile ==============================

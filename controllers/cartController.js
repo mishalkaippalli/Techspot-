@@ -23,16 +23,10 @@ const getCartPage = async(req,res)=>{
           cart.total = cart.products.reduce((total,product)=>{
              return total + product.total;
           },0);
-          // console.log(cart.total)
+          
           const userProducts = cart.products;
           const cartTotal = cart.total;
-
-        //   console.log("inside getcart page products:userProducts", userProducts)
-        //   console.log("cart total", cartTotal)
-
- 
           const cartItemsCount = await CartCountHelper.findCartItemsCountFromCart(cart);
-          //       res.render("cart", {user, quantity, data, grandTotal})
  
           res.render('cart',{products:userProducts,cartTotal,cartItemsCount,user_id});
  
@@ -45,7 +39,7 @@ const addToCart = async(req,res)=>{
     try {
        const proId = req.query.id;
        console.log("inside add to cart",proId)
-       let cart = await Cart.findOne({userId:req.session.user._id}); // Find the user
+       let cart = await Cart.findOne({userId:req.session.user._id}); 
        console.log(cart);
  
        if(!cart){
@@ -69,7 +63,7 @@ const addToCart = async(req,res)=>{
              cart.products.push({
                 productId:proId,
                 quantity:1,
-                total, //Use the Updated total value
+                total,
              });
           }else{
              if(product.quantity > cart.products[existingProductIndex].quantity){
@@ -81,14 +75,13 @@ const addToCart = async(req,res)=>{
              }
               
           }
-          // Calculate the updated total amount for the cart
+         
           cart.total = cart.products.reduce((total,product)=>{
              return total + product.total;
           },0);
-          // console.log(cart.total);
+          
           
           await cart.save();
-          // console.log(cart);
           if(req.session && req.session.user ){
              const cartItemsCount = await CartCountHelper.findCartItemsCountFromCart(cart);
              console.log("cartitemscount", cartItemsCount)
@@ -125,16 +118,10 @@ const removeFromCart = async(req,res)=>{
 const updateQuantity = async (req, res) => {
     try {
         console.log("inside update quantity req.body is ",req.body)
-      //  const findCart = await Cart.findOne({userId:userId});
        const userId = new mongoose.Types.ObjectId(req.session.user._id);
        const productId = new mongoose.Types.ObjectId(req.body.proId) ;
        const count = req.body.count;
        const currentValue = req.body.currentValue;
-       // console.log(currentValue)
-       // console.log('User ID:', userId);
-       // console.log('Product ID:', productId);
-       // console.log('Count:', count); 
-       // console.log('Cart : ', findCart)
  
        const product = await Product.findById(productId);
        if(product.quantity < currentValue){
@@ -195,15 +182,12 @@ const loadCheckOut = async(req,res)=>{
       const user_id = req.session.user;
       console.log("Req.session", req.session)
       console.log("user_id",user_id)
-      let userAddress = await Address.findOne({userId:user_id}); // Find the user
+      let userAddress = await Address.findOne({userId:user_id}); 
       console.log(userAddress)
-
-      // let userAddress2 = await Address.findOne({userId:req.session.user._id}); // Find the user
-      // console.log("userAddress2", userAddress2)
 
       let userWallet = await Wallet.findOne({userId:user_id});
 
-      // If user have no wallet then we create one 
+      // If user have no wallet thenv create one 
 
       if(!userWallet){
          userWallet = new Wallet({
@@ -218,17 +202,14 @@ const loadCheckOut = async(req,res)=>{
          await userAddress.save();
       }
       const coupons = await Coupon.find({isActive:true});
-      const cart = await Cart.findOne({userId:user_id}).populate('products.productId'); // Taking the product details
+      const cart = await Cart.findOne({userId:user_id}).populate('products.productId'); 
       const cartDetails = cart.products;
       console.log("cart details",cartDetails);
       const grandTotal = cart.products.reduce((total,product)=>{
          return total + product.total;
       },0);
 
-      // Taking the available coupons for user with this price range
       const availableCoupons = coupons.filter((coupons)=> coupons.minOrderAmount < grandTotal  );
-      // console.log(availableCoupons)
-      
 
       const address = userAddress.address;
 

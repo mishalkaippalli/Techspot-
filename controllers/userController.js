@@ -1,7 +1,6 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/userSchema");
 const nodemailer = require("nodemailer");
-// const otpGenerate = require('../associates/otpGenerate');
 const pass = require('../associates/securePass');
 const Category = require("../models/categorySchema");
 const Product = require("../models/productSchema");
@@ -31,8 +30,6 @@ const getHomePage = async (req, res) => {
     const user = req.session.user;
     console.log("req.session.user inside get home page",user)
     console.log("req.session.user._id",req.session.user._id)
-    //banner here
-
     const userData = await User.findOne({_id: user});
     console.log("userdata", userData)
     console.log("userdata inside get home page", userData)
@@ -40,8 +37,6 @@ const getHomePage = async (req, res) => {
     const productData = await Product.find({ isBlocked: false })
       .sort({ _id: -1 })
       .limit(12);
-       
-      // console.log("inside gethomePage productdata is", productData)
     if (user) {
       res.render("home", {
         user: userData,
@@ -79,7 +74,6 @@ const getSignupPage = async (req, res) => {
   }
 };
 
-//otp generation
 function generateOtp() {
   const digits = "0123456789";
   var otp = "";
@@ -93,10 +87,7 @@ const insertUser = async(req,res)=>{
    const email = req.body.email
    console.log("inside insert user email & re.body",email, req.body)
    const userData = req.body;
-  //  const spassword = await pass.securePassword(userData.password);
-    // console.log(spassword)
-    // userData.password = spassword;
-    console.log("userdata with updated pass",userData)
+   console.log("userdata with updated pass",userData)
   try{
      const existingEmail = await User.findOne({email:req.body.email});
      const existingMobile = await User.findOne({mobile:req.body.mobile});
@@ -112,8 +103,6 @@ const insertUser = async(req,res)=>{
      else{
       var otp = generateOtp();
               console.log("heyo am the otp", otp);
-              // const newUser = await User.create(req.body);
-              // console.log(newUser);
               const transporter = nodemailer.createTransport({
                 service: "gmail",
                 host: "smtp.gmail.com",
@@ -235,16 +224,11 @@ const resendOtp = async (req, res) => {
   }
 };
 
-
-// After the user enter the otp we check the otp is correct or not
-
 const verifyotp = async(req,res)=>{
   const otp = req.body.otp;
   const userData = req.session.user
   console.log("req.body.otp", otp)
   try {
-    //  const mobileNumber = req.session.tempUser.mobile;
-    //  const verificationResult = await otpGenerate.verifyOTP(mobileNumber,otp)
     console.log("user session", req.session)
       if (otp === req.session.userOtp){
         console.log("otp verified")
@@ -260,7 +244,7 @@ const verifyotp = async(req,res)=>{
         })
         console.log("user", user)
 
-        const userInfo = await user.save(); // if the otp is correct we save the data into data base
+        const userInfo = await user.save(); 
         console.log("otp verifies and userdata saved")
         if(userInfo){
           req.session.user = user;
@@ -276,8 +260,6 @@ const verifyotp = async(req,res)=>{
   }
 }
 
-// When the user enter the email and password through login page. To check it exists or not
-// input is "email","password"
 const verifyUser = async(req,res)=>{
   try {
      const {email , password} = req.body;
@@ -305,6 +287,7 @@ const verifyUser = async(req,res)=>{
 const getShopPage = async (req, res) => {
   try {
     const user = req.session.id;
+    let search = req.query.search || '';
     console.log("inside shop req.session is ", req.session)
     const products = await Product.find({ isBlocked: false });
   
@@ -319,8 +302,6 @@ const getShopPage = async (req, res) => {
     const currentProduct = products.slice(startIndex, endIndex)
     console.log("I am inside getShop page");
 
-    //pagination to be added
-
     res.render("shop", 
         { 
           user: user,
@@ -329,13 +310,15 @@ const getShopPage = async (req, res) => {
           category: categories,
           count: count,
           totalPages,
-          currentPage, 
+          currentPage,
+          search,
+          selectedCategory: null,
+        selectedBrand: null
         });
   } catch (error) {
     console.log(error.message);
   }
 };
-
 
 const getLogoutUser = async (req, res) =>{
   try {
@@ -361,15 +344,6 @@ const getProductDetailPage = async (req, res) => {
     console.log("Iam inside getproduct details page", findProduct);
     const findCategory = await Category.findOne({ _id: findProduct.category });
     console.log("find category inside getproductdetail page",findCategory);
-
-    // let totalOffer
-    // if(findCategory.categoryOffer || findProduct.productOffer){
-    //   totalOffer = findCategory.categoryOffer + findProduct.productOffer
-    // }
-
-    // console.log("findproduct is", findProduct);
-    // console.log("findcategory is", findCategory);
-
     if (user) {
       res.render("productDetails", { data: findProduct, user: user });
     } else {
@@ -380,58 +354,6 @@ const getProductDetailPage = async (req, res) => {
   }
 };
 
-const filterProduct = async(req, res) => {
-   try {
-    const user = req.session.user;
-    const category = req.query.category;
-    console.log("category inside filter product" ,category)
-    const brand = req.query.brand;
-    console.log("brand inside filter product" ,brand)
-    const brands = await Brand.find({});
-    const findCategory = category ? await Category.findOne({_id: category}) : null;
-    console.log("inside filterproduct findcategory is", findCategory)
-    const findBrand = brand ? await Brand.findOne({_id: brand}): null;
-
-    const query = {
-      isBlocked: false,
-    };
-    if(findCategory) {
-      query.category = findCategory._id;
-      console.log("query id", query._id)
-  
-    }
-   
-    if(findBrand){
-      query.brand = findBrand.brandName
-      console.log("query brand", query.brand)
-    }
-    console.log("query",query)
-    const findProducts = await Product.find(query);
-    const categories = await Category.find({isListed: true})
-
-    let itemsPerPage = 6;
-    let currentPage = parseInt(req.query.page) || 1;
-    let startIndex = (currentPage - 1) * itemsPerPage;
-    let endIndex = startIndex + itemsPerPage;
-    let totalPages = Math.ceil(findProducts.length / 6);
-    const currentProduct = findProducts.slice(startIndex, endIndex);
-
-    res.render("shop", {
-      user: user,
-      product: currentProduct,
-      category: categories,
-      brand: brands,
-      totalPages,
-      currentPage,
-      selectedCategory: category || null,
-      selectedBrand: brand || null,
-    });
-
-   } catch (error) {
-    console.log(error.message);
-    res.status(500).send("Internal server error")
-   }
-};
 
 const filterByPrice = async(req, res) => {
   try {
@@ -504,20 +426,21 @@ const getSortProducts = async (req, res) => {
   }
 }
 
-const filterAndSearchProducts = async (req, res) => {
+const searchAndFilterProducts = async (req, res) => {
   try {
+    console.log("iam inside searchand filter products")
     const user = req.session.user;
-    const category = req.query.category || null;
-    const brand = req.query.brand || null;
-    const search = req.query.search || '';
-    const itemsPerPage = 6;
-    const currentPage = parseInt(req.query.page) || 1;
-    const startIndex = (currentPage - 1) * itemsPerPage;
-
+    let search = req.query.search || '';
+    const category = req.query.category;
+    const brand = req.query.brand;
+    
     const brands = await Brand.find({});
     const categories = await Category.find({ isListed: true });
 
-    const query = { isBlocked: false };
+    const query = {
+      isBlocked: false,
+      productName: { $regex: ".*" + search + ".*", $options: "i" }
+    };
 
     if (category) {
       const findCategory = await Category.findOne({ _id: category });
@@ -533,13 +456,13 @@ const filterAndSearchProducts = async (req, res) => {
       }
     }
 
-    if (search) {
-      query.productName = { $regex: `.*${search}.*`, $options: "i" };
-    }
-
-    const findProducts = await Product.find(query).lean();
-    const totalPages = Math.ceil(findProducts.length / itemsPerPage);
-    const currentProduct = findProducts.slice(startIndex, startIndex + itemsPerPage);
+    const searchResult = await Product.find(query).lean();
+    let itemsPerPage = 6;
+    let currentPage = parseInt(req.query.page) || 1;
+    let startIndex = (currentPage - 1) * itemsPerPage;
+    let endIndex = startIndex + itemsPerPage;
+    let totalPages = Math.ceil(searchResult.length / itemsPerPage);
+    let currentProduct = searchResult.slice(startIndex, endIndex);
 
     res.render("shop", {
       user: user,
@@ -549,8 +472,8 @@ const filterAndSearchProducts = async (req, res) => {
       totalPages,
       currentPage,
       search,
-      selectedCategory: category,
-      selectedBrand: brand
+      selectedCategory: category || null,
+      selectedBrand: brand || null
     });
   } catch (error) {
     console.log(error.message);
@@ -558,43 +481,43 @@ const filterAndSearchProducts = async (req, res) => {
   }
 };
 
-const searchProducts = async(req, res) => {
-  try {
-      const user = req.session.user
-      let search = req.query.search
-      const brands = await Brand.find({})
-      const categories = await Category.find({isListed: true})
+// const searchProducts = async(req, res) => {
+//   try {
+//       const user = req.session.user
+//       let search = req.query.search
+//       const brands = await Brand.find({})
+//       const categories = await Category.find({isListed: true})
 
-      const searchResult = await Product.find({
-        $or:[
-          {
-            productName: {$regex: ".*" + search + ".*", $options: "i"},
-          }
-        ],
-        isBlocked: false
-      }).lean()  //.lean(): This is a Mongoose method used to return plain JavaScript objects instead of Mongoose documents.
+//       const searchResult = await Product.find({
+//         $or:[
+//           {
+//             productName: {$regex: ".*" + search + ".*", $options: "i"},
+//           }
+//         ],
+//         isBlocked: false
+//       }).lean()  //.lean(): This is a Mongoose method used to return plain JavaScript objects instead of Mongoose documents.
       
-      let itemsPerPage = 6
-      let currentPage = parseInt(req.query.page) || 1
-      let startIndex = (currentPage - 1) * itemsPerPage
-      let endIndex = startIndex + itemsPerPage
-      let totalPages = Math.ceil(searchResult.length / 6)
-      let currentProduct = searchResult.slice(startIndex, endIndex)
+//       let itemsPerPage = 6
+//       let currentPage = parseInt(req.query.page) || 1
+//       let startIndex = (currentPage - 1) * itemsPerPage
+//       let endIndex = startIndex + itemsPerPage
+//       let totalPages = Math.ceil(searchResult.length / 6)
+//       let currentProduct = searchResult.slice(startIndex, endIndex)
        
-      res.render("shop",
-        {
-          user: user,
-          product: currentProduct,
-          category: categories,
-          brand: brands,
-          totalPages,
-          currentPage,
-          search
-        })
-    } catch (error) {
-    console.log(error.message)
-  }
-}
+//       res.render("shop",
+//         {
+//           user: user,
+//           product: currentProduct,
+//           category: categories,
+//           brand: brands,
+//           totalPages,
+//           currentPage,
+//           search
+//         })
+//     } catch (error) {
+//     console.log(error.message)
+//   }
+// }
 
 //------------------------------------Wallet management-----------------
 
@@ -646,11 +569,11 @@ module.exports = {
   getShopPage,
   getProductDetailPage,
   getLogoutUser,
-  filterProduct,
+  // filterProduct,
   filterByPrice,
   getSortProducts,
-  searchProducts,
+  // searchProducts,
   loadWallet,
   rechargeWallet,
-  filterAndSearchProducts
+  searchAndFilterProducts
 };
