@@ -60,6 +60,14 @@
 
                                     </div>
                                 </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <label class="form-label">Sale price</label>
+                                        <input placeholder="$" name="salePrice" type="text"
+                                            class="form-control border">
+                                        <div id="salePrice-error" class="error-message"></div>
+                                    </div>
+                                </div>
                              
                                 <div class="col-lg-4">
                                     <div class="mb-4">
@@ -229,9 +237,9 @@
     }
 
     function deleteSingleImage({productId, filename}){
-       alert(JSON.stringify(productId))
-       alert(JSON.stringify(filename))
-        alert("inside deleteSingle image in delete image")
+    //    alert(JSON.stringify(productId))
+    //    alert(JSON.stringify(filename))
+    //     alert("inside deleteSingle image in delete image")
 
         fetch("/admin/deleteImage", {
             method: "POST",

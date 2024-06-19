@@ -392,7 +392,7 @@
 
          // Function to update the quantity and total price
          function updateQuantity(inputField) {
-            alert("inside updateQuantity"+inputField)
+            // alert("inside updateQuantity"+inputField)
             const container = inputField.closest('tr'); // Changed this line to get the closest table row
             const quantity = parseInt(inputField.value);
             const productPrice = parseInt(container.querySelector('.productPrice').textContent.replace(/\D/g, '')); // Remove non-numeric characters
@@ -412,7 +412,7 @@
                 const response = await changeQuantity(productId, value, currentValue + 1); // Changing the quantity in db
                 if (response && response.status === 'success') {
                     inputField.value = currentValue + 1;
-                    alert(inputField.value);
+                    // alert(inputField.value);
                     updateQuantity(inputField);
                     updateCart(); // Update the cart total when the quantity changes
                 }

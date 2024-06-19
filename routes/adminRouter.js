@@ -13,7 +13,7 @@ const orderController = require("../controllers/orderController.js")
 const Category = require("../models/categorySchema");
 const couponController = require("../controllers/couponController.js")
 
-const {isAdmin, isLogged} = require("../authenticaiton/auth.js")
+const {isAdmin} = require("../authenticaiton/auth.js")
 
 //admin actions
 Router.get("/login", adminController.getLoginPage);
@@ -51,15 +51,13 @@ Router.get("/unblockBrand",isAdmin, brandController.unBlockBrand);
 
 // product management
 Router.get("/addProducts",isAdmin, productController.getProductAddPage);
-
-Router.post("/addProducts",isAdmin, upload.array("images", [3]),
-(req, res) => {
-    // Check if req.fileFilterError exists
-    if (req.fileFilterError) {
-      // Redirect with error message
-      return res.redirect("/admin/addProducts?error=" + encodeURIComponent(req.fileFilterError));
-    }},
-productController.addProducts);
+Router.post("/addProducts",isAdmin, upload.array("images", [3]),productController.addProducts);
+// (req, res) => {
+//   // Check if req.fileFilterError exists
+//   if (req.fileFilterError) {
+//     // Redirect with error message
+//     return res.redirect("/admin/addProducts?error=" + encodeURIComponent(req.fileFilterError));
+//   }},
 
 Router.get("/products",isAdmin, productController.getAllProducts);
 Router.get("/editProduct",isAdmin, productController.getEditProduct);

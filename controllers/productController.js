@@ -197,6 +197,7 @@ const editProduct = async(req, res) => {
         brand: data.brand,
         category: categoryId,
         regularPrice: data.regularPrice,
+        salePrice: data.salePrice,
         quantity: data.quantity,
         operatingSystem: data.operatingSystem,
         storage: data.storage,

@@ -478,13 +478,13 @@ const generateSalesPdf = async (req, res) => {
          dataX += firstColumnWidth;
          doc.text(order.date, dataX, dataY, { width: otherColumnsWidth, align: 'center' });
          dataX += otherColumnsWidth;
-         doc.text(`€ ${order.totalAmount}`, dataX, dataY, { width: otherColumnsWidth, align: 'center' });
+         doc.text(`₹ ${order.totalAmount}`, dataX, dataY, { width: otherColumnsWidth, align: 'center' });
          dataX += otherColumnsWidth;
-         doc.text(`€ ${order.discountAmount}`, dataX, dataY, { width: otherColumnsWidth, align: 'center' });
+         doc.text(`₹ ${order.discountAmount}`, dataX, dataY, { width: otherColumnsWidth, align: 'center' });
          dataX += otherColumnsWidth;
-         doc.text(`€ ${order.paidAmount}`, dataX, dataY, { width: otherColumnsWidth, align: 'center' });
+         doc.text(`₹ ${order.paidAmount}`, dataX, dataY, { width: otherColumnsWidth, align: 'center' });
          dataX += otherColumnsWidth;
-         // doc.text(`€ ${order.totalAmount - order.discountAmount - order.paidAmount}`, dataX, dataY, { width: otherColumnsWidth, align: 'center' });
+         // doc.text(`₹ ${order.totalAmount - order.discountAmount - order.paidAmount}`, dataX, dataY, { width: otherColumnsWidth, align: 'center' });
          dataY += 25; // Adjust spacing as needed
   
           // Check if we need a new page

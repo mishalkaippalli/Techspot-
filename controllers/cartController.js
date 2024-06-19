@@ -14,7 +14,8 @@ const getCartPage = async(req,res)=>{
 
        const user_id = req.session.user._id
        let cart = await Cart.findOne({userId:user_id}).populate('products.productId');
-
+         
+       console.log("inside getcartpage", cart)
        if(!cart){
           cart = new Cart({userId:req.session.user,products:[]});
           await cart.save();

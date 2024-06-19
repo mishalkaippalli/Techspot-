@@ -21,6 +21,17 @@
          margin-right: 10px; /* Added margin-right to create space between cropping images */
         } 
 
+        .thumbnails-container {
+            display: flex;
+            overflow-x: auto;
+        }
+
+        .thumbnail {
+            margin-right: 10px;
+            /* Adjust margin as needed for spacing between thumbnails */
+        }
+    </style>
+
     </style>
 
 
@@ -192,17 +203,7 @@
     </section>
 
     <!-- Add an empty container div for displaying image thumbnails -->
-    <style>
-        .thumbnails-container {
-            display: flex;
-            overflow-x: auto;
-        }
-
-        .thumbnail {
-            margin-right: 10px;
-            /* Adjust margin as needed for spacing between thumbnails */
-        }
-    </style>
+  
 
         <%- include("../partials/adminFooter") %>
 
@@ -364,7 +365,7 @@
 
             var productName = document.getElementById("product_name").value;
             var regularPrice = document.getElementsByName("regularPrice")[0].value;
-            var salePrice = document.ge
+            var salePrice = document.getElementsByName("salePrice")[0].value
             var quantity = document.getElementsByName("quantity")[0].value;
             // alert("hi")
             // Check if inputs are not empty
