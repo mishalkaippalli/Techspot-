@@ -61,10 +61,7 @@
                                 </li>
                                 <li><a href="/shop">Shop </i></a>
                                 </li>
-                                <li><a href="/about">About</i></a>
-                                </li>
-                                <li><a href="/contact">Contact</a>
-                                </li>
+
                             </ul>
                         </nav>
                     </div>
@@ -270,7 +267,7 @@
 												<input class="form-check-input returnItems" type="checkbox" id="checkbox<%- i %>"
 													value="<%- orderDetails.products[i].productId._id %>">
 												<label class="form-check-label" for="checkbox<%- i %>"><%-
-														orderDetails.products[i].productId.productName %></label>
+														orderDetails.products[i].productId.productName %></label>             
 											</div>
 											<% } %>
 
@@ -295,17 +292,15 @@
 				</div>
 			</div>
 			<!-- End modal structure -->
+			<div class="container mt-5">
+				<div class="row mt-2 justify-content-center">
+					<a id="goToInvoice" href="/invoice/?orderId=<%- orderDetails._id %>" 
+						class="btn btn-secondary  col-md-5 mx-md-auto mx-0">Download Invoice</a>
+				</div>
+			</div>
 
 			<!-- Buttons of requested -->
            <% if(orderDetails.orderStatus === 'payment pending') { %>
-			<!-- <div class="row mt-2 justify-content-center">
-				<a href="/continue-payment?orderid=<- orderDetails._id %> " class="btn btn-secondary col-md-4">Continue payment</a>
-			</div> -->
-			<!-- <div class="row mt-2 justify-content-center">
-				<a href="" data-orderId="<- orderDetails._id %>"
-				   class="btn btn-secondary col-md-3 continuePayment"> Continue payment</a>
-			 </div> -->
-
               <div>
 				 <div class="row mt-2 justify-content-center"> 
 			    <a href="" id="continuePaymentButton"
@@ -344,9 +339,11 @@
 																		<% } %>
 				</div>
 				<div class="row mt-2 justify-content-center">
-					<a href="/list-orders" class="btn btn-secondary col-md-6">Go back</a>
+					<a href="/list-orders" class="btn btn-secondary  col-md-5 mx-md-auto mx-0">Go back</a>
 				</div>
+				<br>
 			</div>
+			<br>
 		</div>
 
 	</section>

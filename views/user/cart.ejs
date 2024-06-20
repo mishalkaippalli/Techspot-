@@ -39,11 +39,9 @@
              </style>
     <link rel="stylesheet" href="/user-assets/css/linearicons.css">
     <link rel="stylesheet" href="/user-assets/css/owl.carousel.css">
-    <!-- <link rel="stylesheet" href="/user-assets/css/font-awesome.min.css"> -->
     <link rel="stylesheet" href="/user-assets/css/themify-icons.css">
     <link rel="stylesheet" href="/user-assets/css/nice-select.css">
     <link rel="stylesheet" href="/user-assets/css/nouislider.min.css">
-    <!-- <link rel="stylesheet" href="/user-assets/css/bootstrap.css"> -->
     <link rel="stylesheet" href="/user-assets/css/main.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -66,13 +64,9 @@
                     <div class="main-menu main-menu-grow main-menu-padding-1 main-menu-lh-1 main-menu-mrg-1 hm3-menu-padding d-none d-lg-block hover-boder">
                         <nav>
                             <ul>   
-                                <li><a  href="/">Home <!--<i class="fi-rs-angle-down"></i> --></a>
+                                <li><a  href="/">Home </a>
                                 </li>
                                 <li><a href="/shop">Shop </i></a>
-                                </li>
-                                <li><a href="/about">About</i></a>
-                                </li>
-                                <li><a href="/contact">Contact</a>
                                 </li>
                             </ul>
                         </nav>
@@ -189,6 +183,7 @@
                                                 </button>
                                                 <button class="reduced items-count" type="button"
                                                     onclick="decreaseQuantity(this)">
+                                                    <%= products[i].quantity == 1 ? 'disabled' : '' %>
                                                     <!-- Added "this" as a parameter to pass the button element -->
                                                     <i class="bi bi-caret-down"></i>
                                                 </button>
@@ -209,7 +204,6 @@
                                     <% } %>
                                         <tr>
                                             <td>
-
                                             </td>
                                             <td>
                                             </td>
@@ -318,12 +312,6 @@
         </div>
     </div>
 </footer>
-    <!--================End Cart Area =================-->
-
-    <!-- start footer Area -->
-
-    <!-- End footer Area -->
-
 
     <!-- Incrimenting the Quantity -->
     <script>
@@ -359,7 +347,6 @@
                 })
                 return { status: 'error' }
             }
-            // document.getElementById('cartItemsCount').textContent = result.cartItemsCount;
             return { status: 'success' }
         }
 
@@ -392,7 +379,6 @@
 
          // Function to update the quantity and total price
          function updateQuantity(inputField) {
-            // alert("inside updateQuantity"+inputField)
             const container = inputField.closest('tr'); // Changed this line to get the closest table row
             const quantity = parseInt(inputField.value);
             const productPrice = parseInt(container.querySelector('.productPrice').textContent.replace(/\D/g, '')); // Remove non-numeric characters
@@ -412,18 +398,17 @@
                 const response = await changeQuantity(productId, value, currentValue + 1); // Changing the quantity in db
                 if (response && response.status === 'success') {
                     inputField.value = currentValue + 1;
-                    // alert(inputField.value);
                     updateQuantity(inputField);
                     updateCart(); // Update the cart total when the quantity changes
                 }
-                // console.log(currentValue)
             }
+            
         }
 
         // Function to decrease the quantity of a product
         async function decreaseQuantity(inputField, productId, value) {
-            // console.log(productId)
             const currentValue = parseInt(inputField.value);
+          
             if (!isNaN(currentValue) && currentValue > 1) {
                 const response = await changeQuantity(productId, value, currentValue - 1);
                 if (response && response.status === 'success') {
@@ -431,8 +416,15 @@
                     updateQuantity(inputField);
                     updateCart(); // Update the cart total when the quantity changes
                 }
-                // console.log(currentValue)
             }
+            if (currentValue >= 1) {
+      input.value = currentValue;
+    }
+
+    // Disable the decrease button if quantity is 1
+    if (currentValue <= 1) {
+      button.disabled = true;
+    }
         }
 
        
@@ -552,10 +544,6 @@
 
 </html>
 
-
-
-
-
 <!-- Vendor JS-->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
 <script src="/user-assets/js/vendor/modernizr-3.6.0.min.js"></script>
@@ -593,7 +581,6 @@ crossorigin="anonymous"></script>
 <script src="/user-assets/js/shop.js?v=3.4"></script>
 
 
- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script> 
   <script src="/user-assets/js/main.js"></script>
   <script src="/js/editProfileValidation.js"></script>
   <script src="/js/changePasswordValidate.js"></script>

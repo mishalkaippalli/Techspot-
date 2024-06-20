@@ -68,7 +68,8 @@ Router.get("/unBlockProduct", isAdmin, productController.getUnblockProduct)
 Router.post("/addProductOffer", isAdmin, productController.addProductOffer)
 Router.post("/removeProductOffer", isAdmin, productController.removeProductOffer)
 
-// //Order Management
+//Order Management
+
 Router.get('/list-orders',isAdmin,orderController.loadOrdersPage)
 Router.get("/order-details",isAdmin, orderController.adminOrderDetails)
 Router.post("/change-status", isAdmin, orderController.changeStatus)

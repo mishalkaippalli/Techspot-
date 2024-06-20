@@ -76,8 +76,8 @@ async function oCount() {
 }
 
 const loadDashboard = async (req, res) => {
-   try {
 
+   try {
       const orders = await Order.find();
       // console.log(orders)
       // Finding how many orders we have
@@ -188,7 +188,7 @@ const loadDashboard = async (req, res) => {
            $group: {
              _id: "$productDetails.category",
              categoryName: { $first: "$categoryDetails.name" }, // Include category name
-             totalQuantity: { $sum: "$product.quantity" }
+             totalQuantity: { $sum: "$products.quantity" }
            }
          },
          { $sort: { totalQuantity: -1 } },
@@ -211,7 +211,7 @@ const loadDashboard = async (req, res) => {
          {
            $group: {
              _id: "$productDetails.brand", // Grouping by brand
-             totalQuantity: { $sum: "$product.quantity" }
+             totalQuantity: { $sum: "$products.quantity" }
            }
          },
          { $sort: { totalQuantity: -1 } },
@@ -245,9 +245,9 @@ const loadSalesReport = async(req,res)=>{
 
      // Calculate totals
      const totalSalesCount = orders.length;
-     const totalOrderAmount = orders.reduce((sum, order) => sum + order.totalAmount, 0);
-     const totalDiscountAmount = orders.reduce((sum, order) => sum + order.couponDiscount, 0);
-     const totalPaidAmount = orders.reduce((sum, order) => sum + order.actualTotalAmount, 0);
+     const totalOrderAmount = Math.round(orders.reduce((sum, order) => sum + order.totalAmount, 0) * 100) / 100;
+        const totalDiscountAmount = Math.round(orders.reduce((sum, order) => sum + order.couponDiscount, 0) * 100) / 100;
+        const totalPaidAmount = Math.round(orders.reduce((sum, order) => sum + order.actualTotalAmount, 0) * 100) / 100;
 
      res.render('sales-report',{orders,totalSalesCount,totalOrderAmount,totalDiscountAmount,totalPaidAmount});
   }catch(error){
@@ -267,14 +267,20 @@ const filterSales = async(req,res)=>{
       // Number is 2 === Weekly
       // Number is 3 === Monthly
       // Number is 4 === Yearly
-      // console.log(number)
- 
+
       const today = new Date();
       if(number === '0'){ // All time report
 
          // Finding data using aggregate
          const orders = await Order.aggregate([{$match:{orderStatus:'Delivered'}},{$sort:{date:-1}}]);
-         res.json({orders});
+        // Calculate totals
+        const totalSalesCount = orders.length;
+        const totalOrderAmount = Math.round(orders.reduce((sum, order) => sum + order.totalAmount, 0) * 100) / 100;
+        const totalDiscountAmount = Math.round(orders.reduce((sum, order) => sum + order.couponDiscount, 0) * 100) / 100;
+        const totalPaidAmount = Math.round(orders.reduce((sum, order) => sum + order.actualTotalAmount, 0) * 100) / 100;
+     
+        res.json({ orders,totalSalesCount,totalOrderAmount,totalDiscountAmount,totalPaidAmount });
+
 
       }else if (number === '1') { // Daily report
 
@@ -300,8 +306,13 @@ const filterSales = async(req,res)=>{
             }},
             {$sort:{date:-1}}
          ]);
+          // Calculate totals
+            const totalSalesCount = orders.length;
+            const totalOrderAmount = Math.round(orders.reduce((sum, order) => sum + order.totalAmount, 0) * 100) / 100;
+            const totalDiscountAmount = Math.round(orders.reduce((sum, order) => sum + order.couponDiscount, 0) * 100) / 100;
+            const totalPaidAmount = Math.round(orders.reduce((sum, order) => sum + order.actualTotalAmount, 0) * 100) / 100;
          
-         res.json({ orders });
+         res.json({ orders,totalSalesCount,totalOrderAmount,totalDiscountAmount,totalPaidAmount });
 
       }else if(number === '2'){ // Weekly Report
 
@@ -329,7 +340,13 @@ const filterSales = async(req,res)=>{
             {$sort:{date:-1}}
          ])
          console.log("orders inside weekly report ", orders);
-         res.json({orders});
+         // Calculate totals
+        const totalSalesCount = orders.length;
+        const totalOrderAmount = Math.round(orders.reduce((sum, order) => sum + order.totalAmount, 0) * 100) / 100;
+        const totalDiscountAmount = Math.round(orders.reduce((sum, order) => sum + order.couponDiscount, 0) * 100) / 100;
+        const totalPaidAmount = Math.round(orders.reduce((sum, order) => sum + order.actualTotalAmount, 0) * 100) / 100;
+     
+        res.json({ orders,totalSalesCount,totalOrderAmount,totalDiscountAmount,totalPaidAmount });
 
       }else if(number === '3'){ // Monthly Report
 
@@ -353,7 +370,13 @@ const filterSales = async(req,res)=>{
           }},
           {$sort:{date:-1}}
        ])
-       res.json({orders});
+       // Calculate totals
+        const totalSalesCount = orders.length;
+        const totalOrderAmount = Math.round(orders.reduce((sum, order) => sum + order.totalAmount, 0) * 100) / 100;
+        const totalDiscountAmount = Math.round(orders.reduce((sum, order) => sum + order.couponDiscount, 0) * 100) / 100;
+        const totalPaidAmount = Math.round(orders.reduce((sum, order) => sum + order.actualTotalAmount, 0) * 100) / 100;
+     
+        res.json({ orders,totalSalesCount,totalOrderAmount,totalDiscountAmount,totalPaidAmount });
 
       }else if(number ==='4'){ // Yearly Report
 
@@ -376,7 +399,13 @@ const filterSales = async(req,res)=>{
             }},
             {$sort:{date:-1}}
          ])
-         res.json({orders});
+          // Calculate totals
+        const totalSalesCount = orders.length;
+        const totalOrderAmount = Math.round(orders.reduce((sum, order) => sum + order.totalAmount, 0) * 100) / 100;
+        const totalDiscountAmount = Math.round(orders.reduce((sum, order) => sum + order.couponDiscount, 0) * 100) / 100;
+        const totalPaidAmount = Math.round(orders.reduce((sum, order) => sum + order.actualTotalAmount, 0) * 100) / 100;
+     
+        res.json({ orders,totalSalesCount,totalOrderAmount,totalDiscountAmount,totalPaidAmount });
 
       }
       // res.render('sales-report')
@@ -387,9 +416,10 @@ const filterSales = async(req,res)=>{
 
 const dateWiseSales = async(req,res)=>{
   try {
+   console.log("iam inside datewise sales")
      let {startingDate , endingDate} = req.body
-     // console.log('Started :',startingDate)
-     // console.log('End :',endingDate)
+     console.log('Started :',startingDate)
+     console.log('End :',endingDate)
      startingDate = new Date(startingDate);
      endingDate = new Date(endingDate);
 
@@ -409,7 +439,14 @@ const dateWiseSales = async(req,res)=>{
         }},
         {$sort:{date:-1}}
      ])
-     res.json({orders});
+     console.log(orders)
+       // Calculate totals
+       const totalSalesCount = orders.length;
+       const totalOrderAmount = orders.reduce((sum, order) => sum + order.totalAmount, 0);
+       const totalDiscountAmount = orders.reduce((sum, order) => sum + order.couponDiscount, 0);
+       const totalPaidAmount = orders.reduce((sum, order) => sum + order.actualTotalAmount, 0);
+    
+       res.json({ orders,totalSalesCount,totalOrderAmount,totalDiscountAmount,totalPaidAmount });
   } catch (error) {
      console.log(error.message);
   }

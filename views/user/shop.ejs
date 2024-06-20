@@ -90,11 +90,7 @@
                         <a href="index.html"><img src="/user-assets/imgs/theme/Techspotlogo.png" alt="logo"></a>
                     </div>
                     <div class="header-right">
-                        <!-- <div class="search-style-1">
-                            <form action="/search" method="get">
-                                <input type="text" id="filterItem" name="search" class="form-control" placeholder="Search for items..." value="<%= typeof search !== 'undefined' ? search : '' %>">
-                            </form>
-                        </div> -->
+                       
                         <div class="search-style-1">
                             <form action="/searchAndFilterProducts" method="get">
                               <input type="text" id="filterItem" name="search" class="form-control" placeholder="Search for items..." value="<%= typeof search !== 'undefined' ? search : '' %>">
@@ -110,10 +106,6 @@
                                 <li><a  href="/">Home </a>
                                 </li>
                                 <li><a href="/shop">Shop </i></a>
-                                </li>
-                                <li><a href="/about">About</i></a>
-                                </li>
-                                <li><a href="/contact">Contact</a>
                                 </li>
                             </ul>
                         </nav>
@@ -253,29 +245,7 @@
                     </div>
                   <% } %>              
             </div>
-            <div class="col-lg-3 primary-sidebar sticky-sidebar">
-                <!-- <div class="widget-category mb-30">
-                    <h5 class="section-title style-1 mb-30 wow fadeIn animated">CATEGORY</h5>
-                    <ul class="categories">
-                        
-                        < for (let i = 0; i < category.length; i++) { %>
-                            <li><a href="/filter?category=<= category[i]._id %>"style="font-size: 15px; text-transform: uppercase;"><= category[i].name %></a></li>
-                        < } %> 
-
-                    </ul>
-                </div>
-
-                <div class="widget-category mb-30">
-                    <h5 class="section-title style-1 mb-30 wow fadeIn animated">BRANDS</h5>
-                    <ul class="categories">
-                      
-                        < for (let i = 0; i < brand.length; i++) { %>
-                            <li><a href="/filter?brand=<= brand[i]._id %>"style="font-size: 15px; text-transform: uppercase;"><= brand[i].brandName %></a></li>
-                        < } %>
-                        
-                    </ul>
-                </div> -->
-                 
+            <div class="col-lg-3 primary-sidebar sticky-sidebar">         
                 <div class="widget-category mb-30">
                     <h5 class="section-title style-1 mb-30 wow fadeIn animated">CATEGORY</h5>
                     <ul class="categories">

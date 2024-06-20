@@ -405,7 +405,7 @@
 
                             <div class="text-center mt-2">
                                 <button class="btn btn-primary" type="button" data-bs-toggle="modal"
-                                    data-bs-target="#addCouponModal">Add Coupon</button>
+                                    data-bs-target="#addCouponModal">available coupons</button>
                             </div>
                         </div>
 
@@ -489,29 +489,6 @@
                                 </tbody>
                             </table>
                     
-                            <!-- <div class="payment_item">
-                                <div class="payment_radio">
-                                    <input type="radio" id="COD" name="payment-method" checked>
-                                    <label for="f-option5">Cash on Delivery</label>
-                                    <div class="check"></div>
-                                </div>
-                                
-                                <div class="payment_radio">
-                                    <input type="radio" id="WALLET" name="payment-method">
-                                    <label for="f-option5">Wallet</label>
-                                    <div class="check"></div>
-                                </div>
-                               
-                                <div class="payment_radio">
-                                    <input type="radio" id="RAZORPAY" name="payment-method">
-                                    <label for="f-option5">Razorpay</label>
-                                    <div class="check"></div>
-                                </div>
-                               
-                            </div> -->
-
-                            
-
                             <div class="container mt-5">
                                 <h2 class="mb-4 text-center">Choose Your Payment Method</h2>
                                 <div id="payment-methods">
@@ -615,8 +592,6 @@
             if (isValid) {
                 const couponCode = document.getElementById('couponCode').value;
                 const totalAmount = '<%- grandTotal %>'
-                console.log(totalAmount)
-                // console.log(couponCode);
 
                 const response = await fetch(`/apply-coupon/?couponCode=${couponCode}&totalAmount=${totalAmount}`);
                 const result = await response.json();
@@ -790,8 +765,6 @@
             const actualAmount = parseFloat(document.getElementById('cartTotal').innerHTML.replace(/[^\d.]/g, ''))
             const walletAmount = Number("<%- userWallet.walletAmount %>")
             const paymentMethod = document.querySelector('input[name="payment-method"]:checked').id;
-            // console.log(payment)
-            // console.log(total)
 
             if (!selectedRadioButtonId) {
                 Swal.fire({
@@ -901,11 +874,6 @@
                     verifyPayment(response, order)
 
                 },
-                // "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
-                //     "name": "Gaurav Kumar", //your customer's name
-                //     "email": "gaurav.kumar@example.com",
-                //     "contact": "9000090000" //Provide the customer's phone number for better conversion rates 
-                // },
                 "notes": {
                     "address": "Razorpay Corporate Office"
                 },
@@ -917,13 +885,6 @@
 
           razorpay.on('payment.failed', function (response){
           console.log(response)
-        //   alert(response.error.code);
-        //   alert(response.error.description);
-        //   alert(response.error.source);
-        //   alert(response.error.step);
-        //   alert(response.error.reason);
-        //   alert(response.error.metadata.order_id);
-        //   alert(response.error.metadata.payment_id);
 
           paymentPending(orderId)
           razorpay.close();
@@ -970,11 +931,9 @@
                 })
             }
         }
-
+//  function for continuing the order eventhough the razoepay payment is failed
         async function paymentPending(orderId) {
 
-            // alert(orderId);
-            // const orderId = paymenterror.error.metadata.order_id
             const response = await fetch('/payment-pending', {
                 method: 'POST',
                 headers: {
@@ -984,15 +943,22 @@
             })
 
             const result = await response.json();
-            
-           
+               
             
             if (result.status === 'ordersuccesspaymentpending') {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Payment Pending Order Succesful',
+                    title: '<span style="color: green;">Order Placed</span> <br> <span style="color: red;">Payment Pending</span>',
+                    html: `
+                            <div style="text-align: left;">
+                             <h3 style="color: green;">Order Placed</h3>
+                             <p style="color: red;">Payment Pending</p>
+                             <p>Thank you for your order! Your order ID is <strong>${result.orderId}</strong>.</p>
+                              <p>Please complete the payment to proceed with the order. You can continue payment from order details.</p>
+                              </div>
+                           `,
                     showConfirmButton: true,
-                    timer: 1500
+                    timer: 6000
                 })
                 setTimeout(() => {
                     location.href = `/confirmation/?orderId=${result.orderId}`

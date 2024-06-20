@@ -110,8 +110,7 @@
                                 <ul>
                                     <li><a href="/">Home</a></li>
                                     <li><a href="/shop">Shop</a></li>
-                                    <li><a href="/about">About</a></li>
-                                    <li><a href="/contact">Contact</a></li>
+                
                                 </ul>
                             </nav>
                         </div>
@@ -190,9 +189,7 @@
                                                     <span class="product-price">₹<%= products[i].regularPrice.toLocaleString('en-IN') %></span>
                                                 <% } %>
                                             </div>
-                                            <!-- <div class="product-action-1 show">
-                                                <a aria-label="Add To Cart" class="action-btn hover-up" href="products-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
-                                            </div> -->
+                                        
                                             <div class="product-action-1 show">
                                                 <a aria-label="Add To Cart" class="action-btn hover-up" href="javascript:void(0);"onclick="addToCart('<%= products[i]._id %>')"><i class="fas fa-shopping-cart"></i></a>
                                             </div>

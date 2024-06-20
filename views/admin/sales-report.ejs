@@ -45,14 +45,8 @@
                     </div>
 
                 </header>
-                <!-- <div class="total-sales">
-                    < if (orders.length) { %>
-                        <p>Total Sales Count: <= orders.length %></p>
-                    <} else { %>
-                        <p>No sales available</p>
-                    < } %>
-                </div> -->
-                <!-- Contents of our table -->
+               
+                <!-- Contents of  table -->
                 <div class="card-body" id="orderList">
                     
                     <div class="table-responsive">
@@ -125,8 +119,14 @@
             if (Number) {
                 try {
                     const response = await fetch(`/admin/filter-sales/?identify=${Number}`);
+
                     const data = await response.json();
+
                     const orders = data.orders;
+                    const totalSalesCount = data.totalSalesCount;
+                    const totalOrderAmount = data.totalOrderAmount;
+                    const totalDiscountAmount = data.totalDiscountAmount;
+                    const totalPaidAmount = data.totalPaidAmount;
 
                     const orderListDiv = document.getElementById('orderList');
                     if (!orderListDiv) {
@@ -138,7 +138,7 @@
                         <div class="card-body">
                             <div class="total-sales">
                               ${orders.length > 0 ? 
-                               `<p>Total Sales Count: ${orders.length}</p>` : 
+                               "" : 
                                  '<p>No sales available</p>'
                                   }
                             </div>
@@ -173,6 +173,12 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="totals">
+                        <p>Total Sales Count: ₹${totalSalesCount}</p>
+                        <p>Total Order Amount: &#x20B9; ${totalOrderAmount}</p>
+                        <p>Total Discount Amount: &#x20B9; ${totalDiscountAmount}</p>
+                        <p>Total Paid Amount: &#x20B9; ${ totalPaidAmount}</p>
+                    </div>
                         </div>
                     `;
                     orderListDiv.innerHTML = orderListHTML;
@@ -192,8 +198,6 @@
             if (isValid) {
                 const startingDate = document.getElementById('startingDate').value;
                 const endingDate = document.getElementById('endingDate').value;
-                // console.log(startingDate)
-                // console.log(endingDate)
 
                 const response = await fetch('/admin/datewise-filter-sales', {
                     method: 'post',
@@ -205,13 +209,18 @@
 
                 const result = await response.json()
                 const orders = result.orders
+                const totalSalesCount = result.totalSalesCount;
+                const totalOrderAmount = result.totalOrderAmount;
+                const totalDiscountAmount = result.totalDiscountAmount;
+                const totalPaidAmount = result.totalPaidAmount;
+                
                 const orderListDiv = document.getElementById('orderList');
 
                 const orderListHTML = `
                         <div class="card-body">
                             <div class="total-sales">
                               ${orders.length > 0 ? 
-                               `<p>Total Sales Count: ${orders.length}</p>` : 
+                               "" : 
                                  '<p>No sales available</p>'
                                   }
                             </div>
@@ -245,6 +254,12 @@
                     }
                                     </tbody>
                                 </table>
+                                <div class="totals">
+                                   <p>Total Sales Count: ₹${totalSalesCount}</p>
+                                   <p>Total Order Amount: &#x20B9; ${totalOrderAmount}</p>
+                                   <p>Total Discount Amount: &#x20B9; ${totalDiscountAmount}</p>
+                                   <p>Total Paid Amount: &#x20B9; ${ totalPaidAmount}</p>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -261,6 +276,16 @@
             const endingDate = document.getElementById('endingDate').value;
 
             let isValid = true;
+
+            if (!dateValidateWithCurrentDate(endingDate)) {
+                  document.getElementById('dateError').textContent = 'Ending date cannot be in the future';
+                  document.getElementById('endingDate').style.borderColor = 'red';
+                   setTimeout(() => {
+                        document.getElementById('dateError').textContent = '';
+                        document.getElementById('endingDate').style.borderColor = '';
+                    }, 5000);
+                isValid = false;
+            }
 
             // Checking the start and end logic
 
@@ -285,6 +310,12 @@
             const expire = new Date(endingDate);
             return created <= expire;
         }
+
+        function dateValidateWithCurrentDate(endingDate) {
+              const expire = new Date(endingDate);
+              const currentDate = new Date();
+              return expire <= currentDate;
+}
     </script>
 
     <!-- Creating Sales Report -->

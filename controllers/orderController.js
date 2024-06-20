@@ -305,11 +305,11 @@ const razorpaypaymentContinue = async(req, res) => {
 // List orders in user-side
 const listOrders = async(req,res)=>{
    try {
-      console.log("req.session.user._id",req.session.user._id)
       const user_id = req.session.user._id;
       const userData = await User.findById(user_id)
       console.log("userdata",userData)
       const userOrders = await Order.find({userId:user_id}).populate('products.productId');
+      console.log(userOrders, "User orders inside list orders")
       const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
       res.render('list-orders',{userOrders,cartItemsCount,userData});
    } catch (error) {
