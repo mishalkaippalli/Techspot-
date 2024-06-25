@@ -1,6 +1,6 @@
 const Mongoose = require("mongoose");
 
-const connectDB = Mongoose.connect(process.env.MONGODB_URL);
+const connectDB = Mongoose.connect(process.env.MONGODB_ATLAS);
 
 connectDB
   .then(() => console.log("Database Connected"))
