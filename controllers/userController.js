@@ -169,7 +169,7 @@ const googleAuth = async (req,res)=>{
       res.redirect('/')
       
   } catch (error) {
-      console.log('errro hapened in the google login route ',error);
+      console.log('error hapened in the google login route ',error);
   }
 
 }
