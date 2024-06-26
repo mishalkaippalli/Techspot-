@@ -21,18 +21,12 @@ const pageNotFound = async (req, res) => {
   }
 };
 
-
 // Loading the Home page
 const getHomePage = async (req, res) => {
   try {
     const today = new Date().toISOString();
-    console.log("inside get home page , req.session is",req.session)
     const user = req.session.user;
-    console.log("req.session.user inside get home page",user)
-    console.log("req.session.user._id",req.session.user._id)
     const userData = await User.findOne({_id: user});
-    console.log("userdata", userData)
-    console.log("userdata inside get home page", userData)
     const brandData = await Brand.find({ isBlocked: false });
     const productData = await Product.find({ isBlocked: false })
       .sort({ _id: -1 })
@@ -85,9 +79,7 @@ function generateOtp() {
 
 const insertUser = async(req,res)=>{
    const email = req.body.email
-   console.log("inside insert user email & re.body",email, req.body)
    const userData = req.body;
-   console.log("userdata with updated pass",userData)
   try{
      const existingEmail = await User.findOne({email:req.body.email});
      const existingMobile = await User.findOne({mobile:req.body.mobile});
