@@ -21,7 +21,7 @@ require('../config/passport')
 
 Router.get("/", userController.getHomePage);
 Router.get("/home", userController.getHomePage);
-Router.get("/login", userController.loadLogin);
+Router.get("/login",isLogout, userController.loadLogin);
 Router.post("/login", userController.verifyUser);
 Router.get("/signup", userController.getSignupPage);
 Router.post("/register", userController.insertUser);

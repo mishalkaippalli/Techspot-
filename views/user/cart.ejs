@@ -183,7 +183,7 @@
                                                 </button>
                                                 <button class="reduced items-count" type="button"
                                                     onclick="decreaseQuantity(this)">
-                                                    <%= products[i].quantity == 1 ? 'disabled' : '' %>
+                                                    
                                                     <!-- Added "this" as a parameter to pass the button element -->
                                                     <i class="bi bi-caret-down"></i>
                                                 </button>
@@ -420,12 +420,7 @@
             if (currentValue >= 1) {
       input.value = currentValue;
     }
-
-    // Disable the decrease button if quantity is 1
-    if (currentValue <= 1) {
-      button.disabled = true;
     }
-        }
 
        
 

@@ -58,7 +58,7 @@ const addToCart = async(req,res)=>{
           })
           
           if(existingProductIndex === -1){
-             const total = product.salePrice;
+            const total = product.salePrice ? product.salePrice : product.regularPrice;
     
              cart.products.push({
                 productId:proId,
@@ -69,7 +69,8 @@ const addToCart = async(req,res)=>{
              if(product.quantity > cart.products[existingProductIndex].quantity){
                 cart.products[existingProductIndex].quantity += 1;
                 const product = await Product.findById(proId).lean();
-                cart.products[existingProductIndex].total += product.salePrice;
+                cart.products[existingProductIndex].total += product.salePrice ? product.salePrice : product.regularPrice;
+
              }else{
                 return res.json({status:'error',message:'Out of stock'})
              }
@@ -210,7 +211,6 @@ const loadCheckOut = async(req,res)=>{
       },0);
 
       const availableCoupons = coupons.filter((coupons)=> coupons.minOrderAmount < grandTotal  );
-
       const address = userAddress.address;
 
       const cartItemsCount = await CartCountHelper.findCartItemsCountFromCart(cart)

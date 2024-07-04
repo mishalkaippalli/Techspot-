@@ -26,6 +26,7 @@ const getHomePage = async (req, res) => {
   try {
     const today = new Date().toISOString();
     const user = req.session.user;
+    console.log("req.session", req.session)
     const userData = await User.findOne({_id: user});
     const brandData = await Brand.find({ isBlocked: false });
     const productData = await Product.find({ isBlocked: false })
@@ -305,7 +306,7 @@ const getShopPage = async (req, res) => {
           currentPage,
           search,
           selectedCategory: null,
-        selectedBrand: null
+          selectedBrand: null
         });
   } catch (error) {
     console.log(error.message);

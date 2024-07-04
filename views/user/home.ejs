@@ -182,11 +182,11 @@
                                             </div>
                                             <h2><a href="products-product-right.html"><%= products[i].productName %></a></h2>
                                             <div class="product-price">
-                                                <% if (products[i].salePrice) { %>
-                                                    <span>₹<%= products[i].salePrice.toLocaleString('en-IN') %></span>
-                                                    <span class="old-price">₹<%= products[i].regularPrice.toLocaleString('en-IN') %></span>
+                                                <% if (products[i].salePrice === products[i].regularPrice) { %>
+                                                    <span class="product-price">₹<%- products[i].regularPrice.toLocaleString('en-IN') %></span>
                                                 <% } else { %>
-                                                    <span class="product-price">₹<%= products[i].regularPrice.toLocaleString('en-IN') %></span>
+                                                    <span class="product-price">₹<%- products[i].salePrice.toLocaleString('en-IN') %></span>
+                                                    <span class="old-price">₹<%- products[i].regularPrice.toLocaleString('en-IN') %></span>
                                                 <% } %>
                                             </div>
                                         

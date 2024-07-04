@@ -210,12 +210,12 @@
                                     <h2><a href="shop-product-right.html"><%= product[i].productName %></a></h2>
                                     <div class="product-price">
                                         <% if (product[i].salePrice === product[i].regularPrice) { %>
-                                            <span class="product-price">₹<%- product[i].regularPrice.toLocaleString('en-IN') %></span> 
+                                            <span class="product-price">₹<%- product[i].regularPrice.toLocaleString('en-IN') %></span>
                                         <% } else { %>
-                                            <span>₹<%- product[i].regularPrice.toLocaleString('en-IN') %></span>
-                                            <span class="old-price">₹<%- product[i].regularPrice.toLocaleString('en-IN') %></span> 
-                                         <% } %>       
-                                        </div>
+                                            <span class="product-price">₹<%- product[i].salePrice.toLocaleString('en-IN') %></span>
+                                            <span class="old-price">₹<%- product[i].regularPrice.toLocaleString('en-IN') %></span>
+                                        <% } %>
+                                    </div>
                                     <div class="product-action-1 show">
                                         <a aria-label="Add To Cart" class="action-btn hover-up" href="javascript:void(0);"onclick="addToCart('<%= product[i]._id %>')"><i class="fas fa-shopping-cart"></i></a>
                                     </div>
