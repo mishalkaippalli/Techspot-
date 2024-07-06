@@ -5,6 +5,7 @@ const passport = require('passport')
 Router.set("view engine", "ejs");
 Router.set("views", "./views/user");
 
+
 // ===============================Controller importing ==============================
 
 const userController = require("../controllers/userController");
@@ -39,8 +40,6 @@ Router.get('/google/callback',passport.authenticate('google',{failureRedirect:'/
 
 Router.get("/shop", isLogged, userController.getShopPage);
 Router.get("/productDetails", userController.getProductDetailPage);
-// Router.get("/search", userController.searchProducts)
-// Router.get("/filter", userController.filterProduct)
 Router.get("/searchAndFilterProducts",isLogged, userController.searchAndFilterProducts)
 Router.get("/filterPrice", userController.filterByPrice)
 Router.get("/shop",userController.searchAndFilterProducts)

@@ -277,6 +277,16 @@
 
             let isValid = true;
 
+            if (!dateValidateWithCurrentDate(startingDate)) {
+                  document.getElementById('dateError').textContent = 'Ending date cannot be in the future';
+                  document.getElementById('endingDate').style.borderColor = 'red';
+                   setTimeout(() => {
+                        document.getElementById('dateError').textContent = '';
+                        document.getElementById('endingDate').style.borderColor = '';
+                    }, 5000);
+                isValid = false;
+            }
+
             if (!dateValidateWithCurrentDate(endingDate)) {
                   document.getElementById('dateError').textContent = 'Ending date cannot be in the future';
                   document.getElementById('endingDate').style.borderColor = 'red';
@@ -311,8 +321,8 @@
             return created <= expire;
         }
 
-        function dateValidateWithCurrentDate(endingDate) {
-              const expire = new Date(endingDate);
+        function dateValidateWithCurrentDate(date) {
+              const expire = new Date(date);
               const currentDate = new Date();
               return expire <= currentDate;
 }

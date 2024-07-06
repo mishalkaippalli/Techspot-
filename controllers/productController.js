@@ -104,10 +104,13 @@ const getAllProducts = async(req, res) => {
           {productName: {$regex: new RegExp(".*"+ search + ".*", "i") } }, //".*": This is a regular expression pattern that matches any sequence of characters.
           {brand: {$regex: new RegExp(".*" + search + ".*", "i") } }
         ],   
-    }).sort({cratedOn: -1})
+    }).populate('category')
+      .sort({cratedOn: -1})
       .limit(limit*1)
       .skip((page - 1)* limit) // to skip based on the current page number and the limit
       .exec()  // used with await to wait for the query to finish executing before proceeding further in the code
+
+      console.log("inside getall products",productData)
 
       const count = await Product.find({
         $or: [

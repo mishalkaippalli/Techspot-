@@ -154,7 +154,7 @@
         <div class="row flex-row-reverse">
             <div class="col-lg-9">
                 <div class="shop-product-fillter">
-                    <div class="totall-product">
+                    <div class="total-product">
                        <% if (locals.count) { %>
                         <p> We found <strong class="text-brand"><%= locals.count %></strong> items for you!</p>
                        <% } %>
@@ -170,7 +170,6 @@
                                     <option value="featured" selected>Featured</option>
                                     <option value="lowToHigh">Price: Low to High</option>
                                     <option value="highToLow">Price: High to Low</option>
-                                    <option value="releaseDate">Release Date</option>
                                 </select>
                             </div>
                         </div>
@@ -229,20 +228,20 @@
                 
                 <% if (totalPages) { %>
                     <div class="pagination">
-                      <% if (currentPage > 1) { %>
-                        <button class="btn btn-sm"><a href="/shop?page=<%= currentPage - 1 %>">Previous</a></button>
-                      <% } %>
-                  
-                      <% for (let i = 1; i <= totalPages; i++) { %> 
-                        <button class="btn btn-sm <%= i === currentPage ? 'active' : '' %>">
-                          <a href="/shop?page=<%= i %>"><%= i %></a>
-                        </button>
-                      <% } %>
-                  
-                      <% if (currentPage < totalPages) { %>
-                        <button class="btn btn-sm"><a href="/shop?page=<%= currentPage + 1 %>">Next</a></button>
-                      <% } %>
-                    </div>
+                        <% if (currentPage > 1) { %>
+                          <button class="btn btn-sm"><a href="/shop?page=<%= currentPage - 1 %>&search=<%= search %>&category=<%= selectedCategory %>&brand=<%= selectedBrand %>&sort=<%= sortOption %>">Previous</a></button>
+                        <% } %>
+                      
+                        <% for (let i = 1; i <= totalPages; i++) { %> 
+                          <button class="btn btn-sm <%= i === currentPage ? 'active' : '' %>">
+                            <a href="/shop?page=<%= i %>&search=<%= search %>&category=<%= selectedCategory %>&brand=<%= selectedBrand %>&sort=<%= sortOption %>"><%= i %></a>
+                          </button>
+                        <% } %>
+                      
+                        <% if (currentPage < totalPages) { %>
+                          <button class="btn btn-sm"><a href="/shop?page=<%= currentPage + 1 %>&search=<%= search %>&category=<%= selectedCategory %>&brand=<%= selectedBrand %>&sort=<%= sortOption %>">Next</a></button>
+                        <% } %>
+                      </div>
                   <% } %>              
             </div>
             <div class="col-lg-3 primary-sidebar sticky-sidebar">         
@@ -453,9 +452,17 @@ function getCurrentPageFromURL(element) {
 
     return 1;
 }
-
+document.addEventListener("DOMContentLoaded", () => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const sortParam = searchParams.get('sort') || 'featured'; // Default to 'featured' if not set
+    document.getElementById('sortByDropdown').value = sortParam;
+});
 
 function handleSortChange(selectedOption){
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set('sort', selectedOption);
+    searchParams.set('page', 1); // Reset to page 1 on sort change
+    window.location.search = searchParams.toString();
     let option = selectedOption;
     $.ajax({
         url: "/sortProducts",

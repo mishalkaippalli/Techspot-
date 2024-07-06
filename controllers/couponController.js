@@ -31,22 +31,30 @@ const listCoupons = async (req, res) => {
            const maxDiscountAmount = couponBody.couponMaxDiscountAmount;
            const validFor = couponBody.couponExpiration;
            const createdOn = couponBody.couponCreated;
-  
-           const couponData = new Coupon({
-            couponCode:couponCode,
-            couponDescription:couponDescription,
-            discountPercentage:discountPercentage,
-            minOrderAmount:minOrderAmount,
-            maxDiscountAmount:maxDiscountAmount,
-            validFor:validFor,
-            createdOn:createdOn,
-         });
-         console.log('Coupon Data is : ',couponData);
-         const addedCoupon = await couponData.save();
+             
+           const couponExists = await Coupon.findOne({ couponCode: { $regex: new RegExp(`^${couponCode}$`), $options: 'i' } });
+           if(!couponExists){
+              const couponData = new Coupon({
+              couponCode:couponCode,
+              couponDescription:couponDescription,
+              discountPercentage:discountPercentage,
+              minOrderAmount:minOrderAmount,
+              maxDiscountAmount:maxDiscountAmount,
+              validFor:validFor,
+              createdOn:createdOn,
+           });   
+            console.log('Coupon Data is : ',couponData);
+            const addedCoupon = await couponData.save();
   
          if(addedCoupon){
             res.json({status:'success',message:'Coupon Added'});
          }
+           }
+           else{
+            console.log("coupon al;ready exits")
+           }
+           
+         
   
     } catch (error) {
       res.json({status:'error', message:'Something went wrong'});

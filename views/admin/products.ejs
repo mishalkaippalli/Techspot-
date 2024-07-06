@@ -1,11 +1,5 @@
 <%- include("../partials/adminHeader") %>
   
-  <!-- <div class="content-header">
-    <div>
-      <h2 class="content-title card-title">All Products</h2>
-    </div>
-  </div> -->
-
 <header class="card-header text-center mb-20">
   
     <form action="/admin/products" method="get" class="d-inline">
@@ -43,7 +37,7 @@
             <tr>
                 <td><%= data[i].productName %></td>
                 <td><%= data[i].brand %></td>
-                <td><%= data[i].category %></td>
+                <td><%= data[i].category.name %></td>
                 <td><%= data[i].quantity %></td>
                 <td><%= data[i].regularPrice %></td>
                 <td><%= data[i].salePrice %></td>

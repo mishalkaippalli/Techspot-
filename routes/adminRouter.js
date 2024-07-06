@@ -52,13 +52,6 @@ Router.get("/unblockBrand",isAdmin, brandController.unBlockBrand);
 // product management
 Router.get("/addProducts",isAdmin, productController.getProductAddPage);
 Router.post("/addProducts",isAdmin, upload.array("images", [3]),productController.addProducts);
-// (req, res) => {
-//   // Check if req.fileFilterError exists
-//   if (req.fileFilterError) {
-//     // Redirect with error message
-//     return res.redirect("/admin/addProducts?error=" + encodeURIComponent(req.fileFilterError));
-//   }},
-
 Router.get("/products",isAdmin, productController.getAllProducts);
 Router.get("/editProduct",isAdmin, productController.getEditProduct);
 Router.post("/editProduct/:id",isAdmin, upload.array("images", 5), productController.editProduct);
@@ -69,23 +62,14 @@ Router.post("/addProductOffer", isAdmin, productController.addProductOffer)
 Router.post("/removeProductOffer", isAdmin, productController.removeProductOffer)
 
 //Order Management
-
 Router.get('/list-orders',isAdmin,orderController.loadOrdersPage)
 Router.get("/order-details",isAdmin, orderController.adminOrderDetails)
 Router.post("/change-status", isAdmin, orderController.changeStatus)
 
 //Coupon Management
-
-// To load the list of coupons
 Router.get("/list-coupons", isAdmin, couponController.listCoupons)
-
-// Load Add the coupons page
 Router.get("/add-coupon", isAdmin, couponController.loadAddCoupons)
-
-// Add coupons
 Router.post("/add-coupon", isAdmin, couponController.addCoupons)
-
-// Inactivate the coupon
 Router.get('/change-coupon-status',isAdmin,couponController.changeCouponStatus);
 
 //sales report
