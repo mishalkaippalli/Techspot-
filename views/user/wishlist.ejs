@@ -31,7 +31,7 @@
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-   
+
 </head>
 
 <style>
@@ -40,9 +40,11 @@
       flex-direction: column;
       min-height: 100vh;
    }
+
    main {
       flex: 1;
    }
+
    .footer {
       background-color: black;
       border-radius: 20px 20px 0 0;
@@ -54,142 +56,145 @@
 <body>
 
    <!-- Start Header Area -->
-   <header class="header-area header-style-5">  
-    <div class="header-bottom sticky-bar sticky-white-bg">
-        <div class="container">
+   <header class="header-area header-style-5">
+      <div class="header-bottom sticky-bar sticky-white-bg">
+         <div class="container">
             <div class="header-wrap header-space-between position-relative">
-                <div class="logo logo-width-1">
-                    <a href="index.html"><img src="/user-assets/imgs/theme/Techspotlogo.png" alt="logo"></a>
-                </div>
-              
-                <div class="main-menu main-menu-grow main-menu-padding-1 main-menu-lh-1 main-menu-mrg-1 hm3-menu-padding d-none d-lg-block hover-boder">
-                    <nav>
-                        <ul>   
-                            <li><a  href="/">Home <!--<i class="fi-rs-angle-down"></i> --></a>
-                            </li>
-                            <li><a href="/shop">Shop </i></a>
-                            </li>
-                            <li><a href="/about">About</i></a>
-                            </li>
-                            <li><a href="/contact">Contact</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="header-action-right">
-                    <div class="header-action-2">
-                        <div class="header-action-icon-2">
-                            <a href="/wishlist">
-                                <img class="svgInject" alt="Evara" src="/user-assets/imgs/theme/icons/icon-heart.svg">
-                                <!-- <span class="pro-count blue">4</span> -->
-                            </a>
-                        </div>
-                        <div class="header-action-icon-2">
-                            <a class="mini-cart-icon" href="/cart">
-                                <img alt="Evara" src="/user-assets/imgs/theme/icons/icon-cart.svg">
-                                <!-- <span class="pro-count blue">2</span> -->
-                            </a>
-                        </div>
-                        <div class="header-action-icon-2">
-                            <% if (locals.userWishlist) { %>
-                                <!-- Displayed when the user is logged in -->
-                                <li class="dropdown nav-item">
-                                  <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false">
-                                    <!-- Uncomment the following line if you want to use an icon -->
-                                    <!-- <i class="fas fa-/user-circle"></i> -->
-                                    <img class="svgInject" alt="Evara" src="/user-assets/imgs/theme/icons/user-profile.svg" style="height: 25px; width: 25px; margin-top: 2px;">
-                                  </a>
-                                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                                    <a class="dropdown-item" href="/user-profile"><i class="material-icons md-perm_identity"></i> Profile</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i> Logout</a>
-                                  </div>
-                                </li>
-                              <% } else { %>
-                                <!-- Displayed when the user is not logged in -->
-                                <div class="single-mobile-header-info ml-25 pr-5">
-                                  <a href="/login">Sign Up</a>
-                                </div>
+               <div class="logo logo-width-1">
+                  <a href="index.html"><img src="/user-assets/imgs/theme/Techspotlogo.png" alt="logo"></a>
+               </div>
+
+               <div
+                  class="main-menu main-menu-grow main-menu-padding-1 main-menu-lh-1 main-menu-mrg-1 hm3-menu-padding d-none d-lg-block hover-boder">
+                  <nav>
+                     <ul>
+                        <li><a href="/">Home <!--<i class="fi-rs-angle-down"></i> --></a>
+                        </li>
+                        <li><a href="/shop">Shop </i></a>
+                        </li>
+                     </ul>
+                  </nav>
+               </div>
+               <div class="header-action-right">
+                  <div class="header-action-2">
+                     <div class="header-action-icon-2">
+                        <a href="/wishlist">
+                           <img class="svgInject" alt="Evara" src="/user-assets/imgs/theme/icons/icon-heart.svg">
+                           <!-- <span class="pro-count blue">4</span> -->
+                        </a>
+                     </div>
+                     <div class="header-action-icon-2">
+                        <a class="mini-cart-icon" href="/cart">
+                           <img alt="Evara" src="/user-assets/imgs/theme/icons/icon-cart.svg">
+                           <!-- <span class="pro-count blue">2</span> -->
+                        </a>
+                     </div>
+                     <div class="header-action-icon-2">
+                        <% if (locals.userWishlist) { %>
+                           <!-- Displayed when the user is logged in -->
+                           <li class="dropdown nav-item">
+                              <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
+                                 aria-expanded="false">
+                                 <!-- Uncomment the following line if you want to use an icon -->
+                                 <!-- <i class="fas fa-/user-circle"></i> -->
+                                 <img class="svgInject" alt="Evara" src="/user-assets/imgs/theme/icons/user-profile.svg"
+                                    style="height: 25px; width: 25px; margin-top: 2px;">
+                              </a>
+                              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                                 <a class="dropdown-item" href="/user-profile"><i
+                                       class="material-icons md-perm_identity"></i> Profile</a>
+                                 <div class="dropdown-divider"></div>
+                                 <a class="dropdown-item text-danger" href="/logout"><i
+                                       class="material-icons md-exit_to_app"></i> Logout</a>
+                              </div>
+                           </li>
+                           <% } else { %>
+                              <!-- Displayed when the user is not logged in -->
+                              <div class="single-mobile-header-info ml-25 pr-5">
+                                 <a href="/login">Sign Up</a>
+                              </div>
                               <% } %>
-                              
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-   <!-- End Header Area -->
-<main>
-   <!-- Start Banner Area -->
-   <section class="">
-      <div class="container">
-         <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
-            <div class="col-first">
+
+                     </div>
+                  </div>
+               </div>
             </div>
          </div>
       </div>
-   </section>
-   <section>
-      <div class="container">
-         <br><h1 class="text-center">WISHLIST</h1><br>
-      </div>
-   </section>
-   <!-- End Banner Area -->
+   </header>
+   <!-- End Header Area -->
+   <main>
+      <!-- Start Banner Area -->
+      <section class="">
+         <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+               <div class="col-first">
+               </div>
+            </div>
+         </div>
+      </section>
+      <section>
+         <div class="container">
+            <br>
+            <h1 class="text-center">WISHLIST</h1><br>
+         </div>
+      </section>
+      <!-- End Banner Area -->
 
-   <!--================Cart Area =================-->
-   <section class="cart_area">
-      <div class="container">
+      <!--================Cart Area =================-->
+      <section class="cart_area">
+         <div class="container">
 
-         <div class="cart_inner row gx-5 d-flex justify-content-between ">
-            <% if (userWishlist.length) { %>
-               <% for( let i=0; i < userWishlist.length; i++ ) { %>
-                  <div class="col-md-6">
-                     <div class="card col-12 shadow mb-3 " style="position: relative;">
-                        <div class="card-body d-flex flex-column justify-content-between">
-                           <div class="text-right">
-                              <a href="" class="removeFromWishlist"
-                                 data-productId="<%- userWishlist[i].productId._id %>"
-                                 style="text-decoration: none; color: black; font-size: 20px;"><i
-                                    class="bi bi-trash "></i></a>
-                           </div>
-                           <div>
-                              <div class="mb-3 col-12 d-flex justify-content-center">
-                                 <img style="object-fit: contain; height: 150px; width: 150px;"
-                                    src="/uploads/product-images/<%= userWishlist[i].productId.productImage[0] %>" alt="">
+            <div class="cart_inner row gx-5 d-flex justify-content-between ">
+               <% if (userWishlist.length) { %>
+                  <% for( let i=0; i < userWishlist.length; i++ ) { %>
+                     <div class="col-md-6">
+                        <div class="card col-12 shadow mb-3 " style="position: relative;">
+                           <div class="card-body d-flex flex-column justify-content-between">
+                              <div class="text-right">
+                                 <a href="" class="removeFromWishlist"
+                                    data-productId="<%- userWishlist[i].productId._id %>"
+                                    style="text-decoration: none; color: black; font-size: 20px;"><i
+                                       class="bi bi-trash "></i></a>
                               </div>
-                              <p>Product Name : <%- userWishlist[i].productId.productName %></p>
-                              <p>Price : &#x20B9; <%- userWishlist[i].productId.salePrice %> </p>
-                              <% if (userWishlist[i].productId.quantity===0) { %>
-                                 <p class="text-danger">Out of Stock</p>
-                                 <% }else{ %>
-                                    <p class="text-success">In Stock</p>
-                                    <% } %>
-                           </div>
-                           <div class="d-flex justify-content-end">
-                              <a href="" data-productId="<%- userWishlist[i].productId._id %>"
-                                 class="btn btn-primary col-md-3 addToCart"> Add To Cart</a>
+                              <div>
+                                 <div class="mb-3 col-12 d-flex justify-content-center">
+                                    <img style="object-fit: contain; height: 150px; width: 150px;"
+                                       src="/uploads/product-images/<%= userWishlist[i].productId.productImage[0] %>"
+                                       alt="">
+                                 </div>
+                                 <p>Product Name : <%- userWishlist[i].productId.productName %></p>
+                                 <p>Price : &#x20B9; <%- userWishlist[i].productId.salePrice %> </p>
+                                 <% if (userWishlist[i].productId.quantity===0) { %>
+                                    <p class="text-danger">Out of Stock</p>
+                                    <% }else{ %>
+                                       <p class="text-success">In Stock</p>
+                                       <% } %>
+                              </div>
+                              <div class="d-flex justify-content-end">
+                                 <a href="" data-productId="<%- userWishlist[i].productId._id %>"
+                                    class="btn btn-primary col-md-3 addToCart"> Add To Cart</a>
+                              </div>
                            </div>
                         </div>
                      </div>
-                  </div>
-                  <% } %>
-                     <% }else{ %>
-                        <div class="col-md-12 d-flex justify-content-center">
-                           <div style="height: 200px; width: 300px;">
-                              <img src="/user-assets/img/elements/empty-wishlist.png"
-                                 style="object-fit: cover; height: 100%; width: 100%;" alt="">
+                     <% } %>
+                        <% }else{ %>
+                           <div class="col-md-12 d-flex justify-content-center">
+                              <div style="height: 200px; width: 300px;">
+                                 <img src="/user-assets/img/elements/empty-wishlist.png"
+                                    style="object-fit: cover; height: 100%; width: 100%;" alt="">
+                              </div>
                            </div>
-                        </div>
-                        <% } %>
+                           <% } %>
+            </div>
+
+
          </div>
+      </section>
 
-
-      </div>
-   </section>
-
-   <!--================End Cart Area =================-->
-</main>
+      <!--================End Cart Area =================-->
+   </main>
    <!-- start footer Area -->
    <footer class="footer-area pt-5 pb-5" style="background-color: black;  border-radius: 20px 20px 0 0;">
       <div class="container">
@@ -198,9 +203,9 @@
                <div class="single-footer-widget">
                   <h6>About Us</h6>
                   <p>
-                    Welcome to Techspot, your destination for sleek mobile devices that seamlessly 
-                    fuse cutting-edge technology with style. We are committed to offering you premium 
-                    smartphones and tablets that marry innovation, elegance, and performance.
+                     Welcome to Techspot, your destination for sleek mobile devices that seamlessly
+                     fuse cutting-edge technology with style. We are committed to offering you premium
+                     smartphones and tablets that marry innovation, elegance, and performance.
 
                   </p>
                </div>
@@ -352,40 +357,40 @@
 
 
    <!-- Vendor JS-->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
-<script src="/user-assets/js/vendor/modernizr-3.6.0.min.js"></script>
-<script src="/user-assets/js/vendor/jquery-3.6.0.min.js"></script>
-<script src="/user-assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
-<script src="/user-assets/js/vendor/bootstrap.bundle.min.js"></script>
-<script src="/user-assets/js/plugins/slick.js"></script>
-<script src="/user-assets/js/plugins/jquery.syotimer.min.js"></script>
-<script src="/user-assets/js/plugins/wow.js"></script>
-<script src="/user-assets/js/plugins/jquery-ui.js"></script>
-<script src="/user-assets/js/plugins/perfect-scrollbar.js"></script>
-<script src="/user-assets/js/plugins/magnific-popup.js"></script>
-<script src="/user-assets/js/plugins/select2.min.js"></script>
-<script src="/user-assets/js/plugins/waypoints.js"></script>
-<script src="/user-assets/js/plugins/counterup.js"></script>
-<script src="/user-assets/js/plugins/jquery.countdown.min.js"></script>
-<script src="/user-assets/js/plugins/images-loaded.js"></script>
-<script src="/user-assets/js/plugins/isotope.js"></script>
-<script src="/user-assets/js/plugins/scrollup.js"></script>
-<script src="/user-assets/js/plugins/jquery.vticker-min.js"></script>
-<script src="/user-assets/js/plugins/jquery.theia.sticky.js"></script>
-<script src="/user-assets/js/plugins/jquery.elevatezoom.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
-integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
-crossorigin="anonymous"></script>
-<script src="/user-assets/js/main.js"></script>
-<script src="/user-assets/js/jquery.ajaxchimp.min.js"></script> 
-<script src="/user-assets/js/jquery.nice-select.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
+   <script src="/user-assets/js/vendor/modernizr-3.6.0.min.js"></script>
+   <script src="/user-assets/js/vendor/jquery-3.6.0.min.js"></script>
+   <script src="/user-assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+   <script src="/user-assets/js/vendor/bootstrap.bundle.min.js"></script>
+   <script src="/user-assets/js/plugins/slick.js"></script>
+   <script src="/user-assets/js/plugins/jquery.syotimer.min.js"></script>
+   <script src="/user-assets/js/plugins/wow.js"></script>
+   <script src="/user-assets/js/plugins/jquery-ui.js"></script>
+   <script src="/user-assets/js/plugins/perfect-scrollbar.js"></script>
+   <script src="/user-assets/js/plugins/magnific-popup.js"></script>
+   <script src="/user-assets/js/plugins/select2.min.js"></script>
+   <script src="/user-assets/js/plugins/waypoints.js"></script>
+   <script src="/user-assets/js/plugins/counterup.js"></script>
+   <script src="/user-assets/js/plugins/jquery.countdown.min.js"></script>
+   <script src="/user-assets/js/plugins/images-loaded.js"></script>
+   <script src="/user-assets/js/plugins/isotope.js"></script>
+   <script src="/user-assets/js/plugins/scrollup.js"></script>
+   <script src="/user-assets/js/plugins/jquery.vticker-min.js"></script>
+   <script src="/user-assets/js/plugins/jquery.theia.sticky.js"></script>
+   <script src="/user-assets/js/plugins/jquery.elevatezoom.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+      integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+      crossorigin="anonymous"></script>
+   <script src="/user-assets/js/main.js"></script>
+   <script src="/user-assets/js/jquery.ajaxchimp.min.js"></script>
+   <script src="/user-assets/js/jquery.nice-select.min.js"></script>
    <script src="/user-assets/js/jquery.sticky.js"></script>
    <script src="/user-assets/js/nouislider.min.js"></script>
    <script src="/user-assets/js/jquery.magnific-popup.min.js"></script>
    <script src="/user-assets/js/owl.carousel.min.js"></script>
 
-<script src="/user-assets/js/main.js?v=3.4"></script>
-<script src="/user-assets/js/shop.js?v=3.4"></script>
+   <script src="/user-assets/js/main.js?v=3.4"></script>
+   <script src="/user-assets/js/shop.js?v=3.4"></script>
 
 </body>
 

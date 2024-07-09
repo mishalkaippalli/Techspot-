@@ -301,10 +301,10 @@
                         <div class="price-filter-inner">
                             <form id="price-filter-form">
                                 <div class="price-options">
-                                    <a href="/filterPrice?gt=0&lt=20000"><button type="button" class="price-button" data-value="under-50000">Under $50,000</button></a>
-                                    <a href="/filterPrice?gt=20000&lt=40000"><button type="button" class="price-button" data-value="50k-to-100k">$50,000 - $100,000</button></a>
-                                    <a href="/filterPrice?gt=40000&lt=800000"><button type="button" class="price-button" data-value="100k-to-150k">$100,000 - $150,000</button></a>
-                                    <a href="/filterPrice?gt=80000&lt=200000"><button type="button" class="price-button" data-value="above-150k">Above $150,000</button></a>
+                                    <a href="/filterPrice?gt=0&lt=30000"><button type="button" class="price-button" data-value="under-50000">Under ₹30,000</button></a>
+                                    <a href="/filterPrice?gt=30000&lt=70000"><button type="button" class="price-button" data-value="50k-to-100k">₹30,000 - ₹700,000</button></a>
+                                    <a href="/filterPrice?gt=70000&lt=100000"><button type="button" class="price-button" data-value="100k-to-150k">₹700,000 - ₹100,000</button></a>
+                                    <a href="/filterPrice?gt=100000&lt=200000"><button type="button" class="price-button" data-value="above-150k">₹1,00,000 - 2,00,000</button></a>
                                     <input type="hidden" id="selected-price" name="selected-price" value="">
                                 </div>
                             </form>
@@ -377,7 +377,7 @@
     
 
 function addToWishlist(productId){
-    $.ajax({
+    ₹.ajax({
         url : "/addToWishlist",
         method : "post",
         data : {
@@ -409,7 +409,7 @@ function addToWishlist(productId){
 async function addToCart(productId){
 
             console.log(productId)
-            const response = await fetch(`/addToCart?id=${productId}`);
+            const response = await fetch(`/addToCart?id=₹{productId}`);
             const result = await response.json();
             if (result.status === 'success') {
                Swal.fire({
@@ -464,7 +464,7 @@ function handleSortChange(selectedOption){
     searchParams.set('page', 1); // Reset to page 1 on sort change
     window.location.search = searchParams.toString();
     let option = selectedOption;
-    $.ajax({
+    ₹.ajax({
         url: "/sortProducts",
         method: "POST",
         data: {
@@ -475,11 +475,11 @@ function handleSortChange(selectedOption){
             if (response.status === true) {
                 const sortedProducts = response.data;
                 console.log(sortedProducts);
-                $(".product-grid-3").empty();
+                ₹(".product-grid-3").empty();
 
                 // Render each product in the container
                 sortedProducts.currentProduct.forEach((product) => {
-                    const productDiv = $("<div class='col-lg-4 col-md-4 col-12 col-sm-6'>" +
+                    const productDiv = ₹("<div class='col-lg-4 col-md-4 col-12 col-sm-6'>" +
                         "<div class='product-cart-wrap mb-30'>" +
                         "<div class='product-img-action-wrap'>" +
                         "<div class='product-img product-img-zoom'>" +
@@ -515,8 +515,8 @@ function handleSortChange(selectedOption){
                         "</div>");
 
                     // Append the productDiv to the product grid
-                    $(".product-grid-3").append(productDiv);
-                    // $("#pagination").html(response.data.totalPages);
+                    ₹(".product-grid-3").append(productDiv);
+                    // ₹("#pagination").html(response.data.totalPages);
                 });
             } else {
                 console.error("Error in sorting products:", response);

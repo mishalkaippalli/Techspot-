@@ -131,12 +131,6 @@ const loadManageAddress = async(req,res)=>{
 const addingAddress = async(req,res)=>{
   try {
      const {name,mobile,homeAddress,city,state,postalCode} = req.body;
-     // console.log(name)
-     // console.log(mobile)
-     // console.log(homeAddress)
-     // console.log(city)
-     // console.log(state)
-     // console.log(postalCode)
 
      let newAddress ={
         name:name,
@@ -162,7 +156,6 @@ const addingAddress = async(req,res)=>{
      }
       
      await userAddress.save();
-     console.log("inside adding address, added address data is",userAddress);
      res.json({status:'success'});
   } catch (error) {
      console.log(error.message);
@@ -176,13 +169,11 @@ const loadEditAddress = async(req,res)=>{
      const user_id = req.session.user;
      const addressId = req.query.addressId;
      const user = await Address.findOne({userId:user_id});
-     // console.log(userAddress)
      
      const userAddress = user.address.find((address)=>{
         return address._id.toString() === addressId;
      })
 
-     // console.log(userAddress);
      const cartItemsCount = await CartCountHelper.findCartItemsCount(user_id);
      res.render('edit-address',{userAddress, cartItemsCount});
   }catch(error){
@@ -207,8 +198,6 @@ const editAddress = async(req,res)=>{
          'address.$.postalCode':postalCode,
       }},
       {new:true});
-      
-      // console.log(updatedAddress)
       res.json({status:'success',message:'Address Edited'});
    } catch (error) {
       res.json({status:'error',message:'Something went wrong'});
@@ -221,27 +210,19 @@ const deleteAddress = async(req,res)=>{
    try {
       const user_id = req.session.user;
       const addressId = req.query.addressId;
-      // console.log(req.query.addressId);
       const address = await Address.findOne({userId:user_id});
-
       const deletedAddress = address.address.find(address=>address._id.toString() === addressId);
-      // console.log(deletedAddress);
-
       const isDefaultedAddress = deletedAddress.isDefault;
-      // console.log(isDefaultedAddress);
 
       // Remove the address
       address.address = address.address.filter((addr)=>addr._id.toString() !== addressId);
-      // console.log(address.address);
       console.log(address.address.length)
       if(isDefaultedAddress && address.address.length > 0){
          let newDefaultAddress = address.address.find(addr=>addr._id.toString() !== addressId);
          if(newDefaultAddress){
             newDefaultAddress.isDefault = true;
          }
-         // console.log(newDefaultAddress)
       }
-      // console.log(address);
       await address.save();
       res.json({status:'success',message:'Address Removed'});
    } catch (error) {

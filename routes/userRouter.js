@@ -14,7 +14,6 @@ const cartController = require("../controllers/cartController")
 const { isLogged, isLogout } = require("../authenticaiton/auth");
 const orderController = require("../controllers/orderController")
 const wishlistController = require("../controllers/wishlistController")
-const paypalController = require("../controllers/paypalController")
 const couponController = require("../controllers/couponController.js")
 require('../config/passport')
 
@@ -51,7 +50,6 @@ Router.get('/user-profile', isLogged, userProfileController.userProfile)
 Router.post("/editUserDetails", isLogged, userProfileController.editUserDetails)
 Router.post("/edit-profile", isLogged,userProfileController.editProfile)
 Router.post("/change-password", isLogged, userProfileController.changePassword)
-
 
 // ===============================Address management ==============================
 
@@ -101,15 +99,5 @@ Router.get("/remove-from-wishlist", isLogged, wishlistController.removeFromWishl
 
 Router.get('/view-wallet',isLogged ,userController.loadWallet);
 Router.post('/recharge-wallet', isLogged, userController.rechargeWallet)
-
-
-// --------------------------------------ONLINE PAYMENT---------------------------
-
-Router.get('/onlinePaymentPage', isLogged, paypalController.paypalpage )
-Router.post('/api/orders', isLogged, paypalController.paypalOrderCreator)
-Router.post( "/api/orders/:orderID/capture", isLogged, paypalController.paypalCaptureOrder)
-
-
-
 
 module.exports = Router;
