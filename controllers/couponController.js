@@ -51,6 +51,7 @@ const listCoupons = async (req, res) => {
          }
            }
            else{
+            res.json({status:'failed', message:'Coupon already exists'})
             console.log("coupon al;ready exits")
            }
            

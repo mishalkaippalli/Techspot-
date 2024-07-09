@@ -126,7 +126,16 @@
              setTimeout(()=>{
                 location.href = '/admin/list-coupons'
              },1500)
-       } else {
+       } else if(result.status === "failed"){
+         Swal.fire({
+                       icon: 'error',
+                       title: result.message,
+                       showConfirmButton: false,
+                       timer: 2000
+                   })
+       }
+       
+       else {
           Swal.fire({
                        icon: 'error',
                        title: result.message,

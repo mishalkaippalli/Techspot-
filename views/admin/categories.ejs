@@ -22,17 +22,6 @@
                                     <input type="text" id="name" name="name" placeholder="Type here" class="form-control"  id="product_name" />
                                     <div id="nameError" class="text-danger" style="display: none;"></div>
                                 </div>
-                                <!-- <div class="mb-4">
-                                    <label for="product_slug" class="form-label">Slug</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="product_slug" />
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label">Parent</label>
-                                    <select class="form-select">
-                                        <option>Clothes</option>
-                                        <option>T-Shirts</option>
-                                    </select>
-                                </div> -->
                                 <div class="mb-4">
                                     <label class="form-label">Description</label>
                                     <textarea id="description" name="description" placeholder="Type here" class="form-control" ></textarea>
@@ -54,11 +43,6 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <!-- <th class="text-center">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value="" />
-                                                </div>
-                                            </th> -->
                                             <th>Name</th>
                                             <th>Description</th>
                                             <th>Offer</th>
@@ -66,7 +50,6 @@
                                             <th>Status</th>
                                             <th>Action</th>
                                             <th class="text-start">Edit</th>
-                                            <!-- <th class="text-end">Action</th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -191,31 +174,56 @@
         }
     });
 
+
     async function addOffer(categoryId) {
-        alert("insde addOffer"+ categoryId);
-        const {value: amount} =  await Swal.fire({
-            title: 'Offer in percentage',
-            input: 'number',
-            inputLabel: 'Percentage',
-            inputPlaceholder: '%'
-        })
+    const { value: amount } = await Swal.fire({
+        title: 'Offer in percentage',
+        input: 'number',
+        inputLabel: 'Percentage',
+        inputPlaceholder: '%',
+        inputAttributes: {
+            min: 0, // Minimum value allowed (0%)
+            max: 100, // Maximum value allowed (100%)
+            step: 1, // Step increment (optional, use 0.01 for percentage)
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Add',
+        cancelButtonText: 'Cancel',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'You need to enter a percentage';
+            }
+            if (value < 0 || value > 100) {
+                return 'Percentage must be between 0 and 100';
+            }
+            return null; // Return null for no validation error
+        }
+    });
+
+    if (amount) {
+        // If user entered a valid amount, proceed with AJAX request
         $.ajax({
             url: "/admin/addCategoryOffer",
             method: 'post',
             data: {
-                percentage: amount, 
+                percentage: amount,
                 categoryId: categoryId
             },
             success: (response) => {
                 console.log(response);
-                if(response.status === true) {
-                    location.reload()
+                if (response.status === true) {
+                    location.reload();
                 } else {
-                    alert("failed")
+                    alert("Failed to add offer");
                 }
+            },
+            error: (error) => {
+                console.error('Error adding offer:', error);
+                alert("Failed to add offer");
             }
-        })
+        });
     }
+}
 
    function removeOffer(categoryId) {
     try {

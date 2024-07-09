@@ -28,7 +28,6 @@ const addCategory = async (req, res) => {
         res.redirect("/admin/allCategories");
       } else {
         res.render("categories", {message: "Category already exists", cat: categoryData})
-        console.log("Category already exists");
       }
     } else {
       console.log("description required");
